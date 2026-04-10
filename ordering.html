@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Order | Precision Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#445aa7",
+                    "tertiary-fixed-dim": "#ffb5a0",
+                    "surface-variant": "#e1e3e4",
+                    "surface-dim": "#d9dadb",
+                    "on-tertiary-fixed-variant": "#872100",
+                    "on-secondary-fixed-variant": "#2b418d",
+                    "primary": "#0041c8",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "primary-container": "#0055ff",
+                    "outline": "#737688",
+                    "on-primary-fixed": "#001551",
+                    "secondary-fixed": "#dce1ff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e7e8e9",
+                    "on-primary-container": "#e3e6ff",
+                    "outline-variant": "#c3c5d9",
+                    "on-tertiary-container": "#ffe1d9",
+                    "on-surface-variant": "#434656",
+                    "surface-bright": "#f8f9fa",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#972500",
+                    "on-secondary-container": "#243c88",
+                    "inverse-surface": "#2e3132",
+                    "tertiary-container": "#c13301",
+                    "surface-tint": "#004dea",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#95aafd",
+                    "on-background": "#191c1d",
+                    "secondary-fixed-dim": "#b6c4ff",
+                    "surface-container": "#edeeef",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#3b0900",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#e1e3e4",
+                    "background": "#f8f9fa",
+                    "surface-container-low": "#f3f4f5",
+                    "surface": "#f8f9fa",
+                    "tertiary-fixed": "#ffdbd1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#dce1ff",
+                    "on-primary-fixed-variant": "#0039b3",
+                    "on-surface": "#191c1d",
+                    "inverse-primary": "#b6c4ff",
+                    "on-secondary-fixed": "#001551"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+</script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Success Modal Overlay */
+        .success-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-modal-overlay.active {
+            display: flex;
+        }
+        .success-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            animation: slideUpFloat 0.35s ease-out;
+        }
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+        .success-icon .material-symbols-outlined {
+            font-size: 36px;
+            color: white;
+        }
+        @keyframes slideUpFloat {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Product image styling */
+        .product-image {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+
+<!-- TopAppBar (Stepper Shell) - NO X BUTTON -->
+<nav class="bg-slate-50 dark:bg-slate-950 flex flex-col items-center pt-4 pb-2 w-full border-b border-slate-200">
+<div class="flex flex-col items-center gap-4">
+<div class="text-lg font-semibold text-slate-900 font-headline">Create New Order</div>
+<!-- Step Indicator -->
+<div class="flex items-center gap-4">
+    <div class="flex items-center gap-2">
+        <div id="step1Dot" class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
+        <span id="step1Label" class="text-xs font-semibold text-primary">Supplier</span>
+    </div>
+    <div class="w-12 h-px bg-slate-300"></div>
+    <div class="flex items-center gap-2">
+        <div id="step2Dot" class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold">2</div>
+        <span id="step2Label" class="text-xs font-medium text-slate-500">Items</span>
+    </div>
+    <div class="w-12 h-px bg-slate-300"></div>
+    <div class="flex items-center gap-2">
+        <div id="step3Dot" class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold">3</div>
+        <span id="step3Label" class="text-xs font-medium text-slate-500">Review</span>
+    </div>
+</div>
+</div>
+</nav>
+
+<!-- Main Workspace -->
+<main class="flex-grow flex flex-col md:flex-row w-full max-w-screen-2xl mx-auto overflow-hidden">
+    
+    <!-- LEFT SECTION: Supplier Selection / Items / Review -->
+    <section id="contentArea" class="flex-grow p-8 bg-surface-container-lowest overflow-y-auto">
+        <!-- STEP 1: Supplier Selection -->
+        <div id="step1Content" class="max-w-3xl mx-auto space-y-8 fade-in">
+            <div class="space-y-4">
+                <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Select Primary Supplier</h2>
+                <div class="relative group">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+                    <input id="supplierSearch" class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Search suppliers by name..." type="text"/>
+                </div>
+            </div>
+            
+            <div id="supplierList" class="space-y-3"></div>
+            
+            <div class="pt-8 text-center">
+                <p class="text-sm text-outline font-body italic">Don't see your supplier? <a class="text-primary font-semibold hover:underline" href="#">Add a new supplier profile</a></p>
+            </div>
+            
+            <div class="flex justify-end pt-4">
+                <button onclick="goToStep2()" id="nextToItemsBtn" class="px-6 py-3 bg-primary text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Proceed to Items <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- STEP 2: Items Selection -->
+        <div id="step2Content" class="max-w-3xl mx-auto space-y-8 fade-in" style="display: none;">
+            <div class="space-y-4">
+                <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Select Items</h2>
+                <div class="bg-primary/5 p-4 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold">Selected Supplier:</p>
+                        <p id="selectedSupplierName" class="text-lg font-bold text-primary">—</p>
+                    </div>
+                    <button onclick="goToStep1()" class="text-sm text-primary hover:underline">Change Supplier</button>
+                </div>
+                <div class="relative group">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+                    <input id="itemSearch" class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary transition-all" placeholder="Search items by name or SKU..." type="text"/>
+                </div>
+            </div>
+            
+            <div id="itemsList" class="space-y-3"></div>
+            
+            <div id="cartSummary" class="bg-slate-50 rounded-xl p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-semibold">Subtotal:</span>
+                    <span id="cartSubtotal" class="text-xl font-bold text-primary">₱0.00</span>
+                </div>
+                <div class="text-xs text-slate-500">Items in cart: <span id="cartCount">0</span></div>
+            </div>
+            
+            <div class="flex justify-between pt-4">
+                <button onclick="goToStep1()" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl font-semibold flex items-center gap-2 hover:bg-slate-300 transition-all">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back
+                </button>
+                <button onclick="goToStep3()" id="nextToReviewBtn" class="px-6 py-3 bg-primary text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Proceed to Review <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- STEP 3: Review Order -->
+        <div id="step3Content" class="max-w-3xl mx-auto space-y-8 fade-in" style="display: none;">
+            <div class="space-y-4">
+                <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Review Order</h2>
+                <div class="bg-primary/5 p-4 rounded-xl">
+                    <p class="text-sm font-semibold">Order Summary</p>
+                    <div class="h-px bg-slate-200 my-3"></div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Order Reference:</span>
+                            <span id="reviewRef" class="font-semibold font-mono">—</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Supplier:</span>
+                            <span id="reviewSupplier" class="font-semibold">—</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Priority:</span>
+                            <span id="reviewPriority" class="font-semibold">NORMAL</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Delivery Terminal:</span>
+                            <span id="reviewTerminal" class="font-semibold">—</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Items:</span>
+                            <span id="reviewItemCount" class="font-semibold">0</span>
+                        </div>
+                        <div class="border-t border-slate-200 pt-2 mt-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-600">Subtotal:</span>
+                                <span id="reviewSubtotal" class="font-semibold">₱0.00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-600">Priority Fee:</span>
+                                <span id="reviewPriorityFee" class="font-semibold">₱0</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-600">Terminal Fee:</span>
+                                <span id="reviewTerminalFee" class="font-semibold">₱0</span>
+                            </div>
+                            <div class="flex justify-between text-lg font-bold mt-2 pt-2 border-t border-slate-200">
+                                <span>Total Amount:</span>
+                                <span id="reviewTotal" class="text-primary">₱0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="reviewItemsList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+            </div>
+            
+            <div class="flex justify-between pt-4">
+                <button onclick="goToStep2()" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl font-semibold flex items-center gap-2 hover:bg-slate-300 transition-all">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Items
+                </button>
+                <button onclick="submitOrder()" id="submitOrderBtn" class="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-green-700 transition-all">
+                    Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- RIGHT SECTION: Order Metadata -->
+    <aside class="w-full md:w-[400px] bg-surface-container-low p-8 flex flex-col justify-between">
+        <div class="space-y-10">
+            <div>
+                <span class="text-[0.6875rem] uppercase tracking-[0.1rem] font-bold text-outline font-label">Configuration</span>
+                <h3 class="text-2xl font-bold font-headline mt-2">Order Metadata</h3>
+            </div>
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Order Reference</label>
+                    <input id="internalRef" class="w-full bg-slate-100 border-none rounded-lg p-3 text-sm font-mono font-semibold text-primary cursor-not-allowed" type="text" readonly/>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Order Priority</label>
+                    <div class="flex gap-2">
+                        <button onclick="setPriority('NORMAL')" id="priorityNormal" class="flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all">NORMAL</button>
+                        <button onclick="setPriority('URGENT')" id="priorityUrgent" class="flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all">URGENT</button>
+                        <button onclick="setPriority('CRITICAL')" id="priorityCritical" class="flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all">CRITICAL</button>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Delivery Terminal</label>
+                    <div class="relative">
+                        <select id="deliveryTerminal" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm appearance-none">
+                            <option value="A1">Central Warehouse - A1 (₱600)</option>
+                            <option value="B4">East Coast Hub - B4 (₱455)</option>
+                            <option value="C2">Pacific Transit - C2 (₱745)</option>
+                            <option value="D3">Southern Distribution - D3 (₱255)</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-surface-container-lowest p-6 rounded-xl space-y-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[0.6875rem] uppercase font-bold text-outline">Estimated Lead Time</span>
+                        <div id="leadTimeDisplay" class="text-3xl font-extrabold font-headline text-primary mt-1">—</div>
+                    </div>
+                    <span class="material-symbols-outlined text-primary-container">speed</span>
+                </div>
+                <div class="h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
+                    <div id="leadTimeBar" class="h-full w-0 bg-gradient-to-r from-primary to-primary-container"></div>
+                </div>
+                <p class="text-[0.75rem] text-on-surface-variant leading-tight">Based on selected supplier's performance metrics.</p>
+            </div>
+        </div>
+    </aside>
+</main>
+
+<!-- Success Modal -->
+<div id="successModal" class="success-modal-overlay">
+    <div class="success-card">
+        <div class="success-icon">
+            <span class="material-symbols-outlined">check</span>
+        </div>
+        <h3 class="text-xl font-bold text-on-surface mb-2">Order Placed Successfully!</h3>
+        <p id="successOrderRef" class="text-slate-500 text-sm mb-4">Your order has been saved</p>
+        <button onclick="closeSuccessAndExit()" class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-all">
+            Done
+        </button>
+    </div>
+</div>
+
+<script>
+    // ========== SUPPLIER DATA ==========
+    const suppliers = [
+        { id: 1, name: "Global Logistics Partners", category: "Electronics", minLeadTime: 4, maxLeadTime: 6, leadPercent: 66, rating: "A+", location: "Singapore" },
+        { id: 2, name: "Precision Components Inc.", category: "Machinery", minLeadTime: 10, maxLeadTime: 14, leadPercent: 45, rating: "A", location: "Germany" },
+        { id: 3, name: "Northern Star Distribution", category: "Logistics", minLeadTime: 2, maxLeadTime: 4, leadPercent: 85, rating: "A+", location: "USA" },
+        { id: 4, name: "MicroSystems Group", category: "Sensors", minLeadTime: 6, maxLeadTime: 8, leadPercent: 30, rating: "B+", location: "Japan" },
+        { id: 5, name: "TechSource International", category: "Components", minLeadTime: 5, maxLeadTime: 7, leadPercent: 55, rating: "A-", location: "Taiwan" },
+        { id: 6, name: "Apex Manufacturing Co.", category: "Industrial", minLeadTime: 8, maxLeadTime: 12, leadPercent: 40, rating: "B+", location: "China" }
+    ];
+    
+    // Terminal fees and days
+    const terminalFees = {
+        "A1": 600,
+        "B4": 455,
+        "C2": 745,
+        "D3": 255
+    };
+    
+    const terminalDays = {
+        "A1": 1,
+        "B4": 3,
+        "C2": 6,
+        "D3": 2
+    };
+    
+    // Priority fees and subtract days
+    const priorityFees = {
+        "NORMAL": 0,
+        "URGENT": 3000,
+        "CRITICAL": 5000
+    };
+    
+    const priorityDays = {
+        "NORMAL": 0,
+        "URGENT": 2,
+        "CRITICAL": 4
+    };
+    
+    const itemsByCategory = {
+        "Electronics": [
+            { id: 101, name: "Microprocessor Chip", sku: "CHP-7842-X", price: 2599.99, stock: 234, image: "https://5.imimg.com/data5/NR/XU/MY-43979900/microprocessor-chip-500x500.jpg" },
+            { id: 102, name: "PCB Board Assembly", sku: "PCB-9921-A", price: 4899.50, stock: 89, image: "https://www.theengineerstore.in/cdn/shop/products/7x9-cm-Board_1024x1024_2x_cdcbbc3e-1169-4b92-9524-4721e17b8c9a.jpg?v=1701086058" },
+            { id: 103, name: "Capacitor Kit", sku: "CAP-4401-B", price: 699.99, stock: 567, image: "https://www.sunfounder.com/cdn/shop/products/sunfounder-peter-dalmaris-tech-explorations-default-title-ceramic-capacitor-assortment-kit-set-of-600-small-assorted-capacitors-from-100-nf-to-10-uf-in-a-box-non-polarized-disc-capacitor-component-set-30201583010027_1200x.jpg?v=1768447005" },
+            { id: 104, name: "Resistor Array", sku: "RES-2201-C", price: 475.75, stock: 1234, image: "https://www.siricomindia.com/wp-content/uploads/2016/08/Chip-Resistor-array.jpg" },
+            { id: 105, name: "Connector Set", sku: "CON-8812-D", price: 1250.50, stock: 456, image: "https://www.southeastclearance.com/cdn/shop/files/GOLD_57_26e16083-6e98-447c-aeec-abd29166a165.jpg?v=1691899264" }
+        ],
+        "Machinery": [
+            { id: 201, name: "Hydraulic Pump", sku: "HYP-5512-X", price: 24500.00, stock: 23, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzJsTSOTXfpfT5oW-vMZc7MfsW8B41vXBk-g&s" },
+            { id: 202, name: "Gear Assembly", sku: "GEA-2234-B", price: 10399.99, stock: 45, image: "https://5.imimg.com/data5/OC/TH/QX/SELLER-12931504/forklift-spaers-500x500.jpg" },
+            { id: 203, name: "Motor Controller", sku: "MTR-9981-C", price: 17450.00, stock: 12, image: "https://circuit.rocks/cdn/shop/products/high-power-motor-controller-24v23-1263.jpg?v=1689673529" },
+            { id: 204, name: "Drive Belt", sku: "BEL-4422-D", price: 1875.50, stock: 89, image: "https://cdn.shopify.com/s/files/1/0782/4860/7937/files/blog_What-is-it---Accessory-Belt_3.jpg" },
+            { id: 205, name: "Bearing Kit", sku: "BRG-6678-E", price: 3650.00, stock: 156, image: "https://napaautoparts.eu/core-assets/uploads/sites/2/2021/06/NAPA-Wheel-Bearing-Kits-e1624366260877.png" }
+        ],
+        "Logistics": [
+            { id: 301, name: "Shipping Pallet", sku: "PAL-8812-X", price: 2450.00, stock: 500, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7t2VqG8GUyTGi08y-nu6tDdIBdSRQvKjVwg&s" },
+            { id: 302, name: "Packaging Tape", sku: "TAP-4411-A", price: 275.99, stock: 2000, image: "https://hbw.ph/wp-content/uploads/2017/10/2b-scaled.jpg" },
+            { id: 303, name: "Label Printer", sku: "LBL-9922-B", price: 6999.00, stock: 34, image: "https://allid.com.ph/wp-content/uploads/2021/12/Primera-LX500c-Jam-Label.jpg.jpg" },
+            { id: 304, name: "RFID Tags (100pk)", sku: "RFID-1101-C", price: 4899.99, stock: 120, image: "https://cdn1-shop.mikroe.com/img/product/rfid-tag-1356mhz/rfid-tag-1356mhz-large_default-22x.jpg" },
+            { id: 305, name: "Stretch Wrap", sku: "WRP-3344-D", price: 1550.50, stock: 345, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8sA-Z-kTTlW49JEGRe9q52OTXmj0dcsAhpA&s" }
+        ],
+        "Sensors": [
+            { id: 401, name: "Temperature Sensor", sku: "TMP-8812-X", price: 1899.99, stock: 67, image: "https://circuit.rocks/cdn/shop/products/temperature-sensor-lm35-to-92-1654.jpg?v=1689678960" },
+            { id: 402, name: "Pressure Transducer", sku: "PRS-4431-A", price: 4850.00, stock: 23, image: "https://www.ashcroft.com/wp-content/uploads/2020/09/GV-transducer.jpg" },
+            { id: 403, name: "Motion Detector", sku: "MOT-2291-B", price: 3075.50, stock: 45, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPa1TDvpjaYgLfqSCe7b2w5a_INawROizRbQ&s" },
+            { id: 404, name: "Optical Sensor", sku: "OPT-7732-C", price: 6100.00, stock: 18, image: "https://monarchinstrument.com/wp-content/uploads/2023/04/products-ROSMSensor_253760f2-af19-47d1-988a-036f4ff47b6f.jpg" },
+            { id: 405, name: "Humidity Sensor", sku: "HUM-5543-D", price: 1575.99, stock: 89, image: "https://circuit.rocks/cdn/shop/files/humidity-sensor-module-hr202-a25871.jpg?v=1689572407&width=1200" }
+        ],
+        "Components": [
+            { id: 501, name: "LED Display", sku: "LED-9912-X", price: 3675.50, stock: 78, image: "https://res.cloudinary.com/dbihouiij/image/upload/c_scale,dpr_auto,f_auto,w_auto/v1/SiteImages/0001132_136-led-all-in-one-display" },
+            { id: 502, name: "Power Supply Unit", sku: "PSU-4431-A", price: 7899.00, stock: 34, image: "https://thecustomizewindows.cachefly.net/wp-content/uploads/2012/02/Power-Supply-Unit.jpg" },
+            { id: 503, name: "Cooling Fan", sku: "FAN-2281-B", price: 1299.99, stock: 156, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5k292eNr4GR3U99ybUbOrvjGccmBcCZoDHQ&s" },
+            { id: 504, name: "Wire Harness", sku: "WIR-6672-C", price: 1005.50, stock: 234, image: "https://down-ph.img.susercontent.com/file/sg-11134201-82617-mjpbgjw3lo1tbe" },
+            { id: 505, name: "Circuit Breaker", sku: "CIR-8843-D", price: 2285.00, stock: 67, image: "https://us1.yofishseo.com/file/157/miniature-circuit-breaker-.jpg" }
+        ],
+        "Industrial": [
+            { id: 601, name: "Industrial Robot Arm", sku: "ROB-9912-X", price: 136250.00, stock: 5, image: "https://www.borunte.net/Content/uploads/2023804276/202306291547510c590eaf37624abe8a83f372cafd5d5c.png?size=730x0" },
+            { id: 602, name: "Conveyor Belt", sku: "CNV-4431-A", price: 48450.00, stock: 12, image: "https://www.wisoven.com/sites/default/files/styles/product_slideshow/public/2016-11/Wisconsin%20Oven%20Mesh-Belt-Conveyor.jpg?itok=ITYChAsb" },
+            { id: 603, name: "PLC Controller", sku: "PLC-2281-B", price: 35375.00, stock: 8, image: "https://8z1xg04k.tinifycdn.com/images/cp1l-m30_40_prod.jpg?resize.method=fit&resize.width=500&resize.height=500" },
+            { id: 604, name: "Servo Motor", sku: "SRV-6672-C", price: 18500.00, stock: 23, image: "https://38-3d.co.uk/cdn/shop/files/Micro-Servo-Motor-SG90-Gear-9g.webp?v=1731061841" },
+            { id: 605, name: "Vibration Sensor", sku: "VIB-8843-D", price: 5175.00, stock: 45, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQadOQgQwF4zUe1ZKn-pqq7ZxXB7a7HEsh9Qg&s" }
+        ]
+    };
+    
+    // State variables
+    let selectedSupplier = null;
+    let cart = [];
+    let currentPriority = "NORMAL";
+    let currentStep = 1;
+    
+    // DOM Elements
+    const step1Content = document.getElementById('step1Content');
+    const step2Content = document.getElementById('step2Content');
+    const step3Content = document.getElementById('step3Content');
+    const step1Dot = document.getElementById('step1Dot');
+    const step2Dot = document.getElementById('step2Dot');
+    const step3Dot = document.getElementById('step3Dot');
+    const step1Label = document.getElementById('step1Label');
+    const step2Label = document.getElementById('step2Label');
+    const step3Label = document.getElementById('step3Label');
+    const supplierList = document.getElementById('supplierList');
+    const itemsList = document.getElementById('itemsList');
+    const cartSubtotalSpan = document.getElementById('cartSubtotal');
+    const cartCountSpan = document.getElementById('cartCount');
+    const selectedSupplierNameSpan = document.getElementById('selectedSupplierName');
+    const nextToItemsBtn = document.getElementById('nextToItemsBtn');
+    const nextToReviewBtn = document.getElementById('nextToReviewBtn');
+    const supplierSearch = document.getElementById('supplierSearch');
+    const itemSearch = document.getElementById('itemSearch');
+    const leadTimeDisplay = document.getElementById('leadTimeDisplay');
+    const leadTimeBar = document.getElementById('leadTimeBar');
+    const deliveryTerminal = document.getElementById('deliveryTerminal');
+    const internalRefInput = document.getElementById('internalRef');
+    const successModal = document.getElementById('successModal');
+    
+    // ========== ORDER REFERENCE GENERATION ==========
+    function generateOrderReference() {
+        const currentYear = new Date().getFullYear();
+        const timestamp = Date.now().toString().slice(-6);
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        
+        if (selectedSupplier) {
+            const words = selectedSupplier.name.split(' ');
+            let companyCode = '';
+            if (words.length >= 2) {
+                companyCode = (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+            } else {
+                companyCode = words[0].substring(0, 2).toUpperCase();
+            }
+            const reference = `ORD-${currentYear}-${companyCode}-${timestamp}${random}`;
+            internalRefInput.value = reference;
+            return reference;
+        }
+        return `ORD-${currentYear}-PX-${timestamp}${random}`;
+    }
+    
+    // Calculate Lead Time Range
+    function calculateLeadTimeRange() {
+        if (!selectedSupplier) return { min: 0, max: 0 };
+        
+        let minDays = selectedSupplier.minLeadTime;
+        let maxDays = selectedSupplier.maxLeadTime;
+        
+        const terminal = deliveryTerminal.value;
+        minDays += terminalDays[terminal] || 0;
+        maxDays += terminalDays[terminal] || 0;
+        
+        minDays -= priorityDays[currentPriority];
+        maxDays -= priorityDays[currentPriority];
+        
+        minDays = Math.max(1, minDays);
+        maxDays = Math.max(minDays, maxDays);
+        
+        return { min: minDays, max: maxDays };
+    }
+    
+    function updateLeadTimeDisplay() {
+        const { min, max } = calculateLeadTimeRange();
+        
+        if (min === max) {
+            leadTimeDisplay.innerText = `${min} Day${min !== 1 ? 's' : ''}`;
+        } else {
+            leadTimeDisplay.innerText = `${min}-${max} Days`;
+        }
+        
+        const avgDays = (min + max) / 2;
+        const percent = Math.min(100, (avgDays / 20) * 100);
+        leadTimeBar.style.width = `${percent}%`;
+    }
+    
+    // Calculate total with fees
+    function calculateTotalWithFees() {
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const priorityFee = priorityFees[currentPriority];
+        const terminalFee = terminalFees[deliveryTerminal.value];
+        const total = subtotal + priorityFee + terminalFee;
+        return { subtotal, priorityFee, terminalFee, total };
+    }
+    
+    function updateCartDisplay() {
+        const { subtotal, priorityFee, terminalFee, total } = calculateTotalWithFees();
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
+        cartSubtotalSpan.innerText = `₱${subtotal.toLocaleString()}`;
+        cartCountSpan.innerText = count;
+        nextToReviewBtn.disabled = cart.length === 0;
+        
+        // Update review section
+        document.getElementById('reviewRef').innerText = internalRefInput.value;
+        document.getElementById('reviewSupplier').innerText = selectedSupplier?.name || '—';
+        document.getElementById('reviewPriority').innerText = currentPriority;
+        document.getElementById('reviewTerminal').innerText = deliveryTerminal.options[deliveryTerminal.selectedIndex].text;
+        document.getElementById('reviewItemCount').innerText = count;
+        document.getElementById('reviewSubtotal').innerText = `₱${subtotal.toLocaleString()}`;
+        document.getElementById('reviewPriorityFee').innerText = `₱${priorityFee.toLocaleString()}`;
+        document.getElementById('reviewTerminalFee').innerText = `₱${terminalFee.toLocaleString()}`;
+        document.getElementById('reviewTotal').innerText = `₱${total.toLocaleString()}`;
+        
+        const reviewItemsList = document.getElementById('reviewItemsList');
+        reviewItemsList.innerHTML = cart.map(item => `
+            <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                <div class="flex items-center gap-3">
+                    <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=Product'">
+                    <div>
+                        <p class="font-medium text-sm">${item.name}</p>
+                        <p class="text-xs text-slate-500">${item.sku}</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold text-primary">₱${(item.price * item.quantity).toLocaleString()}</p>
+                    <p class="text-xs text-primary/70">${item.quantity} item${item.quantity !== 1 ? 's' : ''}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        if (cart.length === 0) {
+            reviewItemsList.innerHTML = '<div class="text-center py-4 text-slate-400">No items added yet</div>';
+        }
+    }
+    
+    function renderSuppliers() {
+        const searchTerm = supplierSearch.value.toLowerCase();
+        const filtered = suppliers.filter(s => s.name.toLowerCase().includes(searchTerm));
+        
+        supplierList.innerHTML = filtered.map(supplier => `
+            <div class="group flex items-center p-6 ${selectedSupplier?.id === supplier.id ? 'bg-primary/5 border-2 border-primary' : 'bg-surface-container-low hover:bg-surface-container'} transition-all cursor-pointer rounded-xl" onclick="selectSupplier(${supplier.id})">
+                <div class="w-12 h-12 rounded-lg ${selectedSupplier?.id === supplier.id ? 'bg-primary' : 'bg-surface-container-highest'} flex items-center justify-center mr-6">
+                    <span class="material-symbols-outlined ${selectedSupplier?.id === supplier.id ? 'text-white' : 'text-outline'}">${supplier.category === 'Electronics' ? 'developer_board' : supplier.category === 'Machinery' ? 'settings' : supplier.category === 'Logistics' ? 'local_shipping' : 'sensors'}</span>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-on-surface">${supplier.name}</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">${supplier.rating}</span>
+                            <span class="text-xs text-slate-500">${supplier.location}</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-on-surface-variant mt-1">Category: ${supplier.category}</p>
+                </div>
+                <div class="ml-6">
+                    ${selectedSupplier?.id === supplier.id ? 
+                        '<span class="material-symbols-outlined text-primary" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : 
+                        '<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity">radio_button_unchecked</span>'}
+                </div>
+            </div>
+        `).join('');
+        
+        nextToItemsBtn.disabled = !selectedSupplier;
+    }
+    
+    function selectSupplier(id) {
+        selectedSupplier = suppliers.find(s => s.id === id);
+        renderSuppliers();
+        generateOrderReference();
+        updateLeadTimeDisplay();
+        updateCartDisplay();
+    }
+    
+    function renderItems() {
+        if (!selectedSupplier) return;
+        
+        const category = selectedSupplier.category;
+        const items = itemsByCategory[category] || [];
+        const searchTerm = itemSearch.value.toLowerCase();
+        
+        const filtered = items.filter(i => 
+            i.name.toLowerCase().includes(searchTerm) || 
+            i.sku.toLowerCase().includes(searchTerm)
+        );
+        
+        itemsList.innerHTML = filtered.map(item => {
+            const cartItem = cart.find(c => c.id === item.id);
+            const quantity = cartItem ? cartItem.quantity : 0;
+            const isMaxStock = quantity >= item.stock;
+            
+            return `
+                <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-3">
+                            <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=${encodeURIComponent(item.name.substring(0, 3))}'">
+                            <div>
+                                <h4 class="font-semibold">${item.name}</h4>
+                                <span class="text-xs text-slate-400 font-mono">${item.sku}</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 mt-2">₱${item.price.toLocaleString()} • Stock: ${item.stock} units</p>
+                        ${isMaxStock ? '<p class="text-xs text-red-500 mt-1">⚠️ Maximum stock reached</p>' : ''}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="updateCart(${item.id}, -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center transition-all">-</button>
+                        <span class="w-8 text-center font-semibold">${quantity}</span>
+                        <button onclick="updateCart(${item.id}, 1)" class="w-8 h-8 rounded-full bg-primary text-white hover:bg-primary/80 flex items-center justify-center transition-all ${isMaxStock ? 'opacity-50 cursor-not-allowed' : ''}" ${isMaxStock ? 'disabled' : ''}>+</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        if (filtered.length === 0) {
+            itemsList.innerHTML = '<div class="text-center py-8 text-slate-400">No items found</div>';
+        }
+        
+        updateCartDisplay();
+    }
+    
+    function updateCart(itemId, delta) {
+        const category = selectedSupplier.category;
+        const items = itemsByCategory[category] || [];
+        const item = items.find(i => i.id === itemId);
+        
+        if (!item) return;
+        
+        const existing = cart.find(c => c.id === itemId);
+        const currentQty = existing ? existing.quantity : 0;
+        
+        if (delta > 0) {
+            if (currentQty + delta > item.stock) {
+                alert(`Cannot add more. Maximum stock for ${item.name} is ${item.stock} units.`);
+                return;
+            }
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+        } else if (delta < 0 && existing) {
+            if (existing.quantity > 1) {
+                existing.quantity--;
+            } else {
+                cart = cart.filter(c => c.id !== itemId);
+            }
+        }
+        
+        updateCartDisplay();
+        renderItems();
+    }
+    
+    function setPriority(priority) {
+        currentPriority = priority;
+        
+        document.getElementById('priorityNormal').className = priority === 'NORMAL' ? 
+            'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' :
+            'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+        document.getElementById('priorityUrgent').className = priority === 'URGENT' ?
+            'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' :
+            'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+        document.getElementById('priorityCritical').className = priority === 'CRITICAL' ?
+            'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' :
+            'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+        
+        updateLeadTimeDisplay();
+        updateCartDisplay();
+    }
+    
+    // ========== Step Navigation ==========
+    function updateStepUI() {
+        step1Content.style.display = 'none';
+        step2Content.style.display = 'none';
+        step3Content.style.display = 'none';
+        
+        if (currentStep === 1) step1Content.style.display = 'block';
+        if (currentStep === 2) step2Content.style.display = 'block';
+        if (currentStep === 3) step3Content.style.display = 'block';
+        
+        const steps = [
+            { dot: step1Dot, label: step1Label, active: currentStep === 1, completed: currentStep > 1 },
+            { dot: step2Dot, label: step2Label, active: currentStep === 2, completed: currentStep > 2 },
+            { dot: step3Dot, label: step3Label, active: currentStep === 3, completed: currentStep > 3 }
+        ];
+        
+        steps.forEach(step => {
+            if (step.completed) {
+                step.dot.className = 'w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold';
+                step.dot.innerText = '✓';
+                step.label.className = 'text-xs font-semibold text-green-600';
+            } else if (step.active) {
+                step.dot.className = 'w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold';
+                step.dot.innerText = steps.indexOf(step) + 1;
+                step.label.className = 'text-xs font-semibold text-primary';
+            } else {
+                step.dot.className = 'w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold';
+                step.dot.innerText = steps.indexOf(step) + 1;
+                step.label.className = 'text-xs font-medium text-slate-500';
+            }
+        });
+    }
+    
+    function goToStep2() {
+        if (!selectedSupplier) return;
+        currentStep = 2;
+        selectedSupplierNameSpan.innerText = selectedSupplier.name;
+        updateStepUI();
+        renderItems();
+    }
+    
+    function goToStep1() {
+        currentStep = 1;
+        updateStepUI();
+        renderSuppliers();
+    }
+    
+    function goToStep3() {
+        if (cart.length === 0) return;
+        currentStep = 3;
+        updateStepUI();
+        updateCartDisplay();
+    }
+    
+    function closeSuccessAndExit() {
+        successModal.classList.remove('active');
+        // Reset the form state
+        cart = [];
+        
+        updateCartDisplay();
+        renderItems();
+        updateStepUI();
+        setPriority('NORMAL');
+        deliveryTerminal.value = 'A1';
+        
+        // Generate a new reference for the next order (if supplier is still selected)
+        if (selectedSupplier) {
+            generateOrderReference();
+        }
+        
+        updateLeadTimeDisplay();
+        updateCartDisplay();
+        
+        // Notify parent to refresh orders and close the modal
+        if (window.parent !== window) {
+            window.parent.postMessage('orderCreated', '*');
+            window.parent.postMessage('closeOrderModal', '*');
+        }
+    }
+    
+    function submitOrder() {
+        const { subtotal, priorityFee, terminalFee, total } = calculateTotalWithFees();
+        const { min, max } = calculateLeadTimeRange();
+        
+        const submitBtn = document.getElementById('submitOrderBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Saving... <span class="material-symbols-outlined text-sm">hourglass_empty</span>';
+        
+        const orderReference = internalRefInput.value;
+        
+        const orderData = {
+            orderReference: orderReference,
+            supplier: selectedSupplier.name,
+            supplierCategory: selectedSupplier.category,
+            items: cart.map(i => ({ 
+                name: i.name, 
+                sku: i.sku, 
+                quantity: i.quantity, 
+                price: i.price,
+                image: i.image  // Add the image URL
+            })),
+            subtotal: subtotal,
+            priorityFee: priorityFee,
+            terminalFee: terminalFee,
+            total: total,
+            priority: currentPriority,
+            deliveryTerminal: deliveryTerminal.options[deliveryTerminal.selectedIndex].text,
+            leadTimeMin: min,
+            leadTimeMax: max,
+            orderDate: new Date().toISOString()
+        };
+           
+        fetch('api/save_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success modal
+                document.getElementById('successOrderRef').innerHTML = `Reference: ${orderReference}<br><span class="text-xs text-slate-400">Order saved successfully</span>`;
+                successModal.classList.add('active');
+                
+                // Clear cart for next order
+                cart = [];
+                updateCartDisplay();
+                renderItems();
+                
+                // Generate NEW reference for the next order
+                setTimeout(() => {
+                    if (selectedSupplier) {
+                        generateOrderReference();
+                    }
+                }, 100);
+            } else {
+                alert('Error saving order: ' + data.error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save order. Please check if the server is running.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>';
+        });
+    }
+    
+    // Event Listeners
+    supplierSearch.addEventListener('input', renderSuppliers);
+    itemSearch.addEventListener('input', renderItems);
+    deliveryTerminal.addEventListener('change', () => {
+        updateLeadTimeDisplay();
+        updateCartDisplay();
+    });
+    
+    // Initialize
+    renderSuppliers();
+    generateOrderReference();
+</script>
+</body>
+</html>

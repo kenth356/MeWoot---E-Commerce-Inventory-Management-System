@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Order Registry | Precision Inventory</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+            z-index: 100;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.5rem;
+            color: #475569;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background: #e2e8f0;
+            color: #2563eb;
+            transform: translateX(4px);
+        }
+
+        .nav-link-active {
+            background: white;
+            color: #2563eb;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* Tabs */
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: transparent;
+        }
+        .tab-button.active {
+            color: #0041c8;
+            border-bottom-color: #0041c8;
+        }
+        .tab-button:not(.active):hover {
+            color: #64748b;
+            border-bottom-color: #cbd5e1;
+        }
+
+        /* Status badge styles */
+        .status-pending { background-color: #ffdad6; color: #93000a; }
+        .status-delivered { background-color: #dce1ff; color: #0039b3; }
+        .status-archived { background-color: #e2e8f0; color: #475569; }
+        .status-cancelled { background-color: #fef9c3; color: #854d0e; }
+
+        /* Fix for select dropdown */
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 14px;
+            padding-right: 2.5rem;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            white-space: nowrap;
+        }
+        .action-buttons select {
+            min-width: 85px;
+            width: auto;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+        }
+        .action-buttons button {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.375rem;
+            transition: background 0.2s;
+        }
+        .action-buttons button:hover {
+            background: #f1f5f9;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            border-left: 4px solid #22c55e;
+        }
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toast-icon .material-symbols-outlined {
+            font-size: 16px;
+            color: white;
+        }
+
+        /* Floating Overlay Styles */
+        .floating-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .floating-overlay.active { display: flex; }
+        .floating-card {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 550px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        }
+        .iframe-card {
+            max-width: 1000px !important;
+            position: relative;
+        }
+        .iframe-card iframe {
+            width: 100%;
+            height: 640px;
+            border: none;
+        }
+        .iframe-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .loading-card { text-align: center; padding: 2rem; }
+        
+        /* Confirmation Dialog */
+        .confirm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-overlay.active { display: flex; }
+        .confirm-dialog {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 340px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .confirm-icon {
+            width: 48px;
+            height: 48px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        .confirm-buttons { display: flex; gap: 0.75rem; }
+        .confirm-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .confirm-btn-cancel { background: #f1f5f9; color: #475569; }
+        .confirm-btn-confirm { background: #dc2626; color: white; }
+        .confirm-btn-delete { background: #dc2626; color: white; }
+
+        /* Restore choice dialog */
+        #restoreChoiceOverlay .space-y-3 button {
+            transition: all 0.2s ease;
+        }
+        #restoreChoiceOverlay .space-y-3 button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Order Details Modal */
+        .order-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .order-details-modal.active {
+            display: flex;
+        }
+        .order-details-card {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: slideUpFloat 0.35s ease-out;
+        }
+        .order-details-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-details-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .order-details-close {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .order-details-close:hover {
+            background: #f1f5f9;
+        }
+        .order-item-row {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s;
+        }
+        .order-item-row:hover {
+            background: #f8fafc;
+        }
+        @keyframes slideUpFloat {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Clickable row styling */
+        .clickable-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .clickable-row:hover {
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="mb-8 px-2">
+            <h1 class="font-manrope font-black text-blue-700 text-xl">MeWoo</h1>
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mt-1">Order Registry</p>
+        </div>
+        <nav style="flex: 1;">
+            <a href="dashboard.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">dashboard</span>
+                Dashboard
+            </a>
+            <a href="inventory.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">inventory_2</span>
+                Inventory
+            </a>
+            <a href="orders.html" class="nav-link nav-link-active">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                Orders
+            </a>
+            <a href="suppliers.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">local_shipping</span>
+                Suppliers
+            </a>
+            <a href="analytics.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">analytics</span>
+                Analytics
+            </a>
+        </nav>
+        <div style="margin-top: auto; padding-top: 1rem;">
+            <button onclick="openFloatingOrderFlow()" class="w-full py-2 bg-[#0041c8] text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[#0035a3]">
+                <span class="material-symbols-outlined text-sm">add</span>
+                New Order
+            </button>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+            <a href="#" class="nav-link text-xs">
+                <span class="material-symbols-outlined text-sm">help_outline</span>
+                Support
+            </a>
+            <a href="login.html" class="nav-link text-xs">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="margin-bottom: 2rem;">
+                <span class="text-[9px] font-bold text-[#0041c8] uppercase tracking-wider">MeWoo</span>
+                <h2 class="text-3xl font-manrope font-extrabold mt-1">Order Registry</h2>
+                <p class="text-slate-500 text-sm mt-1">Manage and track all orders</p>
+            </div>
+
+            <!-- Status Cards -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+                <div class="bg-white p-4 rounded-xl border border-gray-200 stat-card relative">
+                    <div class="absolute top-4 right-4">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">receipt_long</span>
+                    </div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Total Orders</p>
+                    <p class="text-2xl font-bold text-primary stat-value" id="totalOrders">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 stat-card relative">
+                    <div class="absolute top-4 right-4">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">pending</span>
+                    </div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Pending</p>
+                    <p class="text-2xl font-bold text-tertiary stat-value" id="pendingOrders">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 stat-card relative">
+                    <div class="absolute top-4 right-4">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">check_circle</span>
+                    </div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Delivered</p>
+                    <p class="text-2xl font-bold text-blue-600 stat-value" id="deliveredOrders">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 stat-card relative">
+                    <div class="absolute top-4 right-4">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">cancel</span>
+                    </div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Cancelled</p>
+                    <p class="text-2xl font-bold text-red-600 stat-value" id="cancelledOrders">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200 stat-card relative">
+                    <div class="absolute top-4 right-4">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">archive</span>
+                    </div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Archived</p>
+                    <p class="text-2xl font-bold text-slate-600 stat-value" id="archivedOrders">0</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="border-b border-gray-200 mb-6">
+                <div class="flex gap-2">
+                    <button onclick="switchTab('active')" id="tabActive" class="tab-button active">Active Orders (Pending)</button>
+                    <button onclick="switchTab('delivered')" id="tabDelivered" class="tab-button">Delivered</button>
+                    <button onclick="switchTab('cancelled')" id="tabCancelled" class="tab-button">Cancelled</button>
+                    <button onclick="switchTab('archived')" id="tabArchived" class="tab-button">Archived</button>
+                    <button onclick="switchTab('all')" id="tabAll" class="tab-button">All Orders</button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="bg-white rounded-xl shadow-sm mb-6 p-5">
+                <div class="flex gap-4 items-center flex-wrap">
+                    <div class="relative">
+                        <select id="statusFilter" class="px-4 py-2 border rounded-lg text-sm text-slate-600 bg-white pr-10">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="archived">Archived</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-base">
+                            expand_more
+                        </span>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Search by Order ID, Supplier, or Category..." class="flex-1 px-4 py-2 border rounded-lg text-sm min-w-[200px]">
+                    <button onclick="loadOrders()" class="px-6 py-2 bg-[#0041c8] text-white rounded-lg text-sm font-semibold">Search</button>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Supplier</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Amount</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Items</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr>
+                                <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                                    Loading orders...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="order-details-modal">
+        <div class="order-details-card">
+            <div class="order-details-header">
+                <div>
+                    <h3 class="text-xl font-bold font-manrope" id="modalOrderRef">Order Details</h3>
+                    <p class="text-sm text-slate-500 mt-1" id="modalSupplier">Supplier: —</p>
+                </div>
+                <button class="order-details-close" onclick="closeOrderDetails()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="order-details-body">
+                <div class="mb-4 p-3 bg-slate-50 rounded-lg">
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div><span class="text-slate-500">Order Date:</span> <span id="modalDate" class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Status:</span> <span id="modalStatus" class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Priority:</span> <span id="modalPriority" class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Delivery Terminal:</span> <span id="modalTerminal" class="font-medium">—</span></div>
+                    </div>
+                </div>
+                
+                <h4 class="font-semibold text-lg mb-3">Ordered Items</h4>
+                <div id="modalItemsList" class="space-y-2">
+                    <!-- Items will be populated here -->
+                </div>
+                
+                <div class="mt-4 pt-3 border-t border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Subtotal:</span>
+                        <span id="modalSubtotal" class="font-semibold">₱0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-1">
+                        <span class="font-semibold">Priority Fee:</span>
+                        <span id="modalPriorityFee" class="font-semibold">₱0</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-1">
+                        <span class="font-semibold">Terminal Fee:</span>
+                        <span id="modalTerminalFee" class="font-semibold">₱0</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
+                        <span class="font-bold text-lg">Total:</span>
+                        <span id="modalTotal" class="font-bold text-xl text-primary">₱0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Overlay -->
+    <div id="floatingOverlay" class="floating-overlay">
+        <div id="loadingCard" class="floating-card loading-card">
+            <div class="loading-icon">
+                <span class="material-symbols-outlined" style="font-size: 52px; color: #0041c8;">shopping_cart</span>
+            </div>
+            <div class="loading-title">Loading Order Form...</div>
+            <p class="loading-subtext">Preparing your workspace...</p>
+        </div>
+        <div id="iframeCard" class="floating-card iframe-card" style="display: none;">
+            <button class="iframe-close-btn" onclick="requestClose()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <iframe id="orderFormIframe" src="about:blank"></iframe>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmOverlay" class="confirm-overlay">
+        <div class="confirm-dialog">
+            <div class="confirm-icon" id="confirmIcon">
+                <span class="material-symbols-outlined">warning</span>
+            </div>
+            <div class="confirm-title" id="confirmTitle">Cancel Order Creation?</div>
+            <div class="confirm-message" id="confirmMessage">Your order information will be lost if you cancel.</div>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-btn-cancel" id="confirmCancelBtn">Keep Editing</button>
+                <button class="confirm-btn confirm-btn-confirm" id="confirmConfirmBtn">Yes, Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restore Choice Dialog -->
+    <div id="restoreChoiceOverlay" class="confirm-overlay">
+        <div class="confirm-dialog" style="max-width: 380px;">
+            <div class="confirm-icon" style="background: #dce1ff;">
+                <span class="material-symbols-outlined" style="color: #0041c8;">restore</span>
+            </div>
+            <div class="confirm-title" id="restoreChoiceTitle">Restore Order</div>
+            <div class="confirm-message" id="restoreChoiceMessage">Where would you like to restore this order?</div>
+            <div class="space-y-3 mb-4">
+                <button onclick="confirmRestoreWithStatus('pending')" class="w-full py-3 bg-[#0041c8] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-[#0035a3] transition-all">
+                    <span class="material-symbols-outlined text-sm">pending</span>
+                    Restore as Pending
+                </button>
+                <button onclick="confirmRestoreWithStatus('delivered')" class="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    Restore as Delivered
+                </button>
+            </div>
+            <div class="confirm-buttons">
+                <button onclick="hideRestoreChoice()" class="confirm-btn confirm-btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="successToast" class="toast-notification">
+        <div class="toast-icon">
+            <span class="material-symbols-outlined">check</span>
+        </div>
+        <div>
+            <div class="font-semibold text-sm">Order Deleted</div>
+            <div class="text-xs text-slate-500">The order has been removed</div>
+        </div>
+    </div>
+
+    <script>
+        // ========== STATE ==========
+        let currentTab = 'active';
+        let pendingClose = false;
+        let pendingDeleteId = null;
+        let pendingArchiveId = null;
+        let pendingCancelId = null;
+        let pendingRestoreWithChoiceId = null;
+        let pendingRestoreWithChoiceRef = null;
+        let ordersData = [];
+
+        // ========== DOM Elements ==========
+        const overlay = document.getElementById('floatingOverlay');
+        const loadingCard = document.getElementById('loadingCard');
+        const iframeCard = document.getElementById('iframeCard');
+        const orderIframe = document.getElementById('orderFormIframe');
+        const confirmOverlay = document.getElementById('confirmOverlay');
+        const orderDetailsModal = document.getElementById('orderDetailsModal');
+
+        // ========== ORDER DETAILS MODAL ==========
+        function showOrderDetails(order) {
+            document.getElementById('modalOrderRef').innerHTML = order.order_reference;
+            document.getElementById('modalSupplier').innerHTML = `Supplier: ${order.supplier_name}`;
+            document.getElementById('modalDate').innerHTML = formatDate(order.order_date);
+            
+            let statusClass = '';
+            if (order.status === 'pending') statusClass = 'status-pending';
+            else if (order.status === 'delivered') statusClass = 'status-delivered';
+            else if (order.status === 'archived') statusClass = 'status-archived';
+            else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+            document.getElementById('modalStatus').innerHTML = `<span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${order.status.toUpperCase()}</span>`;
+            
+            document.getElementById('modalPriority').innerHTML = order.priority || 'NORMAL';
+            document.getElementById('modalTerminal').innerHTML = order.delivery_terminal || '—';
+            document.getElementById('modalSubtotal').innerHTML = `₱${parseFloat(order.subtotal || 0).toLocaleString()}`;
+            document.getElementById('modalPriorityFee').innerHTML = `₱${parseFloat(order.priority_fee || 0).toLocaleString()}`;
+            document.getElementById('modalTerminalFee').innerHTML = `₱${parseFloat(order.terminal_fee || 0).toLocaleString()}`;
+            document.getElementById('modalTotal').innerHTML = `₱${parseFloat(order.total_amount).toLocaleString()}`;
+            
+            // Load order items with images
+            fetch(`api/get_order_items.php?order_id=${order.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.items && data.items.length > 0) {
+                        document.getElementById('modalItemsList').innerHTML = data.items.map(item => {
+                            const imageUrl = item.item_image || `https://placehold.co/80x80/3b82f6/white?text=${encodeURIComponent(item.item_name?.charAt(0) || 'P')}`;
+                            return `
+                                <div class="order-item-row">
+                                    <div class="flex gap-4 w-full">
+                                        <img src="${imageUrl}" class="w-16 h-16 rounded-lg object-cover bg-slate-100 flex-shrink-0" onerror="this.src='https://placehold.co/80x80/3b82f6/white?text=${encodeURIComponent(item.item_name?.charAt(0) || 'P')}'">
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <p class="font-medium text-base">${escapeHtml(item.item_name)}</p>
+                                                    <p class="text-xs text-slate-500 font-mono">${escapeHtml(item.item_sku)}</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <p class="font-semibold text-primary text-lg">₱${(parseFloat(item.price) * parseInt(item.quantity)).toLocaleString()}</p>
+                                                    <p class="text-xs text-slate-400">₱${parseFloat(item.price).toLocaleString()} / unit</p>
+                                                </div>
+                                            </div>
+                                            <p class="text-sm text-slate-600 mt-2">Quantity: ${item.quantity} pcs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    } else {
+                        document.getElementById('modalItemsList').innerHTML = '<div class="text-center py-8 text-slate-400">No items found for this order</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading order items:', error);
+                    document.getElementById('modalItemsList').innerHTML = '<div class="text-center py-8 text-red-500">Failed to load order items</div>';
+                });
+            
+            orderDetailsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeOrderDetails() {
+            orderDetailsModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ========== TAB SWITCHING ==========
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            document.getElementById('tabActive').classList.remove('active');
+            document.getElementById('tabDelivered').classList.remove('active');
+            document.getElementById('tabCancelled').classList.remove('active');
+            document.getElementById('tabArchived').classList.remove('active');
+            document.getElementById('tabAll').classList.remove('active');
+            
+            if (tab === 'active') {
+                document.getElementById('tabActive').classList.add('active');
+                document.getElementById('statusFilter').value = 'pending';
+            } else if (tab === 'delivered') {
+                document.getElementById('tabDelivered').classList.add('active');
+                document.getElementById('statusFilter').value = 'delivered';
+            } else if (tab === 'cancelled') {
+                document.getElementById('tabCancelled').classList.add('active');
+                document.getElementById('statusFilter').value = 'cancelled';
+            } else if (tab === 'archived') {
+                document.getElementById('tabArchived').classList.add('active');
+                document.getElementById('statusFilter').value = 'archived';
+            } else if (tab === 'all') {
+                document.getElementById('tabAll').classList.add('active');
+                document.getElementById('statusFilter').value = '';
+            }
+            
+            loadOrders();
+        }
+
+        // ========== ARCHIVE FUNCTION ==========
+        function requestArchiveOrder(orderId, orderRef) {
+            event.stopPropagation();
+            pendingArchiveId = orderId;
+            document.getElementById('confirmIcon').innerHTML = '<span class="material-symbols-outlined">archive</span>';
+            document.getElementById('confirmTitle').innerText = 'Archive Order?';
+            document.getElementById('confirmMessage').innerHTML = `Order <strong>${orderRef}</strong> will be moved to archives. You can restore it later.`;
+            document.getElementById('confirmCancelBtn').innerText = 'Cancel';
+            document.getElementById('confirmConfirmBtn').innerText = 'Yes, Archive';
+            document.getElementById('confirmConfirmBtn').className = 'confirm-btn confirm-btn-confirm';
+            confirmOverlay.classList.add('active');
+        }
+
+        function confirmArchiveOrder() {
+            if (!pendingArchiveId) return;
+            
+            fetch('api/update_order.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingArchiveId, status: 'archived' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Order Archived', 'Order has been moved to archives');
+                    loadOrders();
+                } else {
+                    showToast('Error', data.error || 'Failed to archive order', true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error', 'Failed to connect to server', true);
+            })
+            .finally(() => {
+                confirmOverlay.classList.remove('active');
+                pendingArchiveId = null;
+            });
+        }
+
+        // ========== CANCEL FUNCTION ==========
+        function requestCancelOrder(orderId, orderRef) {
+            event.stopPropagation();
+            pendingCancelId = orderId;
+            document.getElementById('confirmIcon').innerHTML = '<span class="material-symbols-outlined">cancel</span>';
+            document.getElementById('confirmTitle').innerText = 'Cancel Order?';
+            document.getElementById('confirmMessage').innerHTML = `Order <strong>${orderRef}</strong> will be marked as cancelled.`;
+            document.getElementById('confirmCancelBtn').innerText = 'Keep Order';
+            document.getElementById('confirmConfirmBtn').innerText = 'Yes, Cancel Order';
+            document.getElementById('confirmConfirmBtn').className = 'confirm-btn confirm-btn-delete';
+            confirmOverlay.classList.add('active');
+        }
+
+        function confirmCancelOrder() {
+            if (!pendingCancelId) return;
+
+            fetch('api/cancel_order.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingCancelId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Order Cancelled', 'Order has been marked as cancelled');
+                    loadOrders();
+                } else {
+                    showToast('Error', data.error || 'Failed to cancel order', true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error', 'Failed to connect to server', true);
+            })
+            .finally(() => {
+                confirmOverlay.classList.remove('active');
+                pendingCancelId = null;
+            });
+        }
+
+        function requestRestoreCancelledOrder(orderId, orderRef) {
+            event.stopPropagation();
+            pendingCancelId = orderId;
+            document.getElementById('confirmIcon').innerHTML = '<span class="material-symbols-outlined">undo</span>';
+            document.getElementById('confirmTitle').innerText = 'Restore Cancelled Order?';
+            document.getElementById('confirmMessage').innerHTML = `Order <strong>${orderRef}</strong> will be restored back to <strong>Pending</strong>.`;
+            document.getElementById('confirmCancelBtn').innerText = 'Cancel';
+            document.getElementById('confirmConfirmBtn').innerText = 'Yes, Restore';
+            document.getElementById('confirmConfirmBtn').className = 'confirm-btn confirm-btn-confirm';
+            confirmOverlay.classList.add('active');
+        }
+
+        function confirmRestoreCancelledOrder() {
+            if (!pendingCancelId) return;
+
+            fetch('api/update_order.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingCancelId, status: 'pending' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Order Restored', 'Order has been restored to Pending');
+                    loadOrders();
+                } else {
+                    showToast('Error', data.error || 'Failed to restore order', true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error', 'Failed to connect to server', true);
+            })
+            .finally(() => {
+                confirmOverlay.classList.remove('active');
+                pendingCancelId = null;
+            });
+        }
+
+        // ========== RESTORE WITH CHOICE FUNCTIONS ==========
+        function requestRestoreWithChoice(orderId, orderRef) {
+            event.stopPropagation();
+            pendingRestoreWithChoiceId = orderId;
+            pendingRestoreWithChoiceRef = orderRef;
+            document.getElementById('restoreChoiceMessage').innerHTML = `Order <strong>${orderRef}</strong> - Choose where to restore this order:`;
+            document.getElementById('restoreChoiceOverlay').classList.add('active');
+        }
+
+        function hideRestoreChoice() {
+            document.getElementById('restoreChoiceOverlay').classList.remove('active');
+            pendingRestoreWithChoiceId = null;
+            pendingRestoreWithChoiceRef = null;
+        }
+
+        function confirmRestoreWithStatus(status) {
+            if (!pendingRestoreWithChoiceId) return;
+            
+            const statusText = status === 'pending' ? 'Pending' : 'Delivered';
+            
+            fetch('api/update_order.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingRestoreWithChoiceId, status: status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Order Restored', `Order restored as ${statusText}`);
+                    loadOrders();
+                } else {
+                    showToast('Error', data.error || 'Failed to restore order', true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error', 'Failed to connect to server', true);
+            })
+            .finally(() => {
+                hideRestoreChoice();
+            });
+        }
+
+        // ========== DELETE FUNCTION ==========
+        function requestDeleteOrder(orderId, orderRef) {
+            event.stopPropagation();
+            pendingDeleteId = orderId;
+            document.getElementById('confirmIcon').innerHTML = '<span class="material-symbols-outlined">delete_forever</span>';
+            document.getElementById('confirmTitle').innerText = 'Permanently Delete Order?';
+            document.getElementById('confirmMessage').innerHTML = `Order <strong>${orderRef}</strong> will be permanently deleted. This action cannot be undone.`;
+            document.getElementById('confirmCancelBtn').innerText = 'Cancel';
+            document.getElementById('confirmConfirmBtn').innerText = 'Yes, Delete';
+            document.getElementById('confirmConfirmBtn').className = 'confirm-btn confirm-btn-delete';
+            confirmOverlay.classList.add('active');
+        }
+
+        function confirmDeleteOrder() {
+            if (!pendingDeleteId) return;
+            
+            fetch('api/delete_order.php', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingDeleteId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Order Deleted', 'Order has been permanently deleted');
+                    loadOrders();
+                } else {
+                    showToast('Error', data.error || 'Failed to delete order', true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error', 'Failed to connect to server', true);
+            })
+            .finally(() => {
+                confirmOverlay.classList.remove('active');
+                pendingDeleteId = null;
+            });
+        }
+
+        // ========== TOAST NOTIFICATION ==========
+        function showToast(title, message, isError = false) {
+            const toast = document.getElementById('successToast');
+            const toastIcon = toast.querySelector('.toast-icon');
+            const toastTitle = toast.querySelector('.font-semibold');
+            const toastMsg = toast.querySelector('.text-xs');
+            
+            if (isError) {
+                toastIcon.style.background = '#dc2626';
+                toastIcon.querySelector('.material-symbols-outlined').innerText = 'error';
+                toastTitle.innerText = title;
+                toastMsg.innerText = message;
+            } else {
+                toastIcon.style.background = '#22c55e';
+                toastIcon.querySelector('.material-symbols-outlined').innerText = 'check';
+                toastTitle.innerText = title;
+                toastMsg.innerText = message;
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ========== FLOATING MODAL FUNCTIONS ==========
+        function openFloatingOrderFlow() {
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            loadingCard.style.display = 'block';
+            iframeCard.style.display = 'none';
+            orderIframe.src = 'about:blank';
+            
+            setTimeout(function() {
+                const timestamp = new Date().getTime();
+                orderIframe.src = 'ordering.html?t=' + timestamp;
+                loadingCard.style.opacity = '0';
+                setTimeout(function() {
+                    loadingCard.style.display = 'none';
+                    iframeCard.style.display = 'block';
+                    loadingCard.style.opacity = '1';
+                }, 300);
+            }, 500);
+        }
+
+        function requestClose() {
+            pendingClose = true;
+            document.getElementById('confirmIcon').innerHTML = '<span class="material-symbols-outlined">warning</span>';
+            document.getElementById('confirmTitle').innerText = 'Cancel Order Creation?';
+            document.getElementById('confirmMessage').innerText = 'Your order information will be lost if you cancel.';
+            document.getElementById('confirmCancelBtn').innerText = 'Keep Editing';
+            document.getElementById('confirmConfirmBtn').innerText = 'Yes, Cancel';
+            document.getElementById('confirmConfirmBtn').className = 'confirm-btn confirm-btn-confirm';
+            confirmOverlay.classList.add('active');
+        }
+
+        function hideConfirm() {
+            confirmOverlay.classList.remove('active');
+            pendingClose = false;
+            pendingDeleteId = null;
+            pendingArchiveId = null;
+            pendingCancelId = null;
+        }
+
+        function confirmClose() {
+            confirmOverlay.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            setTimeout(function() {
+                loadingCard.style.display = 'block';
+                iframeCard.style.display = 'none';
+                orderIframe.src = 'about:blank';
+            }, 300);
+            pendingClose = false;
+        }
+
+        // ========== LOAD ORDERS ==========
+        function loadOrders() {
+            let status = document.getElementById('statusFilter').value;
+            const search = document.getElementById('searchInput').value;
+            
+            if (currentTab === 'active' && status === '') {
+                status = 'pending';
+                document.getElementById('statusFilter').value = 'pending';
+            }
+            
+            fetch(`api/get_orders.php?status=${encodeURIComponent(status)}&search=${encodeURIComponent(search)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        ordersData = data.orders;
+                        updateStats(data.counts);
+                        renderOrdersTable(data.orders);
+                    } else {
+                        document.getElementById('ordersTableBody').innerHTML = `
+                            <tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Error: ${data.error}</td></tr>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('ordersTableBody').innerHTML = `
+                        <tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Failed to connect to server.</td></tr>
+                    `;
+                });
+        }
+        
+        function updateStats(counts) {
+            document.getElementById('totalOrders').innerText = counts.total_orders || 0;
+            document.getElementById('pendingOrders').innerText = counts.pending || 0;
+            document.getElementById('deliveredOrders').innerText = counts.delivered || 0;
+            document.getElementById('cancelledOrders').innerText = counts.delivered || 0;
+            document.getElementById('archivedOrders').innerText = counts.archived || 0;
+        }
+        
+        function highlightText(text, searchTerm) {
+            if (!searchTerm || !text) return escapeHtml(text);
+            const escapedText = escapeHtml(text);
+            const escapedSearch = escapeHtml(searchTerm);
+            const regex = new RegExp(`(${escapedSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return escapedText.replace(regex, `<span style="color: #0041c8; font-weight: 600;">$1</span>`);
+        }
+
+        function renderOrdersTable(orders) {
+            const tableBody = document.getElementById('ordersTableBody');
+            const searchTerm = document.getElementById('searchInput').value;
+            
+            if (!orders || orders.length === 0) {
+                let message = 'No orders found.';
+                if (currentTab === 'active') message = 'No pending orders. Click "New Order" to create one.';
+                else if (currentTab === 'delivered') message = 'No delivered orders yet.';
+                else if (currentTab === 'archived') message = 'No archived orders.';
+                else if (currentTab === 'all') message = 'No orders found. Click "New Order" to create one.';
+                
+                tableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-slate-400">${message}</td></tr>`;
+                return;
+            }
+            
+            tableBody.innerHTML = orders.map(order => {
+                let statusClass = '';
+                if (order.status === 'pending') statusClass = 'status-pending';
+                else if (order.status === 'delivered') statusClass = 'status-delivered';
+                else if (order.status === 'archived') statusClass = 'status-archived';
+                else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+                
+                const highlightedReference = highlightText(order.order_reference, searchTerm);
+                const highlightedSupplier = highlightText(order.supplier_name, searchTerm);
+                const highlightedCategory = highlightText(order.supplier_category || '', searchTerm);
+                
+                let actionButtons = '';
+                if (order.status === 'pending') {
+                    actionButtons = `
+                        <div class="action-buttons">
+                            <select onchange="updateOrderStatus(${order.id}, this.value)" onclick="event.stopPropagation()">
+                                <option value="pending" selected>Pending</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                            <button onclick="requestCancelOrder(${order.id}, '${escapeHtml(order.order_reference)}')" title="Cancel Order" class="bg-yellow-50 hover:bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">cancel</span>
+                                Cancel
+                            </button>
+                            <button onclick="requestArchiveOrder(${order.id}, '${escapeHtml(order.order_reference)}')" title="Archive Order">
+                                <span class="material-symbols-outlined text-sm">archive</span>
+                            </button>
+                            <button onclick="requestDeleteOrder(${order.id}, '${escapeHtml(order.order_reference)}')" title="Delete Order">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                    `;
+                } else if (order.status === 'delivered') {
+                    actionButtons = `
+                        <div class="action-buttons">
+                            <select onchange="updateOrderStatus(${order.id}, this.value)" onclick="event.stopPropagation()">
+                                <option value="pending">Pending</option>
+                                <option value="delivered" selected>Delivered</option>
+                            </select>
+                            <button onclick="requestArchiveOrder(${order.id}, '${escapeHtml(order.order_reference)}')" title="Archive Order">
+                                <span class="material-symbols-outlined text-sm">archive</span>
+                            </button>
+                            <button onclick="requestDeleteOrder(${order.id}, '${escapeHtml(order.order_reference)}')" title="Delete Order">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                    `;
+                } else if (order.status === 'archived') {
+                    actionButtons = `
+                        <div class="action-buttons">
+                            <button onclick="requestRestoreWithChoice(${order.id}, '${escapeHtml(order.order_reference)}')" title="Restore Order" class="bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">restore</span>
+                                Restore
+                            </button>
+                            <button onclick="requestDeleteOrder(${order.id}, '${escapeHtml(order.order_reference)}')" title="Permanently Delete" class="bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">delete_forever</span>
+                                Delete
+                            </button>
+                        </div>
+                    `;
+                } else if (order.status === 'cancelled') {
+                    actionButtons = `
+                        <div class="action-buttons">
+                            <button onclick="requestDeleteOrder(${order.id}, '${escapeHtml(order.order_reference)}')" title="Permanently Delete" class="bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">delete_forever</span>
+                            Delete
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                // Escape the order object for onclick
+                const orderJson = JSON.stringify(order).replace(/"/g, '&quot;');
+                
+                return `
+                    <tr class="border-t clickable-row transition-colors" onclick="showOrderDetails(${orderJson})">
+                        <td class="px-6 py-4"><span class="font-mono text-sm font-semibold text-primary">${highlightedReference}</span></td>
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-sm">${highlightedSupplier}</div>
+                            <div class="text-xs text-slate-500">${highlightedCategory}</div>
+                        </td>
+                        <td class="px-6 py-4 text-sm">${formatDate(order.order_date)}</td>
+                        <td class="px-6 py-4 font-semibold text-sm">₱${parseFloat(order.total_amount).toLocaleString()}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">
+                                ${order.status.toUpperCase()}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm">${order.items_count || 0} items</td>
+                        <td class="px-6 py-4" onclick="event.stopPropagation()">${actionButtons}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        function updateOrderStatus(orderId, newStatus) {
+            fetch('api/update_order.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: orderId, status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let message = '';
+                    if (newStatus === 'pending') message = 'Order changed to pending';
+                    else if (newStatus === 'delivered') message = 'Order marked as delivered';
+                    else message = `Order status changed to ${newStatus}`;
+                    showToast('Status Updated', message);
+                    loadOrders();
+                } else {
+                    showToast('Error', 'Failed to update order status', true);
+                }
+            })
+            .catch(error => {
+                showToast('Error', 'Failed to update order status', true);
+            });
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-PH');
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // ========== EVENT LISTENERS ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+            
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (statusFilter) statusFilter.addEventListener('change', loadOrders);
+            if (searchInput) {
+                let debounceTimer;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => loadOrders(), 300);
+                });
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (orderDetailsModal.classList.contains('active')) {
+                    closeOrderDetails();
+                } else if (document.getElementById('restoreChoiceOverlay').classList.contains('active')) {
+                    hideRestoreChoice();
+                } else if (overlay.classList.contains('active')) {
+                    requestClose();
+                }
+            }
+        });
+        
+        document.getElementById('confirmConfirmBtn').addEventListener('click', function() {
+            if (pendingDeleteId) confirmDeleteOrder();
+            else if (pendingArchiveId) confirmArchiveOrder();
+            else if (pendingCancelId) {
+                // Check if this is a restore-cancelled flow (button says "Yes, Restore") or a cancel flow
+                const btnText = document.getElementById('confirmConfirmBtn').innerText;
+                if (btnText === 'Yes, Restore') confirmRestoreCancelledOrder();
+                else confirmCancelOrder();
+            }
+            else if (pendingClose) confirmClose();
+        });
+        
+        document.getElementById('confirmCancelBtn').addEventListener('click', hideConfirm);
+        
+        window.addEventListener('message', function(event) {
+            if (event.data === 'orderCreated') loadOrders();
+            if (event.data === 'closeOrderModal' && overlay.classList.contains('active')) {
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                loadingCard.style.display = 'block';
+                iframeCard.style.display = 'none';
+                orderIframe.src = 'about:blank';
+            }
+        });
+        
+        // Close modal when clicking outside
+        orderDetailsModal.addEventListener('click', function(e) {
+            if (e.target === orderDetailsModal) {
+                closeOrderDetails();
+            }
+        });
+    </script>
+</body>
+</html>

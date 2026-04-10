@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Suppliers | MeWoo Inventory</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+            z-index: 100;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.5rem;
+            color: #475569;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background: #e2e8f0;
+            color: #2563eb;
+            transform: translateX(4px);
+        }
+
+        .nav-link-active {
+            background: white;
+            color: #2563eb;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .status-active { background-color: #dce1ff; color: #0039b3; }
+        .status-inactive { background-color: #ffdad6; color: #93000a; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #0041c8;
+            box-shadow: 0 0 0 2px rgba(0,65,200,0.1);
+        }
+        
+        /* Confirmation Dialog */
+        .confirm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-overlay.active { display: flex; }
+        .confirm-dialog {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 340px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .confirm-icon {
+            width: 48px;
+            height: 48px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        .confirm-buttons { display: flex; gap: 0.75rem; }
+        .confirm-btn-cancel {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .confirm-btn-confirm {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: #dc2626;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="mb-8 px-2">
+            <h1 class="font-manrope font-black text-blue-700 text-xl">MeWoo</h1>
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mt-1">Supplier Management</p>
+        </div>
+        <nav style="flex: 1;">
+            <a href="dashboard.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">dashboard</span>
+                Dashboard
+            </a>
+            <a href="inventory.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">inventory_2</span>
+                Inventory
+            </a>
+            <a href="orders.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">shopping_cart</span>
+                Orders
+            </a>
+            <a href="suppliers.html" class="nav-link nav-link-active">
+                <span class="material-symbols-outlined text-sm">local_shipping</span>
+                Suppliers
+            </a>
+            <a href="analytics.html" class="nav-link">
+                <span class="material-symbols-outlined text-sm">analytics</span>
+                Analytics
+            </a>
+        </nav>
+        
+        <!-- Info message instead of Add button -->
+        <div style="margin-top: auto; padding-top: 1rem;">
+            <div class="text-center text-xs text-slate-400 p-3 border border-dashed border-slate-300 rounded-xl bg-slate-50">
+                <span class="material-symbols-outlined text-sm block mx-auto mb-1">storefront</span>
+                Suppliers are stored here when placing new orders
+            </div>
+        </div>
+        
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+            <a href="#" class="nav-link text-xs">
+                <span class="material-symbols-outlined text-sm">help_outline</span>
+                Support
+            </a>
+            <a href="login.html" class="nav-link text-xs">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="margin-bottom: 2rem;">
+                <span class="text-[9px] font-bold text-[#0041c8] uppercase tracking-wider">MeWoo</span>
+                <h2 class="text-3xl font-manrope font-extrabold mt-1">Supplier Registry</h2>
+                <p class="text-slate-500 text-sm mt-1">Manage and track all your suppliers</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+                <div class="bg-white p-4 rounded-xl border border-gray-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Total Suppliers</p>
+                            <p class="text-2xl font-bold" id="totalSuppliers">0</p>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-300 text-xl">store</span>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Active</p>
+                            <p class="text-2xl font-bold text-green-600" id="activeSuppliers">0</p>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-300 text-xl">check_circle</span>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Categories</p>
+                            <p class="text-2xl font-bold text-blue-600" id="totalCategories">0</p>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-300 text-xl">category</span>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-gray-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Avg Lead Time</p>
+                            <p class="text-2xl font-bold text-purple-600" id="avgLeadTime">0</p>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-300 text-xl">schedule</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="bg-white rounded-xl shadow-sm mb-6 p-5">
+                <div class="flex gap-4 items-center flex-wrap">
+                    <div class="relative flex-1">
+                        <input type="text" id="searchInput" placeholder="Search by name, category, or contact..." class="w-full px-4 py-2 border rounded-lg text-sm">
+                    </div>
+                    <div class="relative">
+                        <select id="statusFilter" class="px-4 py-2 border rounded-lg text-sm bg-white pr-10">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="relative">
+                        <select id="categoryFilter" class="px-4 py-2 border rounded-lg text-sm bg-white pr-10">
+                            <option value="">All Categories</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Machinery">Machinery</option>
+                            <option value="Logistics">Logistics</option>
+                            <option value="Sensors">Sensors</option>
+                            <option value="Components">Components</option>
+                            <option value="Industrial">Industrial</option>
+                            <option value="Raw Materials">Raw Materials</option>
+                            <option value="Packaging">Packaging</option>
+                            <option value="Services">Services</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <button onclick="loadSuppliers()" class="px-6 py-2 bg-[#0041c8] text-white rounded-lg text-sm font-semibold">Search</button>
+                </div>
+            </div>
+
+            <!-- Suppliers Table -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase">Supplier</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase">Category</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase">Contact</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase">Email</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase">Lead Time</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suppliersTableBody">
+                            <tr>
+                                <td colspan="7" class="px-6 py-12 text-center text-slate-400">Loading suppliers...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Supplier Modal -->
+    <div id="supplierModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="modalTitle">Edit Supplier</h3>
+                <button onclick="closeSupplierModal()" class="text-slate-400 hover:text-slate-600">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="supplierForm" onsubmit="saveSupplier(event)">
+                <input type="hidden" id="supplierId">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Supplier Name *</label>
+                        <input type="text" id="supplierName" required class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Category</label>
+                        <select id="supplierCategory" class="form-select">
+                            <option value="Electronics">Electronics</option>
+                            <option value="Machinery">Machinery</option>
+                            <option value="Logistics">Logistics</option>
+                            <option value="Sensors">Sensors</option>
+                            <option value="Components">Components</option>
+                            <option value="Industrial">Industrial</option>
+                            <option value="Raw Materials">Raw Materials</option>
+                            <option value="Packaging">Packaging</option>
+                            <option value="Services">Services</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Contact Person</label>
+                        <input type="text" id="contactPerson" class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="email" class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Phone</label>
+                        <input type="text" id="phone" class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Address</label>
+                        <textarea id="address" rows="2" class="form-textarea"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Lead Time (days)</label>
+                        <input type="number" id="leadTime" value="7" class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Minimum Order Quantity</label>
+                        <input type="number" id="minOrderQty" value="1" class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Payment Terms</label>
+                        <input type="text" id="paymentTerms" placeholder="e.g., Net 30" class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Status</label>
+                        <select id="status" class="form-select">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Notes</label>
+                        <textarea id="notes" rows="2" class="form-textarea" placeholder="Additional notes about supplier..."></textarea>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="flex-1 py-2 bg-[#0041c8] text-white rounded-lg font-semibold">Save Changes</button>
+                    <button type="button" onclick="closeSupplierModal()" class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation -->
+    <div id="confirmOverlay" class="confirm-overlay">
+        <div class="confirm-dialog">
+            <div class="confirm-icon">
+                <span class="material-symbols-outlined" style="color: #dc2626;">warning</span>
+            </div>
+            <div class="confirm-title font-bold mb-2" id="confirmTitle">Delete Supplier?</div>
+            <div class="confirm-message text-sm text-slate-600 mb-4" id="confirmMessage">This action cannot be undone.</div>
+            <div class="confirm-buttons">
+                <button class="confirm-btn-cancel" id="confirmCancelBtn">Cancel</button>
+                <button class="confirm-btn-confirm" id="confirmConfirmBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pendingDeleteId = null;
+
+        // Load suppliers on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSuppliers();
+            
+            document.getElementById('searchInput').addEventListener('input', function() {
+                setTimeout(loadSuppliers, 300);
+            });
+            document.getElementById('statusFilter').addEventListener('change', loadSuppliers);
+            document.getElementById('categoryFilter').addEventListener('change', loadSuppliers);
+        });
+
+        function loadSuppliers() {
+            const search = document.getElementById('searchInput').value;
+            const status = document.getElementById('statusFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+            
+            fetch(`api/get_suppliers.php?search=${encodeURIComponent(search)}&status=${encodeURIComponent(status)}&category=${encodeURIComponent(category)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderSuppliersTable(data.suppliers);
+                        updateStats(data.stats);
+                    } else {
+                        document.getElementById('suppliersTableBody').innerHTML = `
+                            <tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Error: ${data.error}</td></tr>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('suppliersTableBody').innerHTML = `
+                        <tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Failed to connect to server.</td></tr>
+                    `;
+                });
+        }
+
+        function renderSuppliersTable(suppliers) {
+            const tbody = document.getElementById('suppliersTableBody');
+            
+            if (!suppliers || suppliers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-12 text-center text-slate-400">No suppliers found.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = suppliers.map(supplier => `
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div class="font-semibold text-sm">${escapeHtml(supplier.name)}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-sm">${escapeHtml(supplier.category || '—')}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm">${escapeHtml(supplier.contact_person || '—')}</div>
+                        <div class="text-xs text-slate-400">${escapeHtml(supplier.phone || '')}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm">${escapeHtml(supplier.email || '—')}</td>
+                    <td class="px-6 py-4 text-sm">${supplier.lead_time || '—'} days</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-[10px] font-bold ${supplier.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${(supplier.status || 'active').toUpperCase()}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex gap-2">
+                            <button onclick="editSupplier(${supplier.id})" class="text-blue-600 hover:text-blue-800" title="Edit">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                            </button>
+                            <button onclick="deleteSupplier(${supplier.id}, '${escapeHtml(supplier.name)}')" class="text-red-600 hover:text-red-800" title="Delete">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats(stats) {
+            document.getElementById('totalSuppliers').innerText = stats.total_suppliers || 0;
+            document.getElementById('activeSuppliers').innerText = stats.active_suppliers || 0;
+            document.getElementById('totalCategories').innerText = stats.unique_categories || 0;
+            document.getElementById('avgLeadTime').innerText = stats.avg_lead_time || 0;
+        }
+
+        function editSupplier(id) {
+            fetch(`api/get_supplier.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.supplier) {
+                        const supplier = data.supplier;
+                        document.getElementById('modalTitle').innerText = 'Edit Supplier';
+                        document.getElementById('supplierId').value = supplier.id;
+                        document.getElementById('supplierName').value = supplier.name;
+                        document.getElementById('supplierCategory').value = supplier.category || 'Other';
+                        document.getElementById('contactPerson').value = supplier.contact_person || '';
+                        document.getElementById('email').value = supplier.email || '';
+                        document.getElementById('phone').value = supplier.phone || '';
+                        document.getElementById('address').value = supplier.address || '';
+                        document.getElementById('leadTime').value = supplier.lead_time || 7;
+                        document.getElementById('minOrderQty').value = supplier.min_order_qty || 1;
+                        document.getElementById('paymentTerms').value = supplier.payment_terms || '';
+                        document.getElementById('status').value = supplier.status || 'active';
+                        document.getElementById('notes').value = supplier.notes || '';
+                        document.getElementById('supplierModal').classList.add('active');
+                    } else {
+                        alert('Failed to load supplier details');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to connect to server');
+                });
+        }
+
+        function saveSupplier(event) {
+            event.preventDefault();
+            
+            const supplierData = {
+                id: document.getElementById('supplierId').value,
+                name: document.getElementById('supplierName').value,
+                category: document.getElementById('supplierCategory').value,
+                contact_person: document.getElementById('contactPerson').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                lead_time: parseInt(document.getElementById('leadTime').value) || 7,
+                min_order_qty: parseInt(document.getElementById('minOrderQty').value) || 1,
+                payment_terms: document.getElementById('paymentTerms').value,
+                status: document.getElementById('status').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            fetch('api/save_supplier.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(supplierData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeSupplierModal();
+                    loadSuppliers();
+                    alert('Supplier updated successfully!');
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to save supplier'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to connect to server');
+            });
+        }
+
+        function deleteSupplier(id, name) {
+            pendingDeleteId = id;
+            document.getElementById('confirmTitle').innerText = 'Delete Supplier?';
+            document.getElementById('confirmMessage').innerHTML = `Are you sure you want to delete <strong>${escapeHtml(name)}</strong>? This action cannot be undone.`;
+            document.getElementById('confirmOverlay').classList.add('active');
+        }
+
+        function confirmDelete() {
+            if (!pendingDeleteId) return;
+            
+            fetch('api/delete_supplier.php', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingDeleteId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadSuppliers();
+                    alert('Supplier deleted successfully!');
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to delete supplier'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to connect to server');
+            })
+            .finally(() => {
+                document.getElementById('confirmOverlay').classList.remove('active');
+                pendingDeleteId = null;
+            });
+        }
+
+        function closeSupplierModal() {
+            document.getElementById('supplierModal').classList.remove('active');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Confirm dialog buttons
+        document.getElementById('confirmConfirmBtn')?.addEventListener('click', confirmDelete);
+        document.getElementById('confirmCancelBtn')?.addEventListener('click', function() {
+            document.getElementById('confirmOverlay').classList.remove('active');
+            pendingDeleteId = null;
+        });
+    </script>
+</body>
+</html>

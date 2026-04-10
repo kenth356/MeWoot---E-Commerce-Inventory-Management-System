@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | MeWoot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: #f0f4ff; overflow-x: hidden; }
+    .bg-art { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .blob-1 {
+      position: absolute; top: -80px; right: -60px;
+      width: 520px; height: 520px;
+      background: linear-gradient(135deg, #0041c8 0%, #3b76f5 60%, #87b0ff 100%);
+      border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+      opacity: 0.18;
+    }
+    .blob-2 {
+      position: absolute; bottom: -100px; left: -80px;
+      width: 420px; height: 420px;
+      background: linear-gradient(135deg, #0055ff 0%, #5c8fff 100%);
+      border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%;
+      opacity: 0.13;
+    }
+    .streak {
+      position: absolute; top: 30%; right: 0;
+      width: 160px; height: 340px;
+      background: linear-gradient(180deg, #0041c8 0%, #5c8fff 100%);
+      border-radius: 80px 0 0 80px;
+      opacity: 0.12; transform: translateY(-50%);
+    }
+    .streak-thin {
+      position: absolute; top: 60%; left: 0;
+      width: 90px; height: 200px;
+      background: linear-gradient(180deg, #3b76f5 0%, #87b0ff 100%);
+      border-radius: 0 60px 60px 0;
+      opacity: 0.10;
+    }
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 50;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,65,200,0.08);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Manrope', sans-serif; font-size: 1.2rem;
+      font-weight: 800; color: #0041c8; letter-spacing: -0.5px;
+    }
+    .page-center {
+      position: relative; z-index: 10; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 84px 24px 40px;
+    }
+    .card {
+      background: rgba(255,255,255,0.96); border-radius: 20px;
+      padding: 44px 44px 40px; width: 100%; max-width: 420px;
+      box-shadow: 0 8px 48px rgba(0,65,200,0.10), 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,65,200,0.08);
+    }
+    .card-title {
+      font-family: 'Manrope', sans-serif; font-size: 1.8rem;
+      font-weight: 800; color: #111827; margin: 0 0 4px;
+    }
+    .card-sub { font-size: 0.875rem; color: #64748b; margin: 0 0 32px; }
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block; font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: 0.1em; font-weight: 700; color: #94a3b8; margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%; padding: 12px 14px; background: #f1f5f9;
+      border: 1.5px solid transparent; border-radius: 10px;
+      font-size: 0.875rem; color: #1e293b; outline: none; transition: all 0.2s;
+    }
+    .field input::placeholder { color: #cbd5e1; }
+    .field input:focus {
+      background: #fff; border-color: #0041c8;
+      box-shadow: 0 0 0 3px rgba(0,65,200,0.10);
+    }
+    .submit-btn {
+      width: 100%; margin-top: 10px; padding: 14px;
+      background: linear-gradient(135deg, #0041c8 0%, #0055ff 100%);
+      color: white; border: none; border-radius: 10px;
+      font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(0,65,200,0.25);
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .submit-btn:hover { opacity: 0.92; }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .login-row {
+      margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid #f1f5f9;
+      text-align: center; font-size: 0.85rem; color: #64748b;
+    }
+    .login-row a { color: #0041c8; font-weight: 700; text-decoration: none; }
+    .login-row a:hover { text-decoration: underline; }
+
+    /* Alert messages */
+    .alert {
+      padding: 12px 14px; border-radius: 10px; font-size: 0.85rem;
+      font-weight: 500; margin-bottom: 20px; display: none;
+    }
+    .alert.error { background: #fff0f0; color: #c0392b; border: 1px solid #fcd0d0; display: block; }
+    .alert.success { background: #f0fff4; color: #1a7a3c; border: 1px solid #c3f0d0; display: block; }
+  </style>
+</head>
+<body>
+  <div class="bg-art">
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+    <div class="streak"></div>
+    <div class="streak-thin"></div>
+  </div>
+
+  <nav>
+    <div class="nav-logo">MeWoot</div>
+  </nav>
+
+  <div class="page-center">
+    <div class="card">
+      <h2 class="card-title">Create Account</h2>
+      <p class="card-sub">Establish your professional workspace.</p>
+
+      <div class="alert" id="alert"></div>
+
+      <form id="registerForm">
+        <div class="field">
+          <label for="name">Full Name</label>
+          <input id="name" type="text" placeholder="Alexander Thorne" required>
+        </div>
+        <div class="field">
+          <label for="email">Work Email</label>
+          <input id="email" type="email" placeholder="a.thorne@company.com" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="••••••••••••" required>
+        </div>
+        <div class="field">
+          <label for="confirm_password">Confirm Password</label>
+          <input id="confirm_password" type="password" placeholder="••••••••••••" required>
+        </div>
+        <button class="submit-btn" type="submit" id="submitBtn">Register</button>
+      </form>
+
+      <div class="login-row">
+        Already have an account? <a href="login.html">Log in</a>
+      </div>
+    </div>
+  </div>
+
+ <script>
+    const form = document.getElementById("registerForm");
+    const alert = document.getElementById("alert");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function showAlert(message, type) {
+        alert.textContent = message;
+        alert.className = "alert " + type;
+    }
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const full_name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirm_password = document.getElementById("confirm_password").value;
+
+        // Client-side validation
+        if (!full_name || !email || !password) {
+            showAlert("All fields are required.", "error");
+            return;
+        }
+        
+        if (password !== confirm_password) {
+            showAlert("Passwords do not match.", "error");
+            return;
+        }
+        
+        if (password.length < 8) {
+            showAlert("Password must be at least 8 characters.", "error");
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Registering...";
+
+        try {
+            const response = await fetch("api/register.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ full_name, email, password, confirm_password })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert("Account created successfully! Redirecting to login...", "success");
+                form.reset();
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 2000);
+            } else {
+                showAlert(result.message, "error");
+            }
+
+        } catch (err) {
+            console.error("Error:", err);
+            showAlert("Could not connect to server. Please try again.", "error");
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Register";
+    });
+</script>
+</body>
+</html>
