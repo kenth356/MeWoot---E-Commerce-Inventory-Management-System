@@ -10,11 +10,14 @@ $category = $_GET['category'] ?? '';
 $pdo = getDB();
 
 try {
-    $sql = "SELECT * FROM suppliers WHERE 1=1";
+    $sql = "SELECT s.*, 
+            (SELECT COUNT(*) FROM supplier_products WHERE supplier_id = s.id) as product_count,
+            (SELECT MAX(order_date) FROM orders WHERE supplier_name = s.name) as last_order_date
+            FROM suppliers s WHERE 1=1";
     $params = [];
     
     if (!empty($search)) {
-        $sql .= " AND (name LIKE ? OR contact_person LIKE ? OR email LIKE ? OR phone LIKE ?)";
+        $sql .= " AND (s.name LIKE ? OR s.contact_person LIKE ? OR s.email LIKE ? OR s.phone LIKE ?)";
         $params[] = "%$search%";
         $params[] = "%$search%";
         $params[] = "%$search%";
@@ -22,16 +25,16 @@ try {
     }
     
     if (!empty($status)) {
-        $sql .= " AND status = ?";
+        $sql .= " AND s.status = ?";
         $params[] = $status;
     }
     
     if (!empty($category)) {
-        $sql .= " AND category = ?";
+        $sql .= " AND s.category = ?";
         $params[] = $category;
     }
     
-    $sql .= " ORDER BY name ASC";
+    $sql .= " ORDER BY s.name ASC";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);

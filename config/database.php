@@ -1,5 +1,4 @@
 <?php
-// config/database.php
 $db_config = [
     'host' => 'localhost',
     'user' => 'root',
@@ -29,7 +28,6 @@ function saveOrder($orderData, $pdo) {
     try {
         $pdo->beginTransaction();
         
-        // Insert order
         $stmt = $pdo->prepare("
             INSERT INTO orders (
                 order_reference, supplier_name, supplier_category, priority, 
@@ -55,7 +53,6 @@ function saveOrder($orderData, $pdo) {
         
         $orderId = $pdo->lastInsertId();
         
-        // Insert order items with image
         $itemStmt = $pdo->prepare("
             INSERT INTO order_items (order_id, item_name, item_sku, quantity, price, item_image) 
             VALUES (?, ?, ?, ?, ?, ?)
@@ -68,7 +65,7 @@ function saveOrder($orderData, $pdo) {
                 $item['sku'],
                 $item['quantity'],
                 $item['price'],
-                $item['image'] ?? null  // Add this line
+                $item['image'] ?? null
             ]);
         }
         
@@ -104,7 +101,6 @@ function getOrders($pdo, $status = '', $search = '') {
         $stmt->execute($params);
         $orders = $stmt->fetchAll();
         
-        // Get counts
         $countStmt = $pdo->query("
             SELECT
                 COUNT(*) as total_orders,
@@ -135,7 +131,7 @@ function getOrders($pdo, $status = '', $search = '') {
 
 function getOrderItems($pdo, $orderId) {
     try {
-        $stmt = $pdo->prepare("SELECT item_name, item_sku, quantity, price FROM order_items WHERE order_id = ?");
+        $stmt = $pdo->prepare("SELECT item_name, item_sku, quantity, price, item_image FROM order_items WHERE order_id = ?");
         $stmt->execute([$orderId]);
         return $stmt->fetchAll();
     } catch(PDOException $e) {
@@ -145,7 +141,6 @@ function getOrderItems($pdo, $orderId) {
 
 function updateOrderStatus($pdo, $orderId, $status) {
     try {
-        // Get current status before updating
         $stmt = $pdo->prepare("SELECT status FROM orders WHERE id = ?");
         $stmt->execute([$orderId]);
         $currentOrder = $stmt->fetch();
@@ -156,18 +151,15 @@ function updateOrderStatus($pdo, $orderId, $status) {
         
         $oldStatus = $currentOrder['status'];
         
-        // Update the status
         $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
         $stmt->execute([$status, $orderId]);
         
-        // If status changed from 'pending' to 'delivered', update inventory
         if ($oldStatus === 'pending' && $status === 'delivered') {
             $items = getOrderItems($pdo, $orderId);
             if (!empty($items)) {
                 $inventoryResult = updateInventoryStock($pdo, $items);
                 if (!$inventoryResult['success']) {
                     error_log("Inventory update failed: " . $inventoryResult['error']);
-                    // Don't fail the status update, just log the error
                 }
             }
         }
@@ -182,11 +174,9 @@ function deleteOrder($pdo, $orderId) {
     try {
         $pdo->beginTransaction();
         
-        // First delete order items
         $stmt = $pdo->prepare("DELETE FROM order_items WHERE order_id = ?");
         $stmt->execute([$orderId]);
         
-        // Then delete the order
         $stmt = $pdo->prepare("DELETE FROM orders WHERE id = ?");
         $stmt->execute([$orderId]);
         
@@ -204,117 +194,66 @@ function deleteOrder($pdo, $orderId) {
     }
 }
 
-function getInventory($pdo, $category = 'all', $stockLevel = 'all', $status = 'all', $search = '') {
-    try {
-        $sql = "SELECT * FROM inventory WHERE 1=1";
-        $params = [];
-        
-        if ($category !== 'all') {
-            $sql .= " AND category = ?";
-            $params[] = $category;
-        }
-        
-        if (!empty($search)) {
-            $sql .= " AND (name LIKE ? OR sku LIKE ?)";
-            $params[] = "%$search%";
-            $params[] = "%$search%";
-        }
-        
-        if ($stockLevel !== 'all') {
-            if ($stockLevel === 'low') {
-                $sql .= " AND stock > 0 AND stock <= 50";
-            } elseif ($stockLevel === 'normal') {
-                $sql .= " AND stock > 50 AND stock <= 500";
-            } elseif ($stockLevel === 'high') {
-                $sql .= " AND stock > 500";
-            }
-        }
-        
-        if ($status !== 'all') {
-            if ($status === 'In Stock') {
-                $sql .= " AND stock > 0";
-            } elseif ($status === 'No Stock') {
-                $sql .= " AND stock = 0";
-            }
-        }
-        
-        $sql .= " ORDER BY name ASC";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $inventory = $stmt->fetchAll();
-        
-        foreach ($inventory as &$item) {
-            if ($item['stock'] == 0) {
-                $item['status'] = 'No Stock';
-            } elseif ($item['stock'] <= 50) {
-                $item['status'] = 'Low Stock';
-            } else {
-                $item['status'] = 'In Stock';
-            }
-        }
-        
-        $statsSql = "SELECT 
-            COUNT(*) as total_items,
-            SUM(stock) as total_units,
-            SUM(stock * price) as total_value,
-            SUM(CASE WHEN stock > 0 AND stock <= 50 THEN 1 ELSE 0 END) as low_stock_count,
-            SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) as out_of_stock_count
-            FROM inventory";
-        $statsStmt = $pdo->query($statsSql);
-        $stats = $statsStmt->fetch();
-        
-        return [
-            'success' => true,
-            'data' => $inventory,
-            'stats' => [
-                'total_items' => (int)($stats['total_items'] ?? 0),
-                'total_units' => (int)($stats['total_units'] ?? 0),
-                'total_value' => (float)($stats['total_value'] ?? 0),
-                'low_stock_count' => (int)($stats['low_stock_count'] ?? 0),
-                'out_of_stock_count' => (int)($stats['out_of_stock_count'] ?? 0)
-            ]
-        ];
-        
-    } catch(PDOException $e) {
-        return ['success' => false, 'error' => $e->getMessage()];
-    }
-}
-
 function updateInventoryStock($pdo, $items) {
     try {
         $pdo->beginTransaction();
         
-        // Stock INCREASES when orders are delivered (receiving inventory)
         $stmt = $pdo->prepare("UPDATE inventory SET stock = stock + ? WHERE sku = ?");
         
         foreach ($items as $item) {
-            // Use the correct column names from getOrderItems
             $sku = $item['item_sku'];
             $quantity = $item['quantity'];
             $name = $item['item_name'];
             $price = $item['price'];
+            $image = $item['item_image'] ?? null;
+            
+            // First, try to get the category from supplier_products
+            $categoryStmt = $pdo->prepare("
+                SELECT s.category 
+                FROM supplier_products sp
+                JOIN suppliers s ON s.id = sp.supplier_id
+                WHERE sp.product_sku = ? OR sp.product_name = ?
+                LIMIT 1
+            ");
+            $categoryStmt->execute([$sku, $name]);
+            $categoryResult = $categoryStmt->fetch();
+            $category = $categoryResult ? $categoryResult['category'] : 'Uncategorized';
             
             $stmt->execute([$quantity, $sku]);
             
             if ($stmt->rowCount() === 0) {
-                // Product doesn't exist, insert it
+                // Product doesn't exist, insert it with correct category
                 $insertStmt = $pdo->prepare("
-                    INSERT INTO inventory (name, sku, category, stock, price) 
-                    VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO inventory (name, sku, category, stock, price, image_url) 
+                    VALUES (?, ?, ?, ?, ?, ?)
                 ");
                 $insertStmt->execute([
                     $name,
                     $sku,
-                    'Uncategorized',
+                    $category,
                     $quantity,
-                    $price
+                    $price,
+                    $image
                 ]);
+            } else {
+                // Product exists, update category if it's 'Uncategorized' and we found a real category
+                if ($category !== 'Uncategorized') {
+                    $updateCategoryStmt = $pdo->prepare("
+                        UPDATE inventory SET category = ? WHERE sku = ? AND (category = 'Uncategorized' OR category IS NULL)
+                    ");
+                    $updateCategoryStmt->execute([$category, $sku]);
+                }
+                
+                // Update image if not already set
+                $updateImageStmt = $pdo->prepare("
+                    UPDATE inventory SET image_url = COALESCE(image_url, ?) WHERE sku = ? AND (image_url IS NULL OR image_url = '')
+                ");
+                $updateImageStmt->execute([$image, $sku]);
             }
         }
         
         $pdo->commit();
-        return ['success' => true, 'message' => 'Inventory increased successfully'];
+        return ['success' => true, 'message' => 'Inventory updated successfully'];
         
     } catch(Exception $e) {
         $pdo->rollBack();
@@ -324,18 +263,41 @@ function updateInventoryStock($pdo, $items) {
 
 function addInventoryItem($pdo, $itemData) {
     try {
+        // If category is missing or Uncategorized, try to find it from supplier_products
+        $category = $itemData['category'];
+        if (empty($category) || $category === 'Uncategorized') {
+            $categoryStmt = $pdo->prepare("
+                SELECT s.category 
+                FROM supplier_products sp
+                JOIN suppliers s ON s.id = sp.supplier_id
+                WHERE sp.product_sku = ? OR sp.product_name = ?
+                LIMIT 1
+            ");
+            $categoryStmt->execute([$itemData['sku'], $itemData['name']]);
+            $result = $categoryStmt->fetch();
+            if ($result && $result['category']) {
+                $category = $result['category'];
+            }
+        }
+        
         $stmt = $pdo->prepare("
             INSERT INTO inventory (name, sku, category, stock, price, image_url)
             VALUES (?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
             stock = stock + VALUES(stock),
-            price = VALUES(price)
+            price = VALUES(price),
+            image_url = COALESCE(image_url, VALUES(image_url)),
+            category = CASE 
+                WHEN category = 'Uncategorized' AND VALUES(category) != 'Uncategorized' 
+                THEN VALUES(category) 
+                ELSE category 
+            END
         ");
         
         $stmt->execute([
             $itemData['name'],
             $itemData['sku'],
-            $itemData['category'],
+            $category,
             $itemData['stock'],
             $itemData['price'],
             $itemData['image_url'] ?? null
@@ -357,4 +319,3 @@ function deleteInventoryItem($pdo, $id) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
-?>

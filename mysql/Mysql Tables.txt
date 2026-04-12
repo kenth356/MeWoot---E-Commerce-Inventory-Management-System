@@ -1,0 +1,105 @@
+-- inventory
+
+CREATE TABLE `inventory` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `name` varchar(255) NOT NULL,
+   `sku` varchar(100) NOT NULL,
+   `category` varchar(100) NOT NULL,
+   `stock` int NOT NULL DEFAULT '0',
+   `price` decimal(10,2) NOT NULL,
+   `image_url` text,
+   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `sku` (`sku`),
+   KEY `idx_category` (`category`),
+   KEY `idx_sku` (`sku`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-- order_items
+
+CREATE TABLE `order_items` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `order_id` int NOT NULL,
+   `item_name` varchar(100) DEFAULT NULL,
+   `item_sku` varchar(50) DEFAULT NULL,
+   `quantity` int DEFAULT '0',
+   `price` decimal(12,2) DEFAULT '0.00',
+   `item_image` text,
+   PRIMARY KEY (`id`),
+   KEY `order_id` (`order_id`),
+   CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
+ ) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-- orders
+
+CREATE TABLE `orders` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `order_reference` varchar(50) NOT NULL,
+   `supplier_name` varchar(100) NOT NULL,
+   `supplier_category` varchar(50) DEFAULT NULL,
+   `priority` varchar(20) DEFAULT 'NORMAL',
+   `delivery_terminal` varchar(50) DEFAULT NULL,
+   `subtotal` decimal(12,2) DEFAULT '0.00',
+   `priority_fee` decimal(12,2) DEFAULT '0.00',
+   `terminal_fee` decimal(12,2) DEFAULT '0.00',
+   `total_amount` decimal(12,2) DEFAULT '0.00',
+   `lead_time_min` int DEFAULT '0',
+   `lead_time_max` int DEFAULT '0',
+   `items_count` int DEFAULT '0',
+   `order_date` datetime DEFAULT CURRENT_TIMESTAMP,
+   `status` enum('pending','delivered','archived','cancelled') DEFAULT 'pending',
+   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `order_reference` (`order_reference`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-- suppliers
+
+CREATE TABLE `suppliers` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `name` varchar(255) NOT NULL,
+   `category` varchar(100) DEFAULT NULL,
+   `contact_person` varchar(255) DEFAULT NULL,
+   `email` varchar(255) DEFAULT NULL,
+   `phone` varchar(50) DEFAULT NULL,
+   `address` text,
+   `lead_time` int DEFAULT '7',
+   `min_order_qty` int DEFAULT '1',
+   `status` enum('active','inactive') DEFAULT 'active',
+   `notes` text,
+   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-- supplier_products
+
+CREATE TABLE `suppliers` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `name` varchar(255) NOT NULL,
+   `category` varchar(100) DEFAULT NULL,
+   `contact_person` varchar(255) DEFAULT NULL,
+   `email` varchar(255) DEFAULT NULL,
+   `phone` varchar(50) DEFAULT NULL,
+   `address` text,
+   `lead_time` int DEFAULT '7',
+   `min_order_qty` int DEFAULT '1',
+   `status` enum('active','inactive') DEFAULT 'active',
+   `notes` text,
+   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-- users
+
+CREATE TABLE `users` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `full_name` varchar(100) NOT NULL,
+   `email` varchar(150) NOT NULL,
+   `password_hash` varchar(255) NOT NULL,
+   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `email` (`email`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

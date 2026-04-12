@@ -13,12 +13,22 @@ if (!$id) {
 $pdo = getDB();
 
 try {
+    // Get supplier details
     $stmt = $pdo->prepare("SELECT * FROM suppliers WHERE id = ?");
     $stmt->execute([$id]);
     $supplier = $stmt->fetch();
     
     if ($supplier) {
-        echo json_encode(['success' => true, 'supplier' => $supplier]);
+        // Get supplier products
+        $productStmt = $pdo->prepare("SELECT * FROM supplier_products WHERE supplier_id = ? ORDER BY product_name");
+        $productStmt->execute([$id]);
+        $products = $productStmt->fetchAll();
+        
+        echo json_encode([
+            'success' => true, 
+            'supplier' => $supplier,
+            'products' => $products
+        ]);
     } else {
         echo json_encode(['success' => false, 'error' => 'Supplier not found']);
     }

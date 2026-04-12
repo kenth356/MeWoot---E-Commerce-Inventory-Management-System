@@ -1,40 +1,40 @@
 <?php
+// Turn off all error reporting for clean JSON output
+error_reporting(0);
+ini_set('display_errors', 0);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-require_once '../config/database.php';
-
+// Handle preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Only GET method allowed']);
-    exit();
-}
+require_once '../config/database.php';
 
-$category = $_GET['category'] ?? 'all';
-$stockLevel = $_GET['stockLevel'] ?? 'all';
-$status = $_GET['status'] ?? 'all';
-$search = $_GET['search'] ?? '';
+// Get parameters
+$category = isset($_GET['category']) ? $_GET['category'] : 'all';
+$stockLevel = isset($_GET['stockLevel']) ? $_GET['stockLevel'] : 'all';
+$status = isset($_GET['status']) ? $_GET['status'] : 'all';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Get categories array if multiple selected
-$categories = isset($_GET['categories']) ? $_GET['categories'] : [];
-$stockLevels = isset($_GET['stockLevels']) ? $_GET['stockLevels'] : [];
-$statuses = isset($_GET['statuses']) ? $_GET['statuses'] : [];
-
-$pdo = getDB();
+// Get arrays if provided
+$categories = isset($_GET['categories']) ? (array)$_GET['categories'] : [];
+$stockLevels = isset($_GET['stockLevels']) ? (array)$_GET['stockLevels'] : [];
+$statuses = isset($_GET['statuses']) ? (array)$_GET['statuses'] : [];
 
 try {
+    $pdo = getDB();
+    
     $sql = "SELECT * FROM inventory WHERE 1=1";
     $params = [];
     
     // Handle multiple categories
-    if (!empty($categories) && is_array($categories)) {
+    if (!empty($categories)) {
         $placeholders = implode(',', array_fill(0, count($categories), '?'));
         $sql .= " AND category IN ($placeholders)";
         $params = array_merge($params, $categories);
@@ -51,7 +51,7 @@ try {
     }
     
     // Handle multiple stock levels
-    if (!empty($stockLevels) && is_array($stockLevels)) {
+    if (!empty($stockLevels)) {
         $stockConditions = [];
         foreach ($stockLevels as $level) {
             if ($level === 'low') {
@@ -76,7 +76,7 @@ try {
     }
     
     // Handle multiple statuses
-    if (!empty($statuses) && is_array($statuses)) {
+    if (!empty($statuses)) {
         $statusConditions = [];
         foreach ($statuses as $stat) {
             if ($stat === 'In Stock') {
@@ -128,7 +128,7 @@ try {
     $statsStmt = $pdo->query($statsSql);
     $stats = $statsStmt->fetch();
     
-    echo json_encode([
+    $response = [
         'success' => true,
         'data' => $inventory,
         'stats' => [
@@ -138,9 +138,13 @@ try {
             'low_stock_count' => (int)($stats['low_stock_count'] ?? 0),
             'out_of_stock_count' => (int)($stats['out_of_stock_count'] ?? 0)
         ]
-    ]);
+    ];
+    
+    echo json_encode($response);
     
 } catch(PDOException $e) {
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => 'Database error: ' . $e->getMessage()]);
+} catch(Exception $e) {
+    echo json_encode(['success' => false, 'error' => 'Server error: ' . $e->getMessage()]);
 }
 ?>

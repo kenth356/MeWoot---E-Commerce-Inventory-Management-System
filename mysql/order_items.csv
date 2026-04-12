@@ -1,0 +1,114 @@
+id,order_id,item_name,item_sku,quantity,price,item_image
+28,13,"Capacitor Kit",CAP-4401-B,2,699.99,NULL
+29,13,"Resistor Array",RES-2201-C,1,475.75,NULL
+30,13,"PCB Board Assembly",PCB-9921-A,1,4899.50,NULL
+33,15,"Humidity Sensor",HUM-5543-D,1,1575.99,NULL
+34,15,"Optical Sensor",OPT-7732-C,3,6100.00,NULL
+35,15,"Pressure Transducer",PRS-4431-A,1,4850.00,NULL
+42,18,"Circuit Breaker",CIR-8843-D,3,2285.00,NULL
+43,18,"Wire Harness",WIR-6672-C,2,1005.50,NULL
+44,18,"Cooling Fan",FAN-2281-B,1,1299.99,NULL
+45,19,"LED Display",LED-9912-X,1,3675.50,NULL
+46,19,"Power Supply Unit",PSU-4431-A,3,7899.00,NULL
+47,19,"Cooling Fan",FAN-2281-B,1,1299.99,NULL
+48,19,"Wire Harness",WIR-6672-C,1,1005.50,NULL
+49,19,"Circuit Breaker",CIR-8843-D,2,2285.00,NULL
+50,20,"Motor Controller",MTR-9981-C,4,17450.00,NULL
+52,22,"Microprocessor Chip",CHP-7842-X,15,2599.99,NULL
+53,22,"PCB Board Assembly",PCB-9921-A,11,4899.50,NULL
+54,22,"Capacitor Kit",CAP-4401-B,11,699.99,NULL
+55,22,"Resistor Array",RES-2201-C,9,475.75,NULL
+56,22,"Connector Set",CON-8812-D,7,1250.50,NULL
+57,23,"Bearing Kit",BRG-6678-E,14,3650.00,NULL
+58,24,"Bearing Kit",BRG-6678-E,6,3650.00,NULL
+59,25,"Servo Motor",SRV-6672-C,7,18500.00,NULL
+60,25,"Industrial Robot Arm",ROB-9912-X,2,136250.00,uploads/products/69db7bb6423d5_1775991734.jpg
+61,25,"Conveyor Belt",CNV-4431-A,2,48450.00,uploads/products/69db9766576a8_1775998822.jpg
+62,25,"Vibration Sensor",VIB-8843-D,1,5175.00,NULL
+63,25,"PLC Controller",PLC-2281-B,1,35375.00,uploads/products/69db8da86c413_1775996328.jpg
+64,26,"Industrial Robot Arm",ROB-9912-X,3,136250.00,uploads/products/69db7bb6423d5_1775991734.jpg
+65,26,"Conveyor Belt",CNV-4431-A,2,48450.00,uploads/products/69db9766576a8_1775998822.jpg
+66,26,"PLC Controller",PLC-2281-B,3,35375.00,uploads/products/69db8da86c413_1775996328.jpg
+67,26,"Servo Motor",SRV-6672-C,3,18500.00,NULL
+68,26,"Vibration Sensor",VIB-8843-D,2,5175.00,NULL
+69,27,"Industrial Robot Arm",ROB-9912-X,1,136250.00,uploads/products/69db7bb6423d5_1775991734.jpg
+70,27,"Conveyor Belt",CNV-4431-A,1,48450.00,uploads/products/69db9766576a8_1775998822.jpg
+71,27,"PLC Controller",PLC-2281-B,1,35375.00,uploads/products/69db8da86c413_1775996328.jpg
+72,27,"Servo Motor",SRV-6672-C,3,18500.00,NULL
+73,27,"Vibration Sensor",VIB-8843-D,3,5175.00,NULL
+84,30,"Gear Assembly",GEA-2234-B,4,10399.99,NULL
+85,30,"Motor Controller",MTR-9981-C,3,17450.00,NULL
+86,30,"Drive Belt",BEL-4422-D,2,1875.50,NULL
+91,32,"Packaging Tape",TAP-4411-A,3,275.99,https://hbw.ph/wp-content/uploads/2017/10/2b-scaled.jpg
+92,32,"Shipping Pallet",PAL-8812-X,3,2450.00,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7t2VqG8GUyTGi08y-nu6tDdIBdSRQvKjVwg&s
+93,32,"RFID Tags (100pk)",RFID-1101-C,2,4899.99,https://cdn1-shop.mikroe.com/img/product/rfid-tag-1356mhz/rfid-tag-1356mhz-large_default-22x.jpg
+94,32,"Stretch Wrap",WRP-3344-D,3,1550.50,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8sA-Z-kTTlW49JEGRe9q52OTXmj0dcsAhpA&s
+95,32,"Label Printer",LBL-9922-B,2,6999.00,https://allid.com.ph/wp-content/uploads/2021/12/Primera-LX500c-Jam-Label.jpg.jpg
+96,33,"Conveyor Belt",CNV-4431-A,12,48450.00,uploads/products/69db9766576a8_1775998822.jpg
+97,34,"Bearing Kit",BRG-6678-E,3,3650.00,https://napaautoparts.eu/core-assets/uploads/sites/2/2021/06/NAPA-Wheel-Bearing-Kits-e1624366260877.png
+98,34,"Drive Belt",BEL-4422-D,3,1875.50,https://cdn.shopify.com/s/files/1/0782/4860/7937/files/blog_What-is-it---Accessory-Belt_3.jpg
+99,34,"Motor Controller",MTR-9981-C,2,17450.00,https://circuit.rocks/cdn/shop/products/high-power-motor-controller-24v23-1263.jpg?v=1689673529
+100,34,"Gear Assembly",GEA-2234-B,2,10399.99,https://5.imimg.com/data5/OC/TH/QX/SELLER-12931504/forklift-spaers-500x500.jpg
+101,34,"Hydraulic Pump",HYP-5512-X,1,24500.00,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzJsTSOTXfpfT5oW-vMZc7MfsW8B41vXBk-g&s
+102,35,"Label Printer",LBL-9922-B,1,6999.00,https://allid.com.ph/wp-content/uploads/2021/12/Primera-LX500c-Jam-Label.jpg.jpg
+103,35,"RFID Tags (100pk)",RFID-1101-C,4,4899.99,https://cdn1-shop.mikroe.com/img/product/rfid-tag-1356mhz/rfid-tag-1356mhz-large_default-22x.jpg
+104,35,"Stretch Wrap",WRP-3344-D,2,1550.50,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8sA-Z-kTTlW49JEGRe9q52OTXmj0dcsAhpA&s
+105,35,"Packaging Tape",TAP-4411-A,2,275.99,https://hbw.ph/wp-content/uploads/2017/10/2b-scaled.jpg
+106,36,"LED Display",LED-9912-X,2,3675.50,"https://res.cloudinary.com/dbihouiij/image/upload/c_scale,dpr_auto,f_auto,w_auto/v1/SiteImages/0001132_136-led-all-in-one-display"
+107,36,"Power Supply Unit",PSU-4431-A,1,7899.00,https://thecustomizewindows.cachefly.net/wp-content/uploads/2012/02/Power-Supply-Unit.jpg
+108,36,"Cooling Fan",FAN-2281-B,1,1299.99,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5k292eNr4GR3U99ybUbOrvjGccmBcCZoDHQ&s
+109,36,"Wire Harness",WIR-6672-C,2,1005.50,https://down-ph.img.susercontent.com/file/sg-11134201-82617-mjpbgjw3lo1tbe
+110,36,"Circuit Breaker",CIR-8843-D,2,2285.00,https://us1.yofishseo.com/file/157/miniature-circuit-breaker-.jpg
+111,37,"Shipping Pallet",PAL-8812-X,2,2450.00,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7t2VqG8GUyTGi08y-nu6tDdIBdSRQvKjVwg&s
+112,37,"Packaging Tape",TAP-4411-A,2,275.99,https://hbw.ph/wp-content/uploads/2017/10/2b-scaled.jpg
+113,37,"Label Printer",LBL-9922-B,2,6999.00,https://allid.com.ph/wp-content/uploads/2021/12/Primera-LX500c-Jam-Label.jpg.jpg
+114,38,"Circuit Breaker",CIR-8843-D,3,2285.00,https://us1.yofishseo.com/file/157/miniature-circuit-breaker-.jpg
+115,38,"Wire Harness",WIR-6672-C,3,1005.50,https://down-ph.img.susercontent.com/file/sg-11134201-82617-mjpbgjw3lo1tbe
+116,38,"Cooling Fan",FAN-2281-B,1,1299.99,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5k292eNr4GR3U99ybUbOrvjGccmBcCZoDHQ&s
+117,39,"Stretch Wrap",WRP-3344-D,1,1550.50,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8sA-Z-kTTlW49JEGRe9q52OTXmj0dcsAhpA&s
+118,39,"RFID Tags (100pk)",RFID-1101-C,3,4899.99,https://cdn1-shop.mikroe.com/img/product/rfid-tag-1356mhz/rfid-tag-1356mhz-large_default-22x.jpg
+119,39,"Label Printer",LBL-9922-B,1,6999.00,https://allid.com.ph/wp-content/uploads/2021/12/Primera-LX500c-Jam-Label.jpg.jpg
+120,39,"Shipping Pallet",PAL-8812-X,2,2450.00,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7t2VqG8GUyTGi08y-nu6tDdIBdSRQvKjVwg&s
+121,39,"Packaging Tape",TAP-4411-A,2,275.99,https://hbw.ph/wp-content/uploads/2017/10/2b-scaled.jpg
+122,40,hatdojahd,HAT-1234,5,12.34,NULL
+123,41,"Wire Harness",WIR-6672-C,5,1005.50,NULL
+124,41,"Power Supply Unit",PSU-4431-A,3,7899.00,NULL
+125,41,"LED Display",LED-9912-X,2,3675.50,NULL
+126,42,"Humidity Sensor",HUM-5543-D,3,1575.99,NULL
+127,42,"Motion Detector",MOT-2291-B,1,3075.50,NULL
+128,42,"Optical Sensor",OPT-7732-C,1,6100.00,NULL
+129,42,"Pressure Transducer",PRS-4431-A,2,4850.00,NULL
+130,42,"Temperature Sensor",TMP-8812-X,2,1899.99,NULL
+131,43,"Wire Harness",WIR-6672-C,3,1005.50,NULL
+132,43,"Power Supply Unit",PSU-4431-A,1,7899.00,NULL
+133,43,"LED Display",LED-9912-X,2,3675.50,NULL
+134,43,"Circuit Breaker",CIR-8843-D,1,2285.00,NULL
+135,43,"Cooling Fan",FAN-2281-B,1,1299.99,NULL
+136,44,"Conveyor Belt",CNV-4431-A,5,48450.00,uploads/products/69db9766576a8_1775998822.jpg
+137,44,"Industrial Robot Arm",ROB-9912-X,2,136250.00,uploads/products/69db7bb6423d5_1775991734.jpg
+138,44,"Vibration Sensor",VIB-8843-D,1,5175.00,NULL
+139,44,"Servo Motor",SRV-6672-C,2,18500.00,NULL
+140,44,"PLC Controller",PLC-2281-B,1,35375.00,uploads/products/69db8da86c413_1775996328.jpg
+141,45,"Test Product",TEST-001,3,100.00,NULL
+142,46,"Conveyor Belt",CNV-4431-A,1,48450.00,uploads/products/69db9766576a8_1775998822.jpg
+143,46,"Industrial Robot Arm",ROB-9912-X,1,136250.00,uploads/products/69db7bb6423d5_1775991734.jpg
+144,47,"Conveyor Belt",CNV-4431-A,3,48450.00,uploads/products/69db9766576a8_1775998822.jpg
+145,47,"Industrial Robot Arm",ROB-9912-X,2,136250.00,uploads/products/69db7bb6423d5_1775991734.jpg
+146,47,"PLC Controller",PLC-2281-B,2,35375.00,uploads/products/69db8da86c413_1775996328.jpg
+147,48,"Servo Motor",SRV-6672-C,2,18500.00,uploads/products/69db9a2f2d2fb_1775999535.jpg
+148,48,"PLC Controller",PLC-2281-B,2,35375.00,uploads/products/69db8da86c413_1775996328.jpg
+149,48,"Industrial Robot Arm",ROB-9912-X,1,136250.00,uploads/products/69db7bb6423d5_1775991734.jpg
+150,48,"Conveyor Belt",CNV-4431-A,1,48450.00,uploads/products/69db99fdd4858_1775999485.jpg
+151,49,"Capacitor Kit",CAP-4401-B,4,699.99,uploads/products/69dba3a553d87_1776001957.jpg
+152,50,"Bearing Kit",BRG-6678-E,4,3650.00,uploads/products/69dba75abe168_1776002906.jpg
+153,51,"Bearing Kit",BRG-6678-E,2,3650.00,uploads/products/69dba75abe168_1776002906.jpg
+154,52,"Bearing Kit",BRG-6678-E,20,3650.00,uploads/products/69dbbe5462ee6_1776008788.jpg
+155,53,"Stretch Wrap",WRP-3344-D,2,1550.50,uploads/products/69dbb3928d606_1776006034.webp
+156,53,"Shipping Pallet",PAL-8812-X,2,2450.00,uploads/products/69dbb3743bf28_1776006004.jpg
+157,53,"RFID Tags (100pk)",RFID-1101-C,1,4899.99,uploads/products/69dbb33f54ed1_1776005951.jpg
+158,53,"Label Printer",LBL-9922-B,1,6999.00,uploads/products/69dbb307e3627_1776005895.jpg
+159,53,"Packaging Tape",TAP-4411-A,1,275.99,uploads/products/69dbb32411fde_1776005924.jpg
+160,54,"Conveyor Belt",CNV-4431-A,2,48450.00,uploads/products/69dbb0781598d_1776005240.avif
+161,54,"Industrial Robot Arm",ROB-9912-X,2,136250.00,uploads/products/69dbac30964a7_1776004144.webp
+162,54,"Servo Motor",SRV-6672-C,1,18500.00,uploads/products/69dba7bc84b60_1776003004.jpg
+163,54,"PLC Controller",PLC-2281-B,1,35375.00,uploads/products/69dbaeb43ec34_1776004788.jpg

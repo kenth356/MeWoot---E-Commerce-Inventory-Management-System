@@ -89,7 +89,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Success Modal Overlay */
         .success-modal-overlay {
             position: fixed;
             top: 0;
@@ -140,7 +139,6 @@
             }
         }
         
-        /* Product image styling */
         .product-image {
             width: 48px;
             height: 48px;
@@ -153,15 +151,22 @@
             color: white;
             font-weight: bold;
         }
+        
+        /* Refresh indicator */
+        .refreshing {
+            animation: spin 0.5s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-background text-on-background min-h-screen flex flex-col">
 
-<!-- TopAppBar (Stepper Shell) - NO X BUTTON -->
 <nav class="bg-slate-50 dark:bg-slate-950 flex flex-col items-center pt-4 pb-2 w-full border-b border-slate-200">
 <div class="flex flex-col items-center gap-4">
 <div class="text-lg font-semibold text-slate-900 font-headline">Create New Order</div>
-<!-- Step Indicator -->
 <div class="flex items-center gap-4">
     <div class="flex items-center gap-2">
         <div id="step1Dot" class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
@@ -181,10 +186,8 @@
 </div>
 </nav>
 
-<!-- Main Workspace -->
 <main class="flex-grow flex flex-col md:flex-row w-full max-w-screen-2xl mx-auto overflow-hidden">
     
-    <!-- LEFT SECTION: Supplier Selection / Items / Review -->
     <section id="contentArea" class="flex-grow p-8 bg-surface-container-lowest overflow-y-auto">
         <!-- STEP 1: Supplier Selection -->
         <div id="step1Content" class="max-w-3xl mx-auto space-y-8 fade-in">
@@ -199,7 +202,7 @@
             <div id="supplierList" class="space-y-3"></div>
             
             <div class="pt-8 text-center">
-                <p class="text-sm text-outline font-body italic">Don't see your supplier? <a class="text-primary font-semibold hover:underline" href="#">Add a new supplier profile</a></p>
+                <p class="text-sm text-outline font-body italic">Don't see your supplier? <a class="text-primary font-semibold hover:underline" href="#" onclick="window.parent.postMessage('goToSuppliers', '*'); return false;">Add a new supplier profile</a></p>
             </div>
             
             <div class="flex justify-end pt-4">
@@ -218,7 +221,12 @@
                         <p class="text-sm font-semibold">Selected Supplier:</p>
                         <p id="selectedSupplierName" class="text-lg font-bold text-primary">—</p>
                     </div>
-                    <button onclick="goToStep1()" class="text-sm text-primary hover:underline">Change Supplier</button>
+                    <div class="flex gap-2">
+                        <button onclick="forceRefreshProducts()" id="refreshBtn" class="text-sm bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded-lg flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">refresh</span> Refresh
+                        </button>
+                        <button onclick="goToStep1()" class="text-sm text-primary hover:underline">Change Supplier</button>
+                    </div>
                 </div>
                 <div class="relative group">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
@@ -308,7 +316,6 @@
         </div>
     </section>
     
-    <!-- RIGHT SECTION: Order Metadata -->
     <aside class="w-full md:w-[400px] bg-surface-container-low p-8 flex flex-col justify-between">
         <div class="space-y-10">
             <div>
@@ -359,7 +366,6 @@
     </aside>
 </main>
 
-<!-- Success Modal -->
 <div id="successModal" class="success-modal-overlay">
     <div class="success-card">
         <div class="success-icon">
@@ -374,94 +380,18 @@
 </div>
 
 <script>
-    // ========== SUPPLIER DATA ==========
-    const suppliers = [
-        { id: 1, name: "Global Logistics Partners", category: "Electronics", minLeadTime: 4, maxLeadTime: 6, leadPercent: 66, rating: "A+", location: "Singapore" },
-        { id: 2, name: "Precision Components Inc.", category: "Machinery", minLeadTime: 10, maxLeadTime: 14, leadPercent: 45, rating: "A", location: "Germany" },
-        { id: 3, name: "Northern Star Distribution", category: "Logistics", minLeadTime: 2, maxLeadTime: 4, leadPercent: 85, rating: "A+", location: "USA" },
-        { id: 4, name: "MicroSystems Group", category: "Sensors", minLeadTime: 6, maxLeadTime: 8, leadPercent: 30, rating: "B+", location: "Japan" },
-        { id: 5, name: "TechSource International", category: "Components", minLeadTime: 5, maxLeadTime: 7, leadPercent: 55, rating: "A-", location: "Taiwan" },
-        { id: 6, name: "Apex Manufacturing Co.", category: "Industrial", minLeadTime: 8, maxLeadTime: 12, leadPercent: 40, rating: "B+", location: "China" }
-    ];
-    
-    // Terminal fees and days
-    const terminalFees = {
-        "A1": 600,
-        "B4": 455,
-        "C2": 745,
-        "D3": 255
-    };
-    
-    const terminalDays = {
-        "A1": 1,
-        "B4": 3,
-        "C2": 6,
-        "D3": 2
-    };
-    
-    // Priority fees and subtract days
-    const priorityFees = {
-        "NORMAL": 0,
-        "URGENT": 3000,
-        "CRITICAL": 5000
-    };
-    
-    const priorityDays = {
-        "NORMAL": 0,
-        "URGENT": 2,
-        "CRITICAL": 4
-    };
-    
-    const itemsByCategory = {
-        "Electronics": [
-            { id: 101, name: "Microprocessor Chip", sku: "CHP-7842-X", price: 2599.99, stock: 234, image: "https://5.imimg.com/data5/NR/XU/MY-43979900/microprocessor-chip-500x500.jpg" },
-            { id: 102, name: "PCB Board Assembly", sku: "PCB-9921-A", price: 4899.50, stock: 89, image: "https://www.theengineerstore.in/cdn/shop/products/7x9-cm-Board_1024x1024_2x_cdcbbc3e-1169-4b92-9524-4721e17b8c9a.jpg?v=1701086058" },
-            { id: 103, name: "Capacitor Kit", sku: "CAP-4401-B", price: 699.99, stock: 567, image: "https://www.sunfounder.com/cdn/shop/products/sunfounder-peter-dalmaris-tech-explorations-default-title-ceramic-capacitor-assortment-kit-set-of-600-small-assorted-capacitors-from-100-nf-to-10-uf-in-a-box-non-polarized-disc-capacitor-component-set-30201583010027_1200x.jpg?v=1768447005" },
-            { id: 104, name: "Resistor Array", sku: "RES-2201-C", price: 475.75, stock: 1234, image: "https://www.siricomindia.com/wp-content/uploads/2016/08/Chip-Resistor-array.jpg" },
-            { id: 105, name: "Connector Set", sku: "CON-8812-D", price: 1250.50, stock: 456, image: "https://www.southeastclearance.com/cdn/shop/files/GOLD_57_26e16083-6e98-447c-aeec-abd29166a165.jpg?v=1691899264" }
-        ],
-        "Machinery": [
-            { id: 201, name: "Hydraulic Pump", sku: "HYP-5512-X", price: 24500.00, stock: 23, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzJsTSOTXfpfT5oW-vMZc7MfsW8B41vXBk-g&s" },
-            { id: 202, name: "Gear Assembly", sku: "GEA-2234-B", price: 10399.99, stock: 45, image: "https://5.imimg.com/data5/OC/TH/QX/SELLER-12931504/forklift-spaers-500x500.jpg" },
-            { id: 203, name: "Motor Controller", sku: "MTR-9981-C", price: 17450.00, stock: 12, image: "https://circuit.rocks/cdn/shop/products/high-power-motor-controller-24v23-1263.jpg?v=1689673529" },
-            { id: 204, name: "Drive Belt", sku: "BEL-4422-D", price: 1875.50, stock: 89, image: "https://cdn.shopify.com/s/files/1/0782/4860/7937/files/blog_What-is-it---Accessory-Belt_3.jpg" },
-            { id: 205, name: "Bearing Kit", sku: "BRG-6678-E", price: 3650.00, stock: 156, image: "https://napaautoparts.eu/core-assets/uploads/sites/2/2021/06/NAPA-Wheel-Bearing-Kits-e1624366260877.png" }
-        ],
-        "Logistics": [
-            { id: 301, name: "Shipping Pallet", sku: "PAL-8812-X", price: 2450.00, stock: 500, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7t2VqG8GUyTGi08y-nu6tDdIBdSRQvKjVwg&s" },
-            { id: 302, name: "Packaging Tape", sku: "TAP-4411-A", price: 275.99, stock: 2000, image: "https://hbw.ph/wp-content/uploads/2017/10/2b-scaled.jpg" },
-            { id: 303, name: "Label Printer", sku: "LBL-9922-B", price: 6999.00, stock: 34, image: "https://allid.com.ph/wp-content/uploads/2021/12/Primera-LX500c-Jam-Label.jpg.jpg" },
-            { id: 304, name: "RFID Tags (100pk)", sku: "RFID-1101-C", price: 4899.99, stock: 120, image: "https://cdn1-shop.mikroe.com/img/product/rfid-tag-1356mhz/rfid-tag-1356mhz-large_default-22x.jpg" },
-            { id: 305, name: "Stretch Wrap", sku: "WRP-3344-D", price: 1550.50, stock: 345, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8sA-Z-kTTlW49JEGRe9q52OTXmj0dcsAhpA&s" }
-        ],
-        "Sensors": [
-            { id: 401, name: "Temperature Sensor", sku: "TMP-8812-X", price: 1899.99, stock: 67, image: "https://circuit.rocks/cdn/shop/products/temperature-sensor-lm35-to-92-1654.jpg?v=1689678960" },
-            { id: 402, name: "Pressure Transducer", sku: "PRS-4431-A", price: 4850.00, stock: 23, image: "https://www.ashcroft.com/wp-content/uploads/2020/09/GV-transducer.jpg" },
-            { id: 403, name: "Motion Detector", sku: "MOT-2291-B", price: 3075.50, stock: 45, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPa1TDvpjaYgLfqSCe7b2w5a_INawROizRbQ&s" },
-            { id: 404, name: "Optical Sensor", sku: "OPT-7732-C", price: 6100.00, stock: 18, image: "https://monarchinstrument.com/wp-content/uploads/2023/04/products-ROSMSensor_253760f2-af19-47d1-988a-036f4ff47b6f.jpg" },
-            { id: 405, name: "Humidity Sensor", sku: "HUM-5543-D", price: 1575.99, stock: 89, image: "https://circuit.rocks/cdn/shop/files/humidity-sensor-module-hr202-a25871.jpg?v=1689572407&width=1200" }
-        ],
-        "Components": [
-            { id: 501, name: "LED Display", sku: "LED-9912-X", price: 3675.50, stock: 78, image: "https://res.cloudinary.com/dbihouiij/image/upload/c_scale,dpr_auto,f_auto,w_auto/v1/SiteImages/0001132_136-led-all-in-one-display" },
-            { id: 502, name: "Power Supply Unit", sku: "PSU-4431-A", price: 7899.00, stock: 34, image: "https://thecustomizewindows.cachefly.net/wp-content/uploads/2012/02/Power-Supply-Unit.jpg" },
-            { id: 503, name: "Cooling Fan", sku: "FAN-2281-B", price: 1299.99, stock: 156, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5k292eNr4GR3U99ybUbOrvjGccmBcCZoDHQ&s" },
-            { id: 504, name: "Wire Harness", sku: "WIR-6672-C", price: 1005.50, stock: 234, image: "https://down-ph.img.susercontent.com/file/sg-11134201-82617-mjpbgjw3lo1tbe" },
-            { id: 505, name: "Circuit Breaker", sku: "CIR-8843-D", price: 2285.00, stock: 67, image: "https://us1.yofishseo.com/file/157/miniature-circuit-breaker-.jpg" }
-        ],
-        "Industrial": [
-            { id: 601, name: "Industrial Robot Arm", sku: "ROB-9912-X", price: 136250.00, stock: 5, image: "https://www.borunte.net/Content/uploads/2023804276/202306291547510c590eaf37624abe8a83f372cafd5d5c.png?size=730x0" },
-            { id: 602, name: "Conveyor Belt", sku: "CNV-4431-A", price: 48450.00, stock: 12, image: "https://www.wisoven.com/sites/default/files/styles/product_slideshow/public/2016-11/Wisconsin%20Oven%20Mesh-Belt-Conveyor.jpg?itok=ITYChAsb" },
-            { id: 603, name: "PLC Controller", sku: "PLC-2281-B", price: 35375.00, stock: 8, image: "https://8z1xg04k.tinifycdn.com/images/cp1l-m30_40_prod.jpg?resize.method=fit&resize.width=500&resize.height=500" },
-            { id: 604, name: "Servo Motor", sku: "SRV-6672-C", price: 18500.00, stock: 23, image: "https://38-3d.co.uk/cdn/shop/files/Micro-Servo-Motor-SG90-Gear-9g.webp?v=1731061841" },
-            { id: 605, name: "Vibration Sensor", sku: "VIB-8843-D", price: 5175.00, stock: 45, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQadOQgQwF4zUe1ZKn-pqq7ZxXB7a7HEsh9Qg&s" }
-        ]
-    };
-    
-    // State variables
+    // ========== STATE VARIABLES ==========
     let selectedSupplier = null;
     let cart = [];
     let currentPriority = "NORMAL";
     let currentStep = 1;
+    let allSuppliers = [];
+    let allProducts = {};
+    
+    const terminalFees = { "A1": 600, "B4": 455, "C2": 745, "D3": 255 };
+    const terminalDays = { "A1": 1, "B4": 3, "C2": 6, "D3": 2 };
+    const priorityFees = { "NORMAL": 0, "URGENT": 3000, "CRITICAL": 5000 };
+    const priorityDays = { "NORMAL": 0, "URGENT": 2, "CRITICAL": 4 };
     
     // DOM Elements
     const step1Content = document.getElementById('step1Content');
@@ -488,7 +418,102 @@
     const internalRefInput = document.getElementById('internalRef');
     const successModal = document.getElementById('successModal');
     
-    // ========== ORDER REFERENCE GENERATION ==========
+    // Helper function to add cache-busting
+    function getApiUrl(endpoint, params = {}) {
+        const url = new URL(endpoint, window.location.href);
+        url.searchParams.set('_t', Date.now());
+        Object.keys(params).forEach(key => {
+            url.searchParams.set(key, params[key]);
+        });
+        return url.toString();
+    }
+    
+    // ========== FETCH SUPPLIERS ==========
+    async function fetchSuppliers() {
+        try {
+            const url = getApiUrl('api/get_suppliers.php');
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success) {
+                allSuppliers = data.suppliers;
+                renderSuppliers();
+                await fetchAllSupplierProducts();
+            } else {
+                supplierList.innerHTML = '<div class="text-center py-8 text-red-500">Failed to load suppliers</div>';
+            }
+        } catch (error) {
+            console.error('Error fetching suppliers:', error);
+            supplierList.innerHTML = '<div class="text-center py-8 text-red-500">Connection error. Please refresh.</div>';
+        }
+    }
+    
+    // Fetch products for all suppliers
+    async function fetchAllSupplierProducts() {
+        for (const supplier of allSuppliers) {
+            try {
+                const url = getApiUrl('api/get_supplier.php', { id: supplier.id });
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.success && data.products) {
+                    allProducts[supplier.id] = data.products;
+                } else {
+                    allProducts[supplier.id] = [];
+                }
+            } catch (error) {
+                console.error(`Error fetching products for supplier ${supplier.id}:`, error);
+                allProducts[supplier.id] = [];
+            }
+        }
+        if (selectedSupplier) {
+            renderItems();
+        }
+    }
+    
+    // Force refresh products for current supplier
+    async function forceRefreshProducts() {
+        if (!selectedSupplier) return;
+        
+        const refreshBtn = document.getElementById('refreshBtn');
+        const originalText = refreshBtn.innerHTML;
+        refreshBtn.innerHTML = '<span class="material-symbols-outlined text-sm refreshing">refresh</span> Refreshing...';
+        refreshBtn.disabled = true;
+        
+        try {
+            const url = getApiUrl('api/get_supplier.php', { id: selectedSupplier.id });
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success && data.products) {
+                allProducts[selectedSupplier.id] = data.products;
+                renderItems();
+                // Clear cart when refreshing products
+                cart = [];
+                updateCartDisplay();
+                showToast('Refreshed', 'Products updated successfully');
+            }
+        } catch (error) {
+            console.error('Error refreshing products:', error);
+            showToast('Error', 'Failed to refresh products', true);
+        } finally {
+            refreshBtn.innerHTML = originalText;
+            refreshBtn.disabled = false;
+        }
+    }
+    
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed; bottom: 20px; right: 20px; 
+            background: ${type === 'error' ? '#ef4444' : '#22c55e'}; 
+            color: white; padding: 12px 20px; 
+            border-radius: 8px; z-index: 9999;
+            font-size: 14px; font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    
     function generateOrderReference() {
         const currentYear = new Date().getFullYear();
         const timestamp = Date.now().toString().slice(-6);
@@ -496,12 +521,7 @@
         
         if (selectedSupplier) {
             const words = selectedSupplier.name.split(' ');
-            let companyCode = '';
-            if (words.length >= 2) {
-                companyCode = (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-            } else {
-                companyCode = words[0].substring(0, 2).toUpperCase();
-            }
+            let companyCode = words.length >= 2 ? (words[0].charAt(0) + words[1].charAt(0)).toUpperCase() : words[0].substring(0, 2).toUpperCase();
             const reference = `ORD-${currentYear}-${companyCode}-${timestamp}${random}`;
             internalRefInput.value = reference;
             return reference;
@@ -509,47 +529,32 @@
         return `ORD-${currentYear}-PX-${timestamp}${random}`;
     }
     
-    // Calculate Lead Time Range
     function calculateLeadTimeRange() {
         if (!selectedSupplier) return { min: 0, max: 0 };
-        
-        let minDays = selectedSupplier.minLeadTime;
-        let maxDays = selectedSupplier.maxLeadTime;
-        
+        let minDays = parseInt(selectedSupplier.lead_time) || 7;
+        let maxDays = minDays + 2;
         const terminal = deliveryTerminal.value;
         minDays += terminalDays[terminal] || 0;
         maxDays += terminalDays[terminal] || 0;
-        
         minDays -= priorityDays[currentPriority];
         maxDays -= priorityDays[currentPriority];
-        
         minDays = Math.max(1, minDays);
         maxDays = Math.max(minDays, maxDays);
-        
         return { min: minDays, max: maxDays };
     }
     
     function updateLeadTimeDisplay() {
         const { min, max } = calculateLeadTimeRange();
-        
-        if (min === max) {
-            leadTimeDisplay.innerText = `${min} Day${min !== 1 ? 's' : ''}`;
-        } else {
-            leadTimeDisplay.innerText = `${min}-${max} Days`;
-        }
-        
+        leadTimeDisplay.innerText = min === max ? `${min} Day${min !== 1 ? 's' : ''}` : `${min}-${max} Days`;
         const avgDays = (min + max) / 2;
-        const percent = Math.min(100, (avgDays / 20) * 100);
-        leadTimeBar.style.width = `${percent}%`;
+        leadTimeBar.style.width = `${Math.min(100, (avgDays / 20) * 100)}%`;
     }
     
-    // Calculate total with fees
     function calculateTotalWithFees() {
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const priorityFee = priorityFees[currentPriority];
         const terminalFee = terminalFees[deliveryTerminal.value];
-        const total = subtotal + priorityFee + terminalFee;
-        return { subtotal, priorityFee, terminalFee, total };
+        return { subtotal, priorityFee, terminalFee, total: subtotal + priorityFee + terminalFee };
     }
     
     function updateCartDisplay() {
@@ -560,7 +565,6 @@
         cartCountSpan.innerText = count;
         nextToReviewBtn.disabled = cart.length === 0;
         
-        // Update review section
         document.getElementById('reviewRef').innerText = internalRefInput.value;
         document.getElementById('reviewSupplier').innerText = selectedSupplier?.name || '—';
         document.getElementById('reviewPriority').innerText = currentPriority;
@@ -575,163 +579,143 @@
         reviewItemsList.innerHTML = cart.map(item => `
             <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
                 <div class="flex items-center gap-3">
-                    <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=Product'">
-                    <div>
-                        <p class="font-medium text-sm">${item.name}</p>
-                        <p class="text-xs text-slate-500">${item.sku}</p>
-                    </div>
+                    ${item.image ? 
+                        `<img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=Product'">` :
+                        `<div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                            ${item.name.substring(0, 2).toUpperCase()}
+                        </div>`
+                    }
+                    <div><p class="font-medium text-sm">${escapeHtml(item.name)}</p><p class="text-xs text-slate-500">${item.sku || 'N/A'}</p></div>
                 </div>
-                <div class="text-right">
-                    <p class="font-semibold text-primary">₱${(item.price * item.quantity).toLocaleString()}</p>
-                    <p class="text-xs text-primary/70">${item.quantity} item${item.quantity !== 1 ? 's' : ''}</p>
-                </div>
+                <div class="text-right"><p class="font-semibold text-primary">₱${(item.price * item.quantity).toLocaleString()}</p><p class="text-xs text-primary/70">${item.quantity} item${item.quantity !== 1 ? 's' : ''}</p></div>
             </div>
         `).join('');
-        
-        if (cart.length === 0) {
-            reviewItemsList.innerHTML = '<div class="text-center py-4 text-slate-400">No items added yet</div>';
-        }
+        if (cart.length === 0) reviewItemsList.innerHTML = '<div class="text-center py-4 text-slate-400">No items added yet</div>';
     }
+    
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
     
     function renderSuppliers() {
         const searchTerm = supplierSearch.value.toLowerCase();
-        const filtered = suppliers.filter(s => s.name.toLowerCase().includes(searchTerm));
+        const filtered = allSuppliers.filter(s => s.name.toLowerCase().includes(searchTerm) || (s.category && s.category.toLowerCase().includes(searchTerm)) || (s.contact_person && s.contact_person.toLowerCase().includes(searchTerm)) || (s.address && s.address.toLowerCase().includes(searchTerm)));
+        
+        if (filtered.length === 0) {
+            supplierList.innerHTML = '<div class="text-center py-8 text-slate-400">No suppliers found</div>';
+            nextToItemsBtn.disabled = true;
+            return;
+        }
         
         supplierList.innerHTML = filtered.map(supplier => `
-            <div class="group flex items-center p-6 ${selectedSupplier?.id === supplier.id ? 'bg-primary/5 border-2 border-primary' : 'bg-surface-container-low hover:bg-surface-container'} transition-all cursor-pointer rounded-xl" onclick="selectSupplier(${supplier.id})">
-                <div class="w-12 h-12 rounded-lg ${selectedSupplier?.id === supplier.id ? 'bg-primary' : 'bg-surface-container-highest'} flex items-center justify-center mr-6">
-                    <span class="material-symbols-outlined ${selectedSupplier?.id === supplier.id ? 'text-white' : 'text-outline'}">${supplier.category === 'Electronics' ? 'developer_board' : supplier.category === 'Machinery' ? 'settings' : supplier.category === 'Logistics' ? 'local_shipping' : 'sensors'}</span>
+            <div class="group flex items-start p-6 ${selectedSupplier?.id === supplier.id ? 'bg-primary/5 border-2 border-primary' : 'bg-surface-container-low hover:bg-surface-container'} transition-all cursor-pointer rounded-xl" onclick="selectSupplier(${supplier.id})">
+                <div class="w-12 h-12 rounded-lg ${selectedSupplier?.id === supplier.id ? 'bg-primary' : 'bg-surface-container-highest'} flex items-center justify-center mr-6 flex-shrink-0">
+                    <span class="material-symbols-outlined ${selectedSupplier?.id === supplier.id ? 'text-white' : 'text-outline'}">${getCategoryIcon(supplier.category)}</span>
                 </div>
                 <div class="flex-grow">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-bold text-on-surface">${supplier.name}</h3>
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <h3 class="text-lg font-bold text-on-surface">${escapeHtml(supplier.name)}</h3>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">${supplier.rating}</span>
-                            <span class="text-xs text-slate-500">${supplier.location}</span>
+                            <span class="text-xs px-2 py-1 ${supplier.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded-full">${supplier.status === 'active' ? 'Active' : 'Inactive'}</span>
+                            ${supplier.lead_time ? `<span class="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span>${supplier.lead_time} days</span>` : ''}
                         </div>
                     </div>
-                    <p class="text-sm text-on-surface-variant mt-1">Category: ${supplier.category}</p>
+                    <div class="mt-2 space-y-1">
+                        <p class="text-sm text-on-surface-variant">Category: ${escapeHtml(supplier.category || 'Uncategorized')}</p>
+                        <div class="flex items-center gap-1 text-sm text-slate-500"><span class="material-symbols-outlined text-base">location_on</span><span>${escapeHtml(supplier.address || 'Location not specified')}</span></div>
+                        ${supplier.contact_person ? `<div class="flex items-center gap-1 text-sm text-slate-500"><span class="material-symbols-outlined text-base">person</span><span>${escapeHtml(supplier.contact_person)}</span>${supplier.phone ? `<span class="text-slate-300">•</span><span>${escapeHtml(supplier.phone)}</span>` : ''}</div>` : ''}
+                    </div>
+                    <div class="mt-3"><span class="text-xs text-slate-400 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">inventory_2</span>${allProducts[supplier.id]?.length || 0} products available</span></div>
                 </div>
-                <div class="ml-6">
-                    ${selectedSupplier?.id === supplier.id ? 
-                        '<span class="material-symbols-outlined text-primary" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : 
-                        '<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity">radio_button_unchecked</span>'}
-                </div>
+                <div class="ml-6">${selectedSupplier?.id === supplier.id ? '<span class="material-symbols-outlined text-primary" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : '<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity">radio_button_unchecked</span>'}</div>
             </div>
         `).join('');
-        
         nextToItemsBtn.disabled = !selectedSupplier;
     }
     
-    function selectSupplier(id) {
-        selectedSupplier = suppliers.find(s => s.id === id);
+    function getCategoryIcon(category) {
+        const icons = { 'Electronics':'developer_board', 'Machinery':'settings', 'Logistics':'local_shipping', 'Sensors':'sensors', 'Components':'build', 'Industrial':'factory', 'Raw Materials':'forest', 'Packaging':'inventory', 'Services':'support_agent' };
+        return icons[category] || 'business';
+    }
+    
+    async function selectSupplier(id) {
+        selectedSupplier = allSuppliers.find(s => s.id === id);
         renderSuppliers();
         generateOrderReference();
         updateLeadTimeDisplay();
         updateCartDisplay();
+        
+        const location = selectedSupplier?.address || 'Location not specified';
+        const leadTime = selectedSupplier?.lead_time || '—';
+        selectedSupplierNameSpan.innerHTML = `<div class="text-lg font-bold text-primary">${escapeHtml(selectedSupplier?.name)}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-2"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">location_on</span> ${escapeHtml(location)}</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span> Lead time: ${leadTime} days</span></div>`;
+        
+        cart = [];
+        updateCartDisplay();
+        if (currentStep === 2) {
+            // Force fresh products when selecting supplier in step 2
+            await forceRefreshProducts();
+        }
     }
     
     function renderItems() {
         if (!selectedSupplier) return;
-        
-        const category = selectedSupplier.category;
-        const items = itemsByCategory[category] || [];
+        const products = allProducts[selectedSupplier.id] || [];
         const searchTerm = itemSearch.value.toLowerCase();
+        const filtered = products.filter(p => (p.product_name && p.product_name.toLowerCase().includes(searchTerm)) || (p.product_sku && p.product_sku.toLowerCase().includes(searchTerm)));
         
-        const filtered = items.filter(i => 
-            i.name.toLowerCase().includes(searchTerm) || 
-            i.sku.toLowerCase().includes(searchTerm)
-        );
+        if (filtered.length === 0) {
+            itemsList.innerHTML = '<div class="text-center py-8 text-slate-400">No products available from this supplier</div>';
+            return;
+        }
         
-        itemsList.innerHTML = filtered.map(item => {
-            const cartItem = cart.find(c => c.id === item.id);
+        itemsList.innerHTML = filtered.map(product => {
+            const cartItem = cart.find(c => c.id === product.id);
             const quantity = cartItem ? cartItem.quantity : 0;
-            const isMaxStock = quantity >= item.stock;
-            
+            const productImage = product.product_image || null;
             return `
                 <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
                     <div class="flex-grow">
                         <div class="flex items-center gap-3">
-                            <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=${encodeURIComponent(item.name.substring(0, 3))}'">
-                            <div>
-                                <h4 class="font-semibold">${item.name}</h4>
-                                <span class="text-xs text-slate-400 font-mono">${item.sku}</span>
-                            </div>
+                            ${productImage ? `<img src="${productImage}" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=Product'">` : `<div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">${(product.product_name || 'P').substring(0, 2).toUpperCase()}</div>`}
+                            <div><h4 class="font-semibold">${escapeHtml(product.product_name)}</h4>${product.product_sku ? `<span class="text-xs text-slate-400 font-mono">${escapeHtml(product.product_sku)}</span>` : ''}</div>
                         </div>
-                        <p class="text-sm text-slate-500 mt-2">₱${item.price.toLocaleString()} • Stock: ${item.stock} units</p>
-                        ${isMaxStock ? '<p class="text-xs text-red-500 mt-1">⚠️ Maximum stock reached</p>' : ''}
+                        <p class="text-sm text-slate-500 mt-2">₱${parseFloat(product.price).toLocaleString()} each</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="updateCart(${item.id}, -1)" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center transition-all">-</button>
+                        <button onclick="updateCart(${product.id}, -1, '${escapeHtml(product.product_name)}', '${escapeHtml(product.product_sku || '')}', ${product.price}, '${productImage || ''}')" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center transition-all">-</button>
                         <span class="w-8 text-center font-semibold">${quantity}</span>
-                        <button onclick="updateCart(${item.id}, 1)" class="w-8 h-8 rounded-full bg-primary text-white hover:bg-primary/80 flex items-center justify-center transition-all ${isMaxStock ? 'opacity-50 cursor-not-allowed' : ''}" ${isMaxStock ? 'disabled' : ''}>+</button>
+                        <button onclick="updateCart(${product.id}, 1, '${escapeHtml(product.product_name)}', '${escapeHtml(product.product_sku || '')}', ${product.price}, '${productImage || ''}')" class="w-8 h-8 rounded-full bg-primary text-white hover:bg-primary/80 flex items-center justify-center transition-all">+</button>
                     </div>
                 </div>
             `;
         }).join('');
-        
-        if (filtered.length === 0) {
-            itemsList.innerHTML = '<div class="text-center py-8 text-slate-400">No items found</div>';
-        }
-        
         updateCartDisplay();
     }
     
-    function updateCart(itemId, delta) {
-        const category = selectedSupplier.category;
-        const items = itemsByCategory[category] || [];
-        const item = items.find(i => i.id === itemId);
-        
-        if (!item) return;
-        
+    function updateCart(itemId, delta, name, sku, price, image) {
         const existing = cart.find(c => c.id === itemId);
-        const currentQty = existing ? existing.quantity : 0;
-        
         if (delta > 0) {
-            if (currentQty + delta > item.stock) {
-                alert(`Cannot add more. Maximum stock for ${item.name} is ${item.stock} units.`);
-                return;
-            }
-            if (existing) {
-                existing.quantity++;
-            } else {
-                cart.push({ ...item, quantity: 1 });
-            }
+            if (existing) existing.quantity++;
+            else cart.push({ id: itemId, name, sku, price, quantity: 1, image });
         } else if (delta < 0 && existing) {
-            if (existing.quantity > 1) {
-                existing.quantity--;
-            } else {
-                cart = cart.filter(c => c.id !== itemId);
-            }
+            if (existing.quantity > 1) existing.quantity--;
+            else cart = cart.filter(c => c.id !== itemId);
         }
-        
         updateCartDisplay();
         renderItems();
     }
     
     function setPriority(priority) {
         currentPriority = priority;
-        
-        document.getElementById('priorityNormal').className = priority === 'NORMAL' ? 
-            'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' :
-            'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
-        document.getElementById('priorityUrgent').className = priority === 'URGENT' ?
-            'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' :
-            'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
-        document.getElementById('priorityCritical').className = priority === 'CRITICAL' ?
-            'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' :
-            'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
-        
+        document.getElementById('priorityNormal').className = priority === 'NORMAL' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+        document.getElementById('priorityUrgent').className = priority === 'URGENT' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+        document.getElementById('priorityCritical').className = priority === 'CRITICAL' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
         updateLeadTimeDisplay();
         updateCartDisplay();
     }
     
-    // ========== Step Navigation ==========
     function updateStepUI() {
         step1Content.style.display = 'none';
         step2Content.style.display = 'none';
         step3Content.style.display = 'none';
-        
         if (currentStep === 1) step1Content.style.display = 'block';
         if (currentStep === 2) step2Content.style.display = 'block';
         if (currentStep === 3) step3Content.style.display = 'block';
@@ -741,19 +725,18 @@
             { dot: step2Dot, label: step2Label, active: currentStep === 2, completed: currentStep > 2 },
             { dot: step3Dot, label: step3Label, active: currentStep === 3, completed: currentStep > 3 }
         ];
-        
-        steps.forEach(step => {
+        steps.forEach((step, idx) => {
             if (step.completed) {
                 step.dot.className = 'w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold';
                 step.dot.innerText = '✓';
                 step.label.className = 'text-xs font-semibold text-green-600';
             } else if (step.active) {
                 step.dot.className = 'w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold';
-                step.dot.innerText = steps.indexOf(step) + 1;
+                step.dot.innerText = idx + 1;
                 step.label.className = 'text-xs font-semibold text-primary';
             } else {
                 step.dot.className = 'w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold';
-                step.dot.innerText = steps.indexOf(step) + 1;
+                step.dot.innerText = idx + 1;
                 step.label.className = 'text-xs font-medium text-slate-500';
             }
         });
@@ -762,44 +745,27 @@
     function goToStep2() {
         if (!selectedSupplier) return;
         currentStep = 2;
-        selectedSupplierNameSpan.innerText = selectedSupplier.name;
+        const location = selectedSupplier.address || 'Location not specified';
+        const leadTime = selectedSupplier.lead_time || '—';
+        selectedSupplierNameSpan.innerHTML = `<div class="text-lg font-bold text-primary">${escapeHtml(selectedSupplier.name)}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-2 flex-wrap"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">location_on</span> ${escapeHtml(location)}</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span> Lead time: ${leadTime} days</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">category</span> ${escapeHtml(selectedSupplier.category || 'Uncategorized')}</span></div>`;
         updateStepUI();
         renderItems();
     }
     
-    function goToStep1() {
-        currentStep = 1;
-        updateStepUI();
-        renderSuppliers();
-    }
-    
-    function goToStep3() {
-        if (cart.length === 0) return;
-        currentStep = 3;
-        updateStepUI();
-        updateCartDisplay();
-    }
+    function goToStep1() { currentStep = 1; updateStepUI(); renderSuppliers(); }
+    function goToStep3() { if (cart.length === 0) return; currentStep = 3; updateStepUI(); updateCartDisplay(); }
     
     function closeSuccessAndExit() {
         successModal.classList.remove('active');
-        // Reset the form state
         cart = [];
-        
         updateCartDisplay();
         renderItems();
         updateStepUI();
         setPriority('NORMAL');
         deliveryTerminal.value = 'A1';
-        
-        // Generate a new reference for the next order (if supplier is still selected)
-        if (selectedSupplier) {
-            generateOrderReference();
-        }
-        
+        if (selectedSupplier) generateOrderReference();
         updateLeadTimeDisplay();
         updateCartDisplay();
-        
-        // Notify parent to refresh orders and close the modal
         if (window.parent !== window) {
             window.parent.postMessage('orderCreated', '*');
             window.parent.postMessage('closeOrderModal', '*');
@@ -809,60 +775,36 @@
     function submitOrder() {
         const { subtotal, priorityFee, terminalFee, total } = calculateTotalWithFees();
         const { min, max } = calculateLeadTimeRange();
-        
         const submitBtn = document.getElementById('submitOrderBtn');
         submitBtn.disabled = true;
         submitBtn.innerHTML = 'Saving... <span class="material-symbols-outlined text-sm">hourglass_empty</span>';
         
         const orderReference = internalRefInput.value;
+        const itemsWithLatestImages = cart.map(i => {
+            const latestProduct = allProducts[selectedSupplier.id]?.find(p => p.id === i.id);
+            return { name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, image: latestProduct?.product_image || i.image || null };
+        });
         
         const orderData = {
-            orderReference: orderReference,
-            supplier: selectedSupplier.name,
-            supplierCategory: selectedSupplier.category,
-            items: cart.map(i => ({ 
-                name: i.name, 
-                sku: i.sku, 
-                quantity: i.quantity, 
-                price: i.price,
-                image: i.image  // Add the image URL
-            })),
-            subtotal: subtotal,
-            priorityFee: priorityFee,
-            terminalFee: terminalFee,
-            total: total,
-            priority: currentPriority,
-            deliveryTerminal: deliveryTerminal.options[deliveryTerminal.selectedIndex].text,
-            leadTimeMin: min,
-            leadTimeMax: max,
-            orderDate: new Date().toISOString()
+            orderReference, supplier: selectedSupplier.name, supplierCategory: selectedSupplier.category,
+            items: itemsWithLatestImages, subtotal, priorityFee, terminalFee, total,
+            priority: currentPriority, deliveryTerminal: deliveryTerminal.options[deliveryTerminal.selectedIndex].text,
+            leadTimeMin: min, leadTimeMax: max, orderDate: new Date().toISOString()
         };
-           
+        
         fetch('api/save_order.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Show success modal
                 document.getElementById('successOrderRef').innerHTML = `Reference: ${orderReference}<br><span class="text-xs text-slate-400">Order saved successfully</span>`;
                 successModal.classList.add('active');
-                
-                // Clear cart for next order
                 cart = [];
                 updateCartDisplay();
                 renderItems();
-                
-                // Generate NEW reference for the next order
-                setTimeout(() => {
-                    if (selectedSupplier) {
-                        generateOrderReference();
-                    }
-                }, 100);
+                setTimeout(() => { if (selectedSupplier) generateOrderReference(); }, 100);
             } else {
                 alert('Error saving order: ' + data.error);
                 submitBtn.disabled = false;
@@ -878,15 +820,22 @@
     }
     
     // Event Listeners
-    supplierSearch.addEventListener('input', renderSuppliers);
-    itemSearch.addEventListener('input', renderItems);
-    deliveryTerminal.addEventListener('change', () => {
-        updateLeadTimeDisplay();
-        updateCartDisplay();
+    window.addEventListener('storage', (e) => { if (e.key === 'supplierUpdateBroadcast') fetchSuppliers(); });
+    window.addEventListener('suppliersDataUpdated', () => fetchSuppliers());
+    window.addEventListener('focus', () => { if (selectedSupplier && currentStep === 2) forceRefreshProducts(); });
+    window.addEventListener('message', (event) => {
+        if (event.data === 'supplierUpdated' || event.data === 'supplierSaved') {
+            fetchSuppliers();
+            if (selectedSupplier) setTimeout(() => forceRefreshProducts(), 500);
+        }
     });
     
+    supplierSearch.addEventListener('input', renderSuppliers);
+    itemSearch.addEventListener('input', renderItems);
+    deliveryTerminal.addEventListener('change', () => { updateLeadTimeDisplay(); updateCartDisplay(); });
+    
     // Initialize
-    renderSuppliers();
+    fetchSuppliers();
     generateOrderReference();
 </script>
 </body>

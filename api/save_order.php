@@ -19,4 +19,6 @@ $pdo = getDB();
 // Save the order
 $result = saveOrder($data, $pdo);
 echo json_encode($result);
+
+
 ?>
