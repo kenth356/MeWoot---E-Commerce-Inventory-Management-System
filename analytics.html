@@ -1,430 +1,978 @@
 <!DOCTYPE html>
+<html lang="en">
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Precision Inventory | Analytics Performance</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
-<!-- Material Symbols -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-        tailwind.config = {
-          darkMode: "class",
-          theme: {
-            extend: {
-              colors: {
-                "surface-variant": "#e1e3e4",
-                "secondary": "#445aa7",
-                "on-surface-variant": "#434656",
-                "surface": "#f8f9fa",
-                "on-primary-fixed": "#001551",
-                "on-surface": "#191c1d",
-                "outline": "#737688",
-                "on-tertiary": "#ffffff",
-                "tertiary-fixed": "#ffdbd1",
-                "on-tertiary-fixed": "#3b0900",
-                "surface-bright": "#f8f9fa",
-                "secondary-fixed-dim": "#b6c4ff",
-                "inverse-on-surface": "#f0f1f2",
-                "inverse-surface": "#2e3132",
-                "primary-fixed": "#dce1ff",
-                "on-error-container": "#93000a",
-                "error": "#ba1a1a",
-                "tertiary-container": "#c13301",
-                "secondary-fixed": "#dce1ff",
-                "primary-container": "#0055ff",
-                "tertiary-fixed-dim": "#ffb5a0",
-                "surface-container-highest": "#e1e3e4",
-                "on-tertiary-fixed-variant": "#872100",
-                "inverse-primary": "#b6c4ff",
-                "surface-container-high": "#e7e8e9",
-                "on-error": "#ffffff",
-                "on-secondary-fixed": "#001551",
-                "primary-fixed-dim": "#b6c4ff",
-                "primary": "#0041c8",
-                "tertiary": "#972500",
-                "background": "#f8f9fa",
-                "secondary-container": "#95aafd",
-                "surface-dim": "#d9dadb",
-                "on-background": "#191c1d",
-                "outline-variant": "#c3c5d9",
-                "surface-container": "#edeeef",
-                "on-secondary": "#ffffff",
-                "surface-tint": "#004dea",
-                "surface-container-low": "#f3f4f5",
-                "on-secondary-container": "#243c88",
-                "error-container": "#ffdad6",
-                "on-primary-container": "#e3e6ff",
-                "on-primary": "#ffffff",
-                "on-tertiary-container": "#ffe1d9",
-                "on-secondary-fixed-variant": "#2b418d",
-                "surface-container-lowest": "#ffffff",
-                "on-primary-fixed-variant": "#0039b3"
-              },
-              fontFamily: {
-                "headline": ["Manrope"],
-                "body": ["Inter"],
-                "label": ["Inter"]
-              },
-              borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
-            },
-          },
-        }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-        }
-    </style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Analytics | MeWooHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+
+    h1,
+    h2,
+    h3,
+    .font-headline {
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .main-content {
+      margin-left: 288px;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.5rem;
+      color: #475569;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      background: #e2e8f0;
+      color: #2563eb;
+      transform: translateX(4px);
+    }
+
+    .nav-link-active {
+      background: white;
+      color: #2563eb;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      border: 1px solid #eef2f6;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .chart-container {
+      background: white;
+      border-radius: 1.25rem;
+      border: 1px solid #eef2f6;
+      padding: 1.25rem;
+      transition: all 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .chart-container:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .expand-hint {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .chart-container:hover .expand-hint {
+      opacity: 1;
+    }
+
+    .refresh-indicator {
+      animation: spin 0.6s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .toast-notification {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: white;
+      border-radius: 999px;
+      padding: 0.6rem 1.25rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid #eef2f6;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 2000;
+      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .toast-notification.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .chart-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .chart-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 2rem;
+      width: 90%;
+      max-width: 1200px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      cursor: default;
+    }
+
+    .chart-modal.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #eef2f6;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #e2e8f0;
+      transform: scale(1.05);
+    }
+
+    .modal-chart-canvas {
+      max-height: 50vh;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-stats {
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .modal-stat-item {
+      text-align: center;
+      padding: 0.5rem;
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .modal-stat-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #64748b;
+      letter-spacing: 0.05em;
+    }
+
+    .modal-stat-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 0.25rem;
+    }
+
+    .btn-export {
+      background: #0041c8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-export:hover {
+      background: #0035a3;
+      transform: scale(0.97);
+    }
+
+    .detail-table {
+      width: 100%;
+      font-size: 0.75rem;
+      border-collapse: collapse;
+    }
+
+    .detail-table th,
+    .detail-table td {
+      padding: 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .detail-table th {
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-warning {
+      background: #fed7aa;
+      color: #9a3412;
+    }
+
+    .badge-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .inline-details {
+      margin-top: 1rem;
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 0.75rem;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .supplier-lead-item,
+    .stock-alert-item {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.5rem;
+      border-left: 4px solid #8b5cf6;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .stock-alert-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      border: 1px solid #f1f5f9;
+    }
+
+    .stock-alert-card:hover {
+      transform: translateX(2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .stock-alert-critical {
+      border-left: 4px solid #ef4444;
+      background: #fff;
+    }
+
+    .stock-alert-low {
+      border-left: 4px solid #f97316;
+      background: #fff;
+    }
+
+    .stock-product-name {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 0.85rem;
+    }
+
+    .stock-meta {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      font-size: 0.7rem;
+      color: #475569;
+    }
+
+    .stock-badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.65rem;
+    }
+
+    .badge-out {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .badge-low {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+  </style>
 </head>
-<body class="bg-surface text-on-surface">
-<!-- TopNavBar -->
-<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm dark:shadow-none flex justify-between items-center px-6 py-3 w-full">
-<div class="flex items-center gap-8">
-<span class="text-xl font-bold tracking-tight text-blue-700 dark:text-blue-400">Precision Inventory</span>
-<div class="hidden md:flex items-center gap-6">
-<nav class="flex gap-6 text-sm font-medium">
-<a class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded" href="#">Dashboard</a>
-<a class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded" href="#">Inventory</a>
-<a class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded" href="#">Orders</a>
-<a class="text-blue-700 font-bold px-3 py-1 rounded" href="#">Analytics</a>
-</nav>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<div class="relative flex items-center">
-<span class="material-symbols-outlined absolute left-3 text-outline text-sm">search</span>
-<input class="bg-surface-container border-none text-sm rounded-xl pl-10 pr-4 py-2 w-64 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Search analytics..." type="text"/>
-</div>
-<button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full transition-colors">notifications</button>
-<button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full transition-colors">settings</button>
-<div class="w-8 h-8 rounded-full overflow-hidden bg-primary-container flex items-center justify-center">
-<img alt="User profile" data-alt="professional headshot of a senior logistics manager in a minimalist office setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlbr9R88BwQQLSgg93eoqfXnlTq9rxwvZvNm2o0BJbtVUDQSZCZ2v4TBCg90f1z9-gYGjB4jfqUypJmnnAo-DTkGKCn1ENBRBztYFE4OZJZpnPw0h_AFo2cweHB6pawK6mHeV2jEWduwiGOWX0mXbrvI1c9p1rX3744C6BTCV3yaeTUdhMvO84ElK-sOMNXRxiI5xD7vq4dHEAgX9fE7AVylBjF-oopJ6QHxaOBTGPmRhIBiHmrsMtMRI_u1M7lBkiRWYq7a0VohU"/>
-</div>
-</div>
-</header>
-<!-- SideNavBar -->
-<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 flex flex-col h-full py-8 px-4 bg-slate-50 dark:bg-slate-950 mt-[56px] z-40">
-<div class="mb-8 px-2">
-<h2 class="text-lg font-black text-blue-700">Atelier Admin</h2>
-<p class="text-xs text-slate-500 tracking-wider uppercase font-bold">Precision Control</p>
-</div>
-<nav class="flex-1 space-y-2">
-<a href = "dashboard.html" class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:translate-x-1 transition-transform group" href="#">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-medium">Dashboard</span>
-</a>
-<a href = "inventory.html" class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:translate-x-1 transition-transform group" href="#">
-<span class="material-symbols-outlined">inventory_2</span>
-<span class="font-medium">Inventory</span>
-</a>
-<a href = "orders.html" class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:translate-x-1 transition-transform group" href="#">
-<span class="material-symbols-outlined">shopping_cart</span>
-<span class="font-medium">Orders</span>
-</a>
-<a href = "analytics.html" class="flex items-center gap-3 px-3 py-2 text-blue-700 dark:text-blue-400 font-semibold border-r-2 border-blue-700 dark:border-blue-400 scale-95 duration-200" href="#">
-<span class="material-symbols-outlined">analytics</span>
-<span class="font-medium">Analytics</span>
-</a>
-</nav>
-<div class="mt-auto space-y-6">
-<button class="w-full bg-primary text-white py-3 rounded-xl font-bold text-sm shadow-md hover:bg-primary-container transition-all flex items-center justify-center gap-2">
-<span class="material-symbols-outlined text-sm">add</span>
-                Add New Stock
-            </button>
-<div class="space-y-1">
-<a class="flex items-center gap-3 px-3 py-2 text-slate-600 text-sm hover:text-blue-600 transition-colors" href="#">
-<span class="material-symbols-outlined text-lg">help</span>
-<span>Help Center</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-600 text-sm hover:text-blue-600 transition-colors" href="#">
-<span class="material-symbols-outlined text-lg">logout</span>
-<span>Logout</span>
-</a>
-</div>
-</div>
-</aside>
-<!-- Main Content -->
-<main class="md:ml-64 pt-24 px-8 pb-12">
-<!-- Page Header -->
-<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-[0.05rem] text-on-surface-variant uppercase">Intelligence Engine</span>
-<h1 class="text-4xl font-extrabold tracking-tight text-on-surface mt-1">Inventory Performance</h1>
-<p class="text-on-surface-variant mt-2 max-w-2xl">Real-time throughput analysis and stock efficiency metrics across all distribution hubs.</p>
-</div>
-<div class="flex gap-3">
-<div class="bg-surface-container-low p-1 rounded-xl flex">
-<button class="px-4 py-2 text-sm font-semibold bg-surface-container-lowest shadow-sm rounded-lg text-primary">7 Days</button>
-<button class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">30 Days</button>
-<button class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">YTD</button>
-</div>
-<button class="flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-primary/20">
-<span class="material-symbols-outlined text-sm">download</span>
-                    Export Report
-                </button>
-</div>
-</header>
-<!-- KPI Grid -->
-<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-<div class="bg-surface-container-lowest p-6 rounded-2xl flex flex-col justify-between">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-widest text-outline uppercase">Total Value</span>
-<div class="text-3xl font-bold mt-2">$2.4M</div>
-</div>
-<div class="mt-4 flex items-center gap-2 text-sm">
-<span class="text-blue-600 font-bold">+12.4%</span>
-<span class="text-outline text-xs">vs last month</span>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-2xl flex flex-col justify-between">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-widest text-outline uppercase">Turnover Rate</span>
-<div class="text-3xl font-bold mt-2">4.2x</div>
-</div>
-<div class="mt-4 flex items-center gap-2 text-sm">
-<span class="text-blue-600 font-bold">+0.5</span>
-<span class="text-outline text-xs">efficiency gain</span>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-2xl flex flex-col justify-between">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-widest text-tertiary uppercase">Low Stock Alerts</span>
-<div class="text-3xl font-bold mt-2 text-tertiary">14</div>
-</div>
-<div class="mt-4 flex items-center gap-2 text-sm">
-<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
-<span class="text-outline text-xs">Requires immediate action</span>
-</div>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-2xl flex flex-col justify-between border-l-4 border-primary">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-widest text-primary uppercase">Order Accuracy</span>
-<div class="text-3xl font-bold mt-2">99.8%</div>
-</div>
-<div class="mt-4 flex items-center gap-2 text-sm text-primary">
-<span class="material-symbols-outlined text-sm">verified</span>
-<span class="font-bold">Peak Performance</span>
-</div>
-</div>
-</section>
-<!-- Charts Bento Grid -->
-<section class="grid grid-cols-12 gap-6">
-<!-- Main Stock Over Time Line Chart -->
-<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-8 rounded-2xl relative overflow-hidden">
-<div class="flex justify-between items-start mb-8">
-<div>
-<h3 class="text-xl font-bold">Stock Levels Over Time</h3>
-<p class="text-sm text-outline">Inventory volume aggregate across 5 nodes</p>
-</div>
-<div class="flex gap-4 items-center">
-<div class="flex items-center gap-2">
-<span class="w-3 h-3 rounded-full bg-primary"></span>
-<span class="text-xs font-medium text-on-surface-variant">Optimal</span>
-</div>
-<div class="flex items-center gap-2">
-<span class="w-3 h-3 rounded-full bg-secondary-container"></span>
-<span class="text-xs font-medium text-on-surface-variant">Actual</span>
-</div>
-</div>
-</div>
-<!-- Mock Chart Canvas Area -->
-<div class="h-64 flex items-end gap-1 relative pt-4">
-<!-- Grid Lines -->
-<div class="absolute inset-0 flex flex-col justify-between opacity-10 py-4">
-<div class="border-t border-on-surface"></div>
-<div class="border-t border-on-surface"></div>
-<div class="border-t border-on-surface"></div>
-<div class="border-t border-on-surface"></div>
-</div>
-<!-- SVG Chart Line (Simplified Visualization) -->
-<svg class="absolute inset-0 h-full w-full pointer-events-none" preserveaspectratio="none">
-<defs>
-<lineargradient id="line-grad" x1="0" x2="0" y1="0" y2="1">
-<stop offset="0%" stop-color="#0041c8" stop-opacity="0.2"></stop>
-<stop offset="100%" stop-color="#0041c8" stop-opacity="0"></stop>
-</lineargradient>
-</defs>
-<path d="M0 160 Q 100 140, 200 180 T 400 100 T 600 140 T 800 60" fill="none" stroke="#0041c8" stroke-linecap="round" stroke-width="4"></path>
-<path d="M0 160 Q 100 140, 200 180 T 400 100 T 600 140 T 800 60 L 800 256 L 0 256 Z" fill="url(#line-grad)"></path>
-</svg>
-<!-- Bottom Labels -->
-<div class="absolute bottom-0 left-0 right-0 flex justify-between px-4 text-[10px] text-outline font-bold uppercase tracking-widest mt-4">
-<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-</div>
-</div>
-</div>
-<!-- Distribution Pie Chart -->
-<div class="col-span-12 lg:col-span-4 bg-surface-container-low p-8 rounded-2xl flex flex-col">
-<h3 class="text-xl font-bold mb-2">Stock Distribution</h3>
-<p class="text-sm text-outline mb-8">Volume by Asset Class</p>
-<div class="flex-1 flex flex-col items-center justify-center relative">
-<!-- Semi-realistic Ring Chart UI -->
-<div class="relative w-48 h-48">
-<svg class="w-full h-full transform -rotate-90">
-<circle cx="96" cy="96" fill="transparent" r="80" stroke="#edeeef" stroke-width="18"></circle>
-<circle cx="96" cy="96" fill="transparent" r="80" stroke="#0041c8" stroke-dasharray="502" stroke-dashoffset="150" stroke-linecap="round" stroke-width="18"></circle>
-<circle cx="96" cy="96" fill="transparent" r="80" stroke="#95aafd" stroke-dasharray="502" stroke-dashoffset="400" stroke-linecap="round" stroke-width="18"></circle>
-</svg>
-<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-<span class="text-xs font-bold text-outline uppercase tracking-tighter">Total Stock</span>
-<span class="text-3xl font-bold">12,840</span>
-</div>
-</div>
-<div class="mt-8 w-full space-y-3">
-<div class="flex justify-between items-center text-sm">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary"></span>
-<span>High-Value Electronics</span>
-</div>
-<span class="font-bold">64%</span>
-</div>
-<div class="flex justify-between items-center text-sm">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
-<span>Bulk Raw Materials</span>
-</div>
-<span class="font-bold">28%</span>
-</div>
-<div class="flex justify-between items-center text-sm">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-surface-container-highest"></span>
-<span>Packaging Goods</span>
-</div>
-<span class="font-bold">8%</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Top Categories Bar Chart -->
-<div class="col-span-12 bg-surface-container-lowest p-8 rounded-2xl">
-<div class="flex justify-between items-end mb-10">
-<div>
-<h3 class="text-xl font-bold">Top Performing Categories</h3>
-<p class="text-sm text-outline">Units sold vs Stock availability per category</p>
-</div>
-<button class="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-1 hover:underline">
-                        Detailed Breakdown <span class="material-symbols-outlined text-sm">arrow_forward</span>
-</button>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-end h-48 px-4">
-<div class="flex flex-col gap-4">
-<div class="flex items-end gap-1">
-<div class="w-full bg-primary h-40 rounded-t-lg"></div>
-<div class="w-full bg-secondary-container h-24 rounded-t-lg"></div>
-</div>
-<span class="text-xs font-bold text-center text-on-surface-variant">Laptops</span>
-</div>
-<div class="flex flex-col gap-4">
-<div class="flex items-end gap-1">
-<div class="w-full bg-primary h-32 rounded-t-lg"></div>
-<div class="w-full bg-secondary-container h-36 rounded-t-lg"></div>
-</div>
-<span class="text-xs font-bold text-center text-on-surface-variant">Displays</span>
-</div>
-<div class="flex flex-col gap-4">
-<div class="flex items-end gap-1">
-<div class="w-full bg-primary h-24 rounded-t-lg"></div>
-<div class="w-full bg-secondary-container h-16 rounded-t-lg"></div>
-</div>
-<span class="text-xs font-bold text-center text-on-surface-variant">Storage</span>
-</div>
-<div class="flex flex-col gap-4">
-<div class="flex items-end gap-1">
-<div class="w-full bg-primary h-12 rounded-t-lg"></div>
-<div class="w-full bg-secondary-container h-20 rounded-t-lg"></div>
-</div>
-<span class="text-xs font-bold text-center text-on-surface-variant">Audio</span>
-</div>
-<div class="flex flex-col gap-4">
-<div class="flex items-end gap-1">
-<div class="w-full bg-primary h-44 rounded-t-lg"></div>
-<div class="w-full bg-secondary-container h-28 rounded-t-lg"></div>
-</div>
-<span class="text-xs font-bold text-center text-on-surface-variant">Power Units</span>
-</div>
-</div>
-</div>
-</section>
-<!-- Stock Pulse Section -->
-<section class="mt-12">
-<h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-                Critical Pulse 
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-tertiary-fixed text-on-tertiary-fixed">Live</span>
-</h3>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<!-- Stock Pulse Card 1 -->
-<div class="bg-surface-container-lowest p-6 rounded-2xl flex items-center justify-between group hover:bg-surface transition-colors cursor-pointer">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-[0.05rem] text-outline uppercase">SSD NVMe 2TB</span>
-<div class="text-2xl font-bold mt-1 text-tertiary">LOW</div>
-<div class="text-xs text-on-surface-variant mt-1">12 units remaining</div>
-</div>
-<div class="w-24 h-12 flex items-center">
-<!-- Tiny Sparkline -->
-<svg class="w-full h-full stroke-tertiary fill-none stroke-2" viewbox="0 0 100 40">
-<path d="M0 35 L 20 30 L 40 38 L 60 20 L 80 25 L 100 5" stroke-linecap="round"></path>
-</svg>
-</div>
-</div>
-<!-- Stock Pulse Card 2 -->
-<div class="bg-surface-container-lowest p-6 rounded-2xl flex items-center justify-between group hover:bg-surface transition-colors cursor-pointer">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-[0.05rem] text-outline uppercase">4K OLED Panel</span>
-<div class="text-2xl font-bold mt-1">340</div>
-<div class="text-xs text-on-surface-variant mt-1">Optimal replenishment</div>
-</div>
-<div class="w-24 h-12 flex items-center">
-<svg class="w-full h-full stroke-primary fill-none stroke-2" viewbox="0 0 100 40">
-<path d="M0 20 L 20 22 L 40 18 L 60 20 L 80 19 L 100 21" stroke-linecap="round"></path>
-</svg>
-</div>
-</div>
-<!-- Stock Pulse Card 3 -->
-<div class="bg-surface-container-lowest p-6 rounded-2xl flex items-center justify-between group hover:bg-surface transition-colors cursor-pointer">
-<div>
-<span class="text-[0.6875rem] font-bold tracking-[0.05rem] text-outline uppercase">DDR5 RAM 32GB</span>
-<div class="text-2xl font-bold mt-1 text-primary">HIGH</div>
-<div class="text-xs text-on-surface-variant mt-1">Excess: +180 units</div>
-</div>
-<div class="w-24 h-12 flex items-center">
-<svg class="w-full h-full stroke-primary fill-none stroke-2" viewbox="0 0 100 40">
-<path d="M0 35 L 20 25 L 40 15 L 60 10 L 80 8 L 100 5" stroke-linecap="round"></path>
-</svg>
-</div>
-</div>
-</div>
-</section>
-</main>
-<!-- Bottom Nav for Mobile -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-slate-900 flex justify-around items-center py-3 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-<button class="flex flex-col items-center gap-1 text-slate-500">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="text-[10px] font-bold">DASHBOARD</span>
-</button>
-<button class="flex flex-col items-center gap-1 text-slate-500">
-<span class="material-symbols-outlined">inventory_2</span>
-<span class="text-[10px] font-bold">INVENTORY</span>
-</button>
-<button class="flex flex-col items-center gap-1 text-blue-700">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
-<span class="text-[10px] font-bold">ANALYTICS</span>
-</button>
-<button class="flex flex-col items-center gap-1 text-slate-500">
-<span class="material-symbols-outlined">settings</span>
-<span class="text-[10px] font-bold">SETTINGS</span>
-</button>
-</nav>
-</body></html>
+
+<body class="bg-slate-50">
+
+  <!-- SIDEBAR -->
+  <aside
+    class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-sm border-r border-slate-200/80 shadow-sm z-40 flex flex-col">
+    <div class="px-6 pt-8 pb-6 border-b border-slate-100">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
+          <span class="material-symbols-outlined text-white text-2xl"
+            style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+        </div>
+        <div>
+          <h1 class="font-manrope font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span
+              class="text-blue-600">Hub</span></h1>
+          <p class="text-[10px] font-semibold uppercase text-slate-400 tracking-wider">Analytics Hub</p>
+        </div>
+      </div>
+    </div>
+    <nav class="flex-1 px-4 py-6 space-y-1.5">
+      <a href="dashboard.html" class="nav-link"><span
+          class="material-symbols-outlined text-sm">dashboard</span><span>Dashboard</span></a>
+      <a href="inventory.html" class="nav-link"><span
+          class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
+      <a href="orders.html" class="nav-link"><span
+          class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
+      <a href="suppliers.html" class="nav-link"><span
+          class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
+      <a href="analytics.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm"
+          style="font-variation-settings: 'FILL' 1;">analytics</span><span>Analytics</span></a>
+    </nav>
+    <div class="px-4 pb-8 pt-4 border-t border-slate-100">
+      <div class="mt-4 space-y-1"><a href="login.html" class="nav-link text-xs"><span
+            class="material-symbols-outlined text-sm">logout</span><span>Logout</span></a></div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div style="max-width: 1600px; margin: 0 auto;">
+      <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+        <div>
+          <div class="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1"><span
+              class="material-symbols-outlined text-sm">analytics</span><span>Real-time Visualization of Data
+              Analyzed</span></div>
+          <h1 class="text-4xl font-manrope font-extrabold text-slate-800 tracking-tight">Live Analytics</h1>
+          <p class="text-slate-500 text-sm mt-1">Click any chart or table to expand into detailed analytics view</p>
+        </div>
+        <button id="refreshAnalyticsBtn"
+          class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-all"><span
+            class="material-symbols-outlined text-base">refresh</span> Refresh Data</button>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8" id="kpiGrid">
+        <div class="stat-card animate-pulse">Loading metrics...</div>
+        <div class="stat-card animate-pulse">Loading...</div>
+        <div class="stat-card animate-pulse">Loading...</div>
+        <div class="stat-card animate-pulse">Loading...</div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="chart-container" data-chart-id="valueTrend">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h3 class="text-lg font-bold text-slate-800">Inventory Value Trend</h3>
+              <p class="text-xs text-slate-400">Last 7 days (dynamic)</p>
+            </div><span class="material-symbols-outlined text-blue-500">show_chart</span>
+          </div>
+          <canvas id="valueTrendChart" height="200" style="max-height: 220px;"></canvas>
+          <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
+          </div>
+        </div>
+        <div class="chart-container" data-chart-id="orderStatus">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h3 class="text-lg font-bold text-slate-800">Order Status Breakdown</h3>
+              <p class="text-xs text-slate-400">Current live orders</p>
+            </div><span class="material-symbols-outlined text-indigo-500">pie_chart</span>
+          </div>
+          <canvas id="orderStatusChart" height="200" style="max-height: 220px;"></canvas>
+          <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
+          </div>
+        </div>
+      </div>
+
+      <!-- Supplier & Products tables -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="chart-container" data-chart-id="topSuppliers">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-slate-800">Top Suppliers (by order count)</h3><span
+              class="material-symbols-outlined text-emerald-500">local_shipping</span>
+          </div>
+          <div class="overflow-y-auto max-h-72 pr-5">
+            <table class="w-full text-sm">
+              <thead class="border-b border-slate-100">
+                <tr>
+                  <th class="text-left py-2 font-semibold text-slate-500">Supplier</th>
+                  <th class="text-right font-semibold text-slate-500">Orders</th>
+                  <th class="text-right font-semibold text-slate-500">Total (₱)</th>
+                </tr>
+              </thead>
+              <tbody id="topSuppliersTable"></tbody>
+            </table>
+          </div>
+          <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
+          </div>
+        </div>
+        <div class="chart-container" data-chart-id="topProducts">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-slate-800">Top Moving Products</h3><span
+              class="material-symbols-outlined text-amber-500">inventory_2</span>
+          </div>
+          <div class="overflow-y-auto max-h-72 pr-5">
+            <table class="w-full text-sm">
+              <thead class="border-b border-slate-100">
+                <tr>
+                  <th class="text-left py-2 font-semibold text-slate-500">Product</th>
+                  <th class="text-right font-semibold text-slate-500">Qty Ordered</th>
+                  <th class="text-right font-semibold text-slate-500">Revenue (₱)</th>
+                </tr>
+              </thead>
+              <tbody id="topProductsTable"></tbody>
+            </table>
+          </div>
+          <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Bar Chart -->
+      <div class="chart-container mb-8" data-chart-id="categoryBar">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h3 class="text-lg font-bold text-slate-800">Inventory Value by Category</h3>
+            <p class="text-xs text-slate-400">Based on current stock × price</p>
+          </div><span class="material-symbols-outlined text-purple-500">category</span>
+        </div>
+        <canvas id="categoryBarChart" height="280" style="max-height: 300px;"></canvas>
+        <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand</div>
+      </div>
+
+      <!-- Lead Time & Stock Health -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="chart-container" data-chart-id="leadTime">
+          <h3 class="text-lg font-bold text-slate-800 mb-3">Active Suppliers || Lead Time</h3>
+          <canvas id="leadTimeChart" height="160"></canvas>
+          <div class="inline-details mt-10" id="leadTimeSupplierDetails">
+            <div class="text-xs font-semibold text-slate-500 mb-2">📋 ACTIVE SUPPLIERS BREAKDOWN</div>
+            <div id="leadTimeDetailsList" class="space-y-1 text-xs">Loading supplier details...</div>
+          </div>
+          <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
+          </div>
+        </div>
+        <div class="chart-container" data-chart-id="stockHealth">
+          <h3 class="text-lg font-bold text-slate-800 mb-3">Stock Health Overview</h3>
+          <canvas id="stockHealthChart" height="160"></canvas>
+          <div class="inline-details mt-3" id="stockHealthDetails">
+            <div class="text-xs font-semibold text-slate-500 mb-2">⚠️ AT-RISK INVENTORY (Low/Out of Stock)</div>
+            <div id="stockAlertList" class="space-y-1 text-xs">Loading inventory alerts...</div>
+          </div>
+          <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="analyticsToast" class="toast-notification"><span class="material-symbols-outlined text-sm"
+      id="toastIcon">check_circle</span>
+    <div>
+      <div class="font-semibold text-sm" id="toastTitle">Analytics Updated</div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Modal -->
+  <div id="chartModal" class="chart-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle">Chart Details</h2>
+        <div class="flex gap-3"><button id="exportModalChartBtn" class="btn-export"><span
+              class="material-symbols-outlined text-sm">download</span> Export as PNG</button>
+          <div class="modal-close" id="closeModalBtn"><span class="material-symbols-outlined">close</span></div>
+        </div>
+      </div>
+      <div class="modal-chart-canvas"><canvas id="modalCanvas" style="width: 100%; max-height: 450px;"></canvas></div>
+      <div id="modalStatsPanel" class="modal-stats"></div>
+      <div id="modalDetailTable" style="margin-top: 1rem;"></div>
+    </div>
+  </div>
+
+  <script>
+    let valueChart = null, orderPieChart = null, categoryChart = null, leadTimeChart = null, stockHealthChart = null;
+    let currentModalChartInstance = null;
+    let cachedOrders = [], cachedSuppliers = [], cachedInventory = [];
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('analyticsToast');
+      const icon = document.getElementById('toastIcon');
+      const title = document.getElementById('toastTitle');
+      icon.innerText = isError ? 'error' : 'check_circle';
+      icon.style.color = isError ? '#ef4444' : '#2563eb';
+      title.innerText = isError ? 'Something went wrong' : 'Analytics Updated';
+      title.style.color = isError ? '#ef4444' : '#1e293b';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    async function fetchAllAnalyticsData() {
+      try {
+        const ordersRes = await fetch('/MeWoot/api/get_orders.php');
+        const ordersData = await ordersRes.json();
+        const orders = ordersData.success ? ordersData.orders : [];
+        const suppliersRes = await fetch('/MeWoot/api/get_suppliers.php');
+        const suppliersData = await suppliersRes.json();
+        const suppliers = suppliersData.success ? suppliersData.suppliers : [];
+        const inventoryRes = await fetch('/MeWoot/api/get_inventory.php');
+        const inventoryData = await inventoryRes.json();
+        const inventory = inventoryData.success ? inventoryData.data : [];
+        cachedOrders = orders; cachedSuppliers = suppliers; cachedInventory = inventory;
+        return { orders, suppliers, inventory, stats: ordersData.counts || {} };
+      } catch (err) { console.error(err); showToast('Failed to load analytics data', true); return { orders: [], suppliers: [], inventory: [], stats: {} }; }
+    }
+
+    function computeKPIs(orders, suppliers, inventory) {
+      const totalOrders = orders.length;
+      const pendingOrders = orders.filter(o => o.status === 'pending').length;
+      const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
+      const totalInventoryValue = inventory.reduce((sum, item) => sum + (item.stock * parseFloat(item.price)), 0);
+      const totalStockUnits = inventory.reduce((sum, item) => sum + item.stock, 0);
+      const lowStockItems = inventory.filter(i => i.stock > 0 && i.stock <= 50).length;
+      const outOfStock = inventory.filter(i => i.stock === 0).length;
+      const activeSuppliers = suppliers.filter(s => s.status === 'active').length;
+      const totalSupplierCount = suppliers.length;
+      let avgLead = 0;
+      const activeWithLead = suppliers.filter(s => s.status === 'active' && s.lead_time);
+      if (activeWithLead.length) avgLead = Math.round(activeWithLead.reduce((acc, s) => acc + parseInt(s.lead_time), 0) / activeWithLead.length);
+      return { totalOrders, pendingOrders, deliveredOrders, totalInventoryValue, totalStockUnits, lowStockItems, outOfStock, activeSuppliers, totalSupplierCount, avgLeadTime: avgLead };
+    }
+
+    function processOrderStatusDistribution(orders) {
+      return { pending: orders.filter(o => o.status === 'pending').length, delivered: orders.filter(o => o.status === 'delivered').length, archived: orders.filter(o => o.status === 'archived').length, cancelled: orders.filter(o => o.status === 'cancelled').length };
+    }
+
+    function getTopSuppliers(orders) {
+      const map = new Map();
+      orders.forEach(order => { const name = order.supplier_name; if (!name) return; const totalAmount = parseFloat(order.total_amount) || 0; if (map.has(name)) { const entry = map.get(name); entry.count += 1; entry.total += totalAmount; } else map.set(name, { count: 1, total: totalAmount }); });
+      return Array.from(map.entries()).map(([name, data]) => ({ name, count: data.count, total: data.total })).sort((a, b) => b.count - a.count).slice(0, 10);
+    }
+
+    async function fetchAllProductsDetailed() {
+      try {
+        const ordersRes = await fetch('/MeWoot/api/get_orders.php');
+        const ordersData = await ordersRes.json();
+        if (!ordersData.success) return [];
+        const orders = ordersData.orders;
+        const productMap = new Map();
+        for (let order of orders) {
+          const itemsRes = await fetch(`/MeWoot/api/get_order_items.php?order_id=${order.id}`);
+          const itemsData = await itemsRes.json();
+          if (itemsData.success && itemsData.items) {
+            itemsData.items.forEach(item => {
+              const name = item.item_name;
+              const qty = parseInt(item.quantity) || 0;
+              const revenue = (parseFloat(item.price) || 0) * qty;
+              if (productMap.has(name)) { const existing = productMap.get(name); existing.qty += qty; existing.revenue += revenue; existing.orderCount += 1; }
+              else productMap.set(name, { qty, revenue, orderCount: 1 });
+            });
+          }
+        }
+        return Array.from(productMap.entries()).map(([name, val]) => ({ name, qty: val.qty, revenue: val.revenue, orderCount: val.orderCount })).sort((a, b) => b.qty - a.qty).slice(0, 10);
+      } catch (e) { return []; }
+    }
+
+    function getCategoryValue(inventory) {
+      const catMap = new Map();
+      inventory.forEach(item => { const cat = item.category || 'Uncategorized'; const value = (item.stock || 0) * (parseFloat(item.price) || 0); const units = item.stock; catMap.set(cat, { value: (catMap.get(cat)?.value || 0) + value, units: (catMap.get(cat)?.units || 0) + units }); });
+      return Array.from(catMap.entries()).map(([cat, data]) => ({ category: cat, value: data.value, units: data.units })).sort((a, b) => b.value - a.value);
+    }
+
+    function getLeadTimeDistribution(suppliers) {
+      const active = suppliers.filter(s => s.status === 'active' && s.lead_time);
+      const ranges = { '0-5 days': [], '6-10 days': [], '11-15 days': [], '15+ days': [] };
+      active.forEach(s => { const lt = parseInt(s.lead_time); if (lt <= 5) ranges['0-5 days'].push(s); else if (lt <= 10) ranges['6-10 days'].push(s); else if (lt <= 15) ranges['11-15 days'].push(s); else ranges['15+ days'].push(s); });
+      const counts = { '0-5 days': ranges['0-5 days'].length, '6-10 days': ranges['6-10 days'].length, '11-15 days': ranges['11-15 days'].length, '15+ days': ranges['15+ days'].length };
+      return { ranges: counts, details: ranges, total: active.length, avg: active.length ? Math.round(active.reduce((a, s) => a + parseInt(s.lead_time), 0) / active.length) : 0 };
+    }
+
+    function getStockHealth(inventory) {
+      const lowItems = inventory.filter(i => i.stock > 0 && i.stock <= 50);
+      const zeroItems = inventory.filter(i => i.stock === 0);
+      const normalItems = inventory.filter(i => i.stock > 50 && i.stock <= 500);
+      const highItems = inventory.filter(i => i.stock > 500);
+      return { low: lowItems.length, normal: normalItems.length, high: highItems.length, zero: zeroItems.length, total: inventory.length, lowDetails: lowItems, zeroDetails: zeroItems };
+    }
+
+    async function generateTrendData(inventory, orders) {
+      const today = new Date(); const last7 = []; for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(today.getDate() - i); last7.push(d.toISOString().split('T')[0]); }
+      const currentTotalValue = inventory.reduce((s, i) => s + (i.stock * parseFloat(i.price)), 0);
+      const deliveredOrders = orders.filter(o => o.status === 'delivered' && o.order_date);
+      const dailyAddedValue = {};
+      deliveredOrders.forEach(order => { const dateStr = order.order_date.split(' ')[0]; if (last7.includes(dateStr)) dailyAddedValue[dateStr] = (dailyAddedValue[dateStr] || 0) + (parseFloat(order.total_amount) || 0); });
+      let running = currentTotalValue; const values = [];
+      for (let i = last7.length - 1; i >= 0; i--) { const day = last7[i]; const added = dailyAddedValue[day] || 0; if (i === last7.length - 1) values.unshift(running); else { running = running - added; values.unshift(Math.max(0, running)); } }
+      return { labels: last7, values, startValue: values[0], endValue: values[values.length - 1], changePercent: ((values[values.length - 1] - values[0]) / values[0] * 100).toFixed(1) };
+    }
+
+    function updateLeadTimeDetails(suppliers) {
+      const leadDist = getLeadTimeDistribution(suppliers);
+      const container = document.getElementById('leadTimeDetailsList');
+      if (!container) return;
+      let html = '';
+      for (const [range, supplierList] of Object.entries(leadDist.details)) {
+        if (supplierList.length === 0) continue;
+        html += `<div class="mt-2"><div class="font-bold text-slate-700 text-xs">📌 ${range} (${supplierList.length} suppliers)</div>`;
+        supplierList.forEach(sup => { html += `<div class="supplier-lead-item border-l-purple-500 pl-2 py-1"><span class="font-medium">${escapeHtml(sup.name)}</span> — Lead time: <span class="font-semibold">${sup.lead_time} days</span> | Status: ${sup.status}</div>`; });
+        html += `</div>`;
+      }
+      if (!html) html = '<div class="text-slate-400">No active suppliers with lead time data</div>';
+      container.innerHTML = html;
+    }
+
+    function updateStockHealthDetails(inventory) {
+      const health = getStockHealth(inventory);
+      const container = document.getElementById('stockAlertList');
+      if (!container) return;
+      let html = '';
+      if (health.zeroDetails.length > 0) {
+        html += `<div class="text-xs font-bold text-red-600 mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">error</span> Out of Stock (${health.zeroDetails.length})</div>`;
+        health.zeroDetails.forEach(prod => {
+          html += `<div class="stock-alert-card stock-alert-critical"><div class="flex flex-col"><span class="stock-product-name">${escapeHtml(prod.name)}</span><div class="stock-meta"><span>ID: ${prod.id || '-'}</span><span>Category: ${prod.category || '-'}</span><span>Price: ₱${parseFloat(prod.price).toLocaleString()}</span></div></div><span class="stock-badge badge-out">0 units</span></div>`;
+        });
+      }
+      if (health.lowDetails.length > 0) {
+        html += `<div class="text-xs font-bold text-orange-600 mb-2 mt-3 flex items-center gap-1"><span class="material-symbols-outlined text-sm">warning</span> Low Stock (less than 50 units) — ${health.lowDetails.length} products</div>`;
+        health.lowDetails.forEach(prod => {
+          html += `<div class="stock-alert-card stock-alert-low"><div class="flex flex-col"><span class="stock-product-name">${escapeHtml(prod.name)}</span><div class="stock-meta"><span>ID: ${prod.id || '-'}</span><span>Category: ${prod.category || '-'}</span><span>Price: ₱${parseFloat(prod.price).toLocaleString()}</span></div></div><span class="stock-badge badge-low">${prod.stock} units left</span></div>`;
+        });
+      }
+      if (health.zeroDetails.length === 0 && health.lowDetails.length === 0) html = '<div class="text-slate-400 text-center py-4">✅ All inventory levels are healthy</div>';
+      container.innerHTML = html;
+    }
+
+    async function refreshAnalytics() {
+      const refreshBtn = document.getElementById('refreshAnalyticsBtn');
+      const originalText = refreshBtn.innerHTML;
+      refreshBtn.innerHTML = '<span class="material-symbols-outlined text-base refresh-indicator">progress_activity</span> Syncing...';
+      refreshBtn.disabled = true;
+      try {
+        const { orders, suppliers, inventory } = await fetchAllAnalyticsData();
+        const kpis = computeKPIs(orders, suppliers, inventory);
+        document.getElementById('kpiGrid').innerHTML = `<div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Total Orders</span><span class="material-symbols-outlined text-blue-300">shopping_cart</span></div><div class="text-3xl font-black mt-2">${kpis.totalOrders}</div><div class="text-xs text-slate-400 mt-1">${kpis.pendingOrders} pending · ${kpis.deliveredOrders} delivered</div></div><div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Inventory Value</span><span class="material-symbols-outlined text-emerald-300">payments</span></div><div class="text-2xl font-black mt-2">₱${kpis.totalInventoryValue.toLocaleString()}</div><div class="text-xs text-slate-400 mt-1">${kpis.totalStockUnits.toLocaleString()} units total</div></div><div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Stock Alerts</span><span class="material-symbols-outlined text-amber-300">warning</span></div><div class="text-2xl font-black mt-2"><span class="text-red-600">${kpis.lowStockItems}</span> Low · <span class="text-red-600">${kpis.outOfStock}</span> Out of Stock</div><div class="text-xs text-slate-400 mt-1">Needs attention</div></div><div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Active Suppliers</span><span class="material-symbols-outlined text-indigo-300">local_shipping</span></div><div class="text-2xl font-black mt-2">${kpis.activeSuppliers}/${kpis.totalSupplierCount}</div><div class="text-xs text-slate-400 mt-1">Avg lead time: ${kpis.avgLeadTime} days</div></div>`;
+
+        const statusDist = processOrderStatusDistribution(orders);
+        if (orderPieChart) orderPieChart.destroy();
+        orderPieChart = new Chart(document.getElementById('orderStatusChart'), { type: 'doughnut', data: { labels: ['Pending', 'Delivered', 'Archived', 'Cancelled'], datasets: [{ data: [statusDist.pending, statusDist.delivered, statusDist.archived, statusDist.cancelled], backgroundColor: ['#f97316', '#10b981', '#64748b', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
+
+        const trend = await generateTrendData(inventory, orders);
+        if (valueChart) valueChart.destroy();
+        valueChart = new Chart(document.getElementById('valueTrendChart'), { type: 'line', data: { labels: trend.labels, datasets: [{ label: 'Total Inventory Value (₱)', data: trend.values, borderColor: '#0041c8', backgroundColor: 'rgba(0,65,200,0.05)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
+
+        const topSuppliers = getTopSuppliers(orders);
+        document.getElementById('topSuppliersTable').innerHTML = topSuppliers.map(s => `<tr class="border-b border-slate-50"><td class="py-2 font-medium">${escapeHtml(s.name)}</td><td class="text-right">${s.count}</td><td class="text-right">₱${s.total.toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="3" class="py-3 text-slate-400 text-center">No orders yet</td></tr>';
+        const topProducts = await fetchAllProductsDetailed();
+        document.getElementById('topProductsTable').innerHTML = topProducts.map(p => `<tr class="border-b border-slate-50"><td class="py-2 font-medium">${escapeHtml(p.name)}</td><td class="text-right">${p.qty}</td><td class="text-right">₱${p.revenue.toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="3" class="py-3 text-slate-400 text-center">No product data</td></tr>';
+
+        const categoryData = getCategoryValue(inventory);
+        if (categoryChart) categoryChart.destroy();
+        categoryChart = new Chart(document.getElementById('categoryBarChart'), { type: 'bar', data: { labels: categoryData.map(c => c.category), datasets: [{ label: 'Total Value (₱)', data: categoryData.map(c => c.value), backgroundColor: '#3b82f6', borderRadius: 8 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
+
+        const leadDist = getLeadTimeDistribution(suppliers);
+        if (leadTimeChart) leadTimeChart.destroy();
+        leadTimeChart = new Chart(document.getElementById('leadTimeChart'), { type: 'bar', data: { labels: Object.keys(leadDist.ranges), datasets: [{ label: '# Suppliers', data: Object.values(leadDist.ranges), backgroundColor: '#8b5cf6' }] }, options: { responsive: true } });
+        updateLeadTimeDetails(suppliers);
+
+        const stockHealth = getStockHealth(inventory);
+        if (stockHealthChart) stockHealthChart.destroy();
+        stockHealthChart = new Chart(document.getElementById('stockHealthChart'), { type: 'pie', data: { labels: ['Low Stock (≤50)', 'Normal (51-500)', 'High (500+)', 'Out of Stock'], datasets: [{ data: [stockHealth.low, stockHealth.normal, stockHealth.high, stockHealth.zero], backgroundColor: ['#f97316', '#3b82f6', '#10b981', '#ef4444'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
+        updateStockHealthDetails(inventory);
+
+        showToast('');
+      } catch (err) { console.error(err); showToast('Error updating analytics', true); } finally { refreshBtn.innerHTML = originalText; refreshBtn.disabled = false; }
+    }
+
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+
+    // COMPLETE MODAL HANDLER - ALL CHARTS WITH FULL DETAILS
+    async function openChartModal(chartId) {
+      const modal = document.getElementById('chartModal');
+      const modalCanvas = document.getElementById('modalCanvas');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalStats = document.getElementById('modalStatsPanel');
+      const modalDetail = document.getElementById('modalDetailTable');
+
+      modalStats.innerHTML = '';
+      modalDetail.innerHTML = '';
+      modalCanvas.style.display = 'block';
+      modalCanvas.style.width = '100%';
+      if (currentModalChartInstance) { currentModalChartInstance.destroy(); currentModalChartInstance = null; }
+
+      // INVENTORY VALUE TREND
+      if (chartId === 'valueTrend' && valueChart) {
+        const trend = await generateTrendData(cachedInventory, cachedOrders);
+        modalTitle.innerText = 'Inventory Value Trend Analysis (Last 7 Days)';
+        modalStats.innerHTML = `
+          <div class="modal-stat-item"><div class="modal-stat-label">Start Value</div><div class="modal-stat-value">₱${trend.startValue.toLocaleString()}</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">End Value</div><div class="modal-stat-value">₱${trend.endValue.toLocaleString()}</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">Change</div><div class="modal-stat-value ${trend.changePercent >= 0 ? 'text-green-600' : 'text-red-600'}">${trend.changePercent}%</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">Total Units</div><div class="modal-stat-value">${cachedInventory.reduce((a, i) => a + i.stock, 0).toLocaleString()}</div></div>
+        `;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'line', data: valueChart.data, options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
+        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Date</th><th>Inventory Value (₱)</th><th>Daily Change</th></tr></thead><tbody>${trend.labels.map((label, idx) => {
+          const prev = idx > 0 ? trend.values[idx - 1] : trend.values[idx];
+          const change = trend.values[idx] - prev;
+          return `<tr><td>${label}</td><td>₱${trend.values[idx].toLocaleString()}</td><td class="${change >= 0 ? 'text-green-600' : 'text-red-600'}">${change >= 0 ? '+' : ''}₱${change.toLocaleString()}</td></tr>`;
+        }).join('')}</tbody></table>`;
+      }
+      // ORDER STATUS BREAKDOWN
+      else if (chartId === 'orderStatus' && orderPieChart) {
+        const total = cachedOrders.length;
+        const statusCounts = processOrderStatusDistribution(cachedOrders);
+        modalTitle.innerText = 'Order Status Analytics';
+        modalStats.innerHTML = `
+          <div class="modal-stat-item"><div class="modal-stat-label">Total Orders</div><div class="modal-stat-value">${total}</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">Completion Rate</div><div class="modal-stat-value">${((statusCounts.delivered / total) * 100).toFixed(1)}%</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">Cancellation Rate</div><div class="modal-stat-value">${((statusCounts.cancelled / total) * 100).toFixed(1)}%</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">Pending</div><div class="modal-stat-value text-orange-600">${statusCounts.pending}</div></div>
+        `;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'doughnut', data: orderPieChart.data, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Status</th><th>Count</th><th>Percentage</th><th>Action Needed</th></tr></thead><tbody>
+          <tr><td><span class="badge badge-warning">Pending</span></td><td>${statusCounts.pending}</td><td>${((statusCounts.pending / total) * 100).toFixed(1)}%</td><td>Process shipments</td></tr>
+          <tr><td><span class="badge badge-success">Delivered</span></td><td>${statusCounts.delivered}</td><td>${((statusCounts.delivered / total) * 100).toFixed(1)}%</td><td>Completed</td></tr>
+          <tr><td><span class="badge badge-info">Archived</span></td><td>${statusCounts.archived}</td><td>${((statusCounts.archived / total) * 100).toFixed(1)}%</td><td>Historical data</td></tr>
+          <tr><td><span class="badge badge-danger">Cancelled</span></td><td>${statusCounts.cancelled}</td><td>${((statusCounts.cancelled / total) * 100).toFixed(1)}%</td><td>Review reasons</td></tr>
+        </tbody></table>`;
+      }
+      // CATEGORY BAR CHART
+      else if (chartId === 'categoryBar' && categoryChart) {
+        const catData = getCategoryValue(cachedInventory);
+        const totalValue = catData.reduce((a, c) => a + c.value, 0);
+        modalTitle.innerText = 'Inventory Value by Category - Detailed Breakdown';
+        modalStats.innerHTML = `
+          <div class="modal-stat-item"><div class="modal-stat-label">Total Categories</div><div class="modal-stat-value">${catData.length}</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">Total Value</div><div class="modal-stat-value">₱${totalValue.toLocaleString()}</div></div>
+          <div class="modal-stat-item"><div class="modal-stat-label">Top Category</div><div class="modal-stat-value">${catData[0]?.category || 'N/A'}</div></div>
+        `;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'bar', data: categoryChart.data, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
+        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Category</th><th>Total Value (₱)</th><th>Stock Units</th><th>% of Total</th></tr></thead><tbody>${catData.map(c => `<tr><td class="font-medium">${escapeHtml(c.category)}</td><td>₱${c.value.toLocaleString()}</td><td>${c.units.toLocaleString()}</td><td>${((c.value / totalValue) * 100).toFixed(1)}%</td></tr>`).join('')}</tbody></table>`;
+      }
+      // TOP SUPPLIERS
+      else if (chartId === 'topSuppliers') {
+        const suppliers = getTopSuppliers(cachedOrders);
+        modalCanvas.style.display = 'none';
+        modalTitle.innerText = 'Top Suppliers Performance Analytics';
+        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Total Suppliers Tracked</div><div class="modal-stat-value">${suppliers.length}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Total Order Value</div><div class="modal-stat-value">₱${suppliers.reduce((a, s) => a + s.total, 0).toLocaleString()}</div></div>`;
+        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Rank</th><th>Supplier Name</th><th>Order Count</th><th>Total Value (₱)</th><th>Avg Order Value</th></tr></thead><tbody>${suppliers.map((s, i) => `<tr><td>#${i + 1}</td><td class="font-medium">${escapeHtml(s.name)}</td><td>${s.count}</td><td>₱${s.total.toLocaleString()}</td><td>₱${Math.round(s.total / s.count).toLocaleString()}</td></tr>`).join('')}</tbody></table>`;
+        currentModalChartInstance = null;
+      }
+      // TOP PRODUCTS
+      else if (chartId === 'topProducts') {
+        const products = await fetchAllProductsDetailed();
+        modalCanvas.style.display = 'none';
+        modalTitle.innerText = 'Top Moving Products Analytics';
+        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Total Products</div><div class="modal-stat-value">${products.length}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Total Units Sold</div><div class="modal-stat-value">${products.reduce((a, p) => a + p.qty, 0).toLocaleString()}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Total Revenue</div><div class="modal-stat-value">₱${products.reduce((a, p) => a + p.revenue, 0).toLocaleString()}</div></div>`;
+        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Rank</th><th>Product Name</th><th>Units Sold</th><th>Revenue (₱)</th><th>Order Frequency</th></tr></thead><tbody>${products.map((p, i) => `<tr><td>#${i + 1}</td><td class="font-medium">${escapeHtml(p.name)}</td><td>${p.qty.toLocaleString()}</td><td>₱${p.revenue.toLocaleString()}</td><td>${p.orderCount} orders</td></tr>`).join('')}</tbody></table>`;
+        currentModalChartInstance = null;
+      }
+      // LEAD TIME
+      else if (chartId === 'leadTime' && leadTimeChart) {
+        const leadDist = getLeadTimeDistribution(cachedSuppliers);
+        modalTitle.innerText = 'Active Supplier and Lead Time Distribution';
+        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Active Suppliers</div><div class="modal-stat-value">${leadDist.total}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Avg Lead Time</div><div class="modal-stat-value">${leadDist.avg} days</div></div>`;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'bar', data: leadTimeChart.data, options: { responsive: true, maintainAspectRatio: true } });
+        let tableHtml = `<table class="detail-table"><thead><tr><th>Supplier</th><th>Lead Time (days)</th><th>Status</th></tr></thead><tbody>`;
+        cachedSuppliers.filter(s => s.status === 'active' && s.lead_time).forEach(sup => { tableHtml += `<tr><td class="font-medium">${escapeHtml(sup.name)}</td><td>${sup.lead_time}</td><td><span class="badge badge-success">Active</span></td></tr>`; });
+        tableHtml += `</tbody></table>`;
+        modalDetail.innerHTML = tableHtml;
+      }
+      // STOCK HEALTH
+      else if (chartId === 'stockHealth' && stockHealthChart) {
+        const health = getStockHealth(cachedInventory);
+        modalTitle.innerText = 'Stock Health & Risk Assessment (Detailed Items)';
+        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Critical (Out of Stock)</div><div class="modal-stat-value text-red-600">${health.zero}</div></div><div class="modal-stat-item"><div class="modal-stat-label">At Risk (Low Stock)</div><div class="modal-stat-value text-orange-600">${health.low}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Health Rate</div><div class="modal-stat-value">${(((health.normal + health.high) / health.total) * 100).toFixed(1)}%</div></div>`;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'pie', data: stockHealthChart.data, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+        let itemsHtml = `<div class="mt-2"><div class="font-bold text-red-700 mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">error</span> Out of Stock Items (${health.zeroDetails.length})</div>`;
+        if (health.zeroDetails.length) health.zeroDetails.forEach(p => { itemsHtml += `<div class="stock-alert-card stock-alert-critical mb-2"><div><span class="stock-product-name">${escapeHtml(p.name)}</span><div class="stock-meta">ID: ${p.id} | ${p.category || '-'} | ₱${parseFloat(p.price).toLocaleString()}</div></div><span class="stock-badge badge-out">0 units</span></div>`; });
+        else itemsHtml += `<div class="text-slate-400">None</div>`;
+        itemsHtml += `</div><div class="mt-4"><div class="font-bold text-orange-700 mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">warning</span> Low Stock Items (less than 50 units) — ${health.lowDetails.length} products</div>`;
+        if (health.lowDetails.length) health.lowDetails.forEach(p => { itemsHtml += `<div class="stock-alert-card stock-alert-low mb-2"><div><span class="stock-product-name">${escapeHtml(p.name)}</span><div class="stock-meta">ID: ${p.id} | ${p.category || '-'} | ₱${parseFloat(p.price).toLocaleString()}</div></div><span class="stock-badge badge-low">${p.stock} units</span></div>`; });
+        else itemsHtml += `<div class="text-slate-400">None</div>`;
+        itemsHtml += `</div>`;
+        modalDetail.innerHTML = itemsHtml;
+      }
+      else {
+        modal.classList.remove('active');
+        showToast('Chart data not ready yet. Please refresh.', true);
+        return;
+      }
+      modal.classList.add('active');
+    }
+
+    document.querySelectorAll('.chart-container').forEach(container => {
+      container.addEventListener('click', (e) => { if (e.target.closest('.chart-container')) { const id = container.dataset.chartId; if (id) openChartModal(id); } });
+    });
+
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+      document.getElementById('chartModal').classList.remove('active');
+      if (currentModalChartInstance) { currentModalChartInstance.destroy(); currentModalChartInstance = null; }
+    });
+    document.getElementById('chartModal').addEventListener('click', (e) => { if (e.target === document.getElementById('chartModal')) document.getElementById('chartModal').classList.remove('active'); });
+    document.getElementById('exportModalChartBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('exportModalChartBtn');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm">hourglass_empty</span> Exporting...';
+      btn.disabled = true;
+
+      try {
+        const modalCard = document.querySelector('.modal-card');
+
+        const originalMaxHeight = modalCard.style.maxHeight;
+        const originalOverflow = modalCard.style.overflowY;
+
+        modalCard.style.maxHeight = 'none';
+        modalCard.style.overflowY = 'visible';
+
+        await new Promise(r => setTimeout(r, 100));
+
+        const canvas = await html2canvas(modalCard, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          scrollY: 0,
+          windowHeight: modalCard.scrollHeight,
+          ignoreElements: (el) => el.id === 'exportModalChartBtn' || el.classList.contains('modal-close')
+        });
+
+        modalCard.style.maxHeight = originalMaxHeight;
+        modalCard.style.overflowY = originalOverflow;
+
+        const title = (document.getElementById('modalTitle').innerText || 'analytics-export')
+          .toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+        const link = document.createElement('a');
+        link.download = `${title}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch (err) {
+        console.error('Export failed:', err);
+        alert('Export failed. Please try again.');
+      } finally {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+      }
+    });
+
+    window.addEventListener('message', (event) => { if (event.data === 'orderCreated' || event.data === 'supplierSaved' || event.data === 'orderStatusChanged' || event.data === 'inventoryUpdated') refreshAnalytics(); });
+    window.addEventListener('storage', (e) => { if (e.key === 'supplierUpdateBroadcast') refreshAnalytics(); });
+    window.addEventListener('suppliersDataUpdated', () => refreshAnalytics());
+    document.getElementById('refreshAnalyticsBtn').addEventListener('click', refreshAnalytics);
+    refreshAnalytics();
+    setInterval(refreshAnalytics, 60000);
+  </script>
+</body>
+
+</html>
