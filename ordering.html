@@ -1,94 +1,118 @@
 <!DOCTYPE html>
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Create New Order | Precision Inventory</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "secondary": "#445aa7",
-                    "tertiary-fixed-dim": "#ffb5a0",
-                    "surface-variant": "#e1e3e4",
-                    "surface-dim": "#d9dadb",
-                    "on-tertiary-fixed-variant": "#872100",
-                    "on-secondary-fixed-variant": "#2b418d",
-                    "primary": "#0041c8",
-                    "on-primary": "#ffffff",
-                    "primary-fixed-dim": "#b6c4ff",
-                    "primary-container": "#0055ff",
-                    "outline": "#737688",
-                    "on-primary-fixed": "#001551",
-                    "secondary-fixed": "#dce1ff",
-                    "inverse-on-surface": "#f0f1f2",
-                    "on-error": "#ffffff",
-                    "surface-container-high": "#e7e8e9",
-                    "on-primary-container": "#e3e6ff",
-                    "outline-variant": "#c3c5d9",
-                    "on-tertiary-container": "#ffe1d9",
-                    "on-surface-variant": "#434656",
-                    "surface-bright": "#f8f9fa",
-                    "on-error-container": "#93000a",
-                    "tertiary": "#972500",
-                    "on-secondary-container": "#243c88",
-                    "inverse-surface": "#2e3132",
-                    "tertiary-container": "#c13301",
-                    "surface-tint": "#004dea",
-                    "error-container": "#ffdad6",
-                    "secondary-container": "#95aafd",
-                    "on-background": "#191c1d",
-                    "secondary-fixed-dim": "#b6c4ff",
-                    "surface-container": "#edeeef",
-                    "on-secondary": "#ffffff",
-                    "on-tertiary-fixed": "#3b0900",
-                    "error": "#ba1a1a",
-                    "surface-container-highest": "#e1e3e4",
-                    "background": "#f8f9fa",
-                    "surface-container-low": "#f3f4f5",
-                    "surface": "#f8f9fa",
-                    "tertiary-fixed": "#ffdbd1",
-                    "surface-container-lowest": "#ffffff",
-                    "on-tertiary": "#ffffff",
-                    "primary-fixed": "#dce1ff",
-                    "on-primary-fixed-variant": "#0039b3",
-                    "on-surface": "#191c1d",
-                    "inverse-primary": "#b6c4ff",
-                    "on-secondary-fixed": "#001551"
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Create New Order | Precision Inventory</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#445aa7",
+                        "tertiary-fixed-dim": "#ffb5a0",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "on-tertiary-fixed-variant": "#872100",
+                        "on-secondary-fixed-variant": "#2b418d",
+                        "primary": "#0041c8",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "primary-container": "#0055ff",
+                        "outline": "#737688",
+                        "on-primary-fixed": "#001551",
+                        "secondary-fixed": "#dce1ff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e7e8e9",
+                        "on-primary-container": "#e3e6ff",
+                        "outline-variant": "#c3c5d9",
+                        "on-tertiary-container": "#ffe1d9",
+                        "on-surface-variant": "#434656",
+                        "surface-bright": "#f8f9fa",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#972500",
+                        "on-secondary-container": "#243c88",
+                        "inverse-surface": "#2e3132",
+                        "tertiary-container": "#c13301",
+                        "surface-tint": "#004dea",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#95aafd",
+                        "on-background": "#191c1d",
+                        "secondary-fixed-dim": "#b6c4ff",
+                        "surface-container": "#edeeef",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#3b0900",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "surface": "#f8f9fa",
+                        "tertiary-fixed": "#ffdbd1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dce1ff",
+                        "on-primary-fixed-variant": "#0039b3",
+                        "on-surface": "#191c1d",
+                        "inverse-primary": "#b6c4ff",
+                        "on-secondary-fixed": "#001551"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
             },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
-          },
-        },
-      }
-</script>
-<style>
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+
         .fade-in {
             animation: fadeIn 0.3s ease-in-out;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .success-modal-overlay {
             position: fixed;
             top: 0;
@@ -102,9 +126,11 @@
             align-items: center;
             justify-content: center;
         }
+
         .success-modal-overlay.active {
             display: flex;
         }
+
         .success-card {
             background: white;
             border-radius: 1.5rem;
@@ -114,6 +140,7 @@
             width: 90%;
             animation: slideUpFloat 0.35s ease-out;
         }
+
         .success-icon {
             width: 70px;
             height: 70px;
@@ -124,21 +151,24 @@
             justify-content: center;
             margin: 0 auto 1.25rem;
         }
+
         .success-icon .material-symbols-outlined {
             font-size: 36px;
             color: white;
         }
+
         @keyframes slideUpFloat {
             from {
                 opacity: 0;
                 transform: translateY(30px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
-        
+
         .product-image {
             width: 48px;
             height: 48px;
@@ -151,461 +181,477 @@
             color: white;
             font-weight: bold;
         }
-        
-        /* Refresh indicator */
+
         .refreshing {
             animation: spin 0.5s linear infinite;
         }
+
         @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body class="bg-background text-on-background min-h-screen flex flex-col">
 
-<nav class="bg-slate-50 dark:bg-slate-950 flex flex-col items-center pt-4 pb-2 w-full border-b border-slate-200">
-<div class="flex flex-col items-center gap-4">
-<div class="text-lg font-semibold text-slate-900 font-headline">Create New Order</div>
-<div class="flex items-center gap-4">
-    <div class="flex items-center gap-2">
-        <div id="step1Dot" class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
-        <span id="step1Label" class="text-xs font-semibold text-primary">Supplier</span>
-    </div>
-    <div class="w-12 h-px bg-slate-300"></div>
-    <div class="flex items-center gap-2">
-        <div id="step2Dot" class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold">2</div>
-        <span id="step2Label" class="text-xs font-medium text-slate-500">Items</span>
-    </div>
-    <div class="w-12 h-px bg-slate-300"></div>
-    <div class="flex items-center gap-2">
-        <div id="step3Dot" class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold">3</div>
-        <span id="step3Label" class="text-xs font-medium text-slate-500">Review</span>
-    </div>
-</div>
-</div>
-</nav>
+    <nav class="bg-slate-50 dark:bg-slate-950 flex flex-col items-center pt-4 pb-2 w-full border-b border-slate-200">
+        <div class="flex flex-col items-center gap-4">
+            <div class="text-lg font-semibold text-slate-900 font-headline">Create New Order</div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <div id="step1Dot"
+                        class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
+                        1</div>
+                    <span id="step1Label" class="text-xs font-semibold text-primary">Supplier</span>
+                </div>
+                <div class="w-12 h-px bg-slate-300"></div>
+                <div class="flex items-center gap-2">
+                    <div id="step2Dot"
+                        class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold">
+                        2</div>
+                    <span id="step2Label" class="text-xs font-medium text-slate-500">Items</span>
+                </div>
+                <div class="w-12 h-px bg-slate-300"></div>
+                <div class="flex items-center gap-2">
+                    <div id="step3Dot"
+                        class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold">
+                        3</div>
+                    <span id="step3Label" class="text-xs font-medium text-slate-500">Review</span>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<main class="flex-grow flex flex-col md:flex-row w-full max-w-screen-2xl mx-auto overflow-hidden">
-    
-    <section id="contentArea" class="flex-grow p-8 bg-surface-container-lowest overflow-y-auto">
-        <!-- STEP 1: Supplier Selection -->
-        <div id="step1Content" class="max-w-3xl mx-auto space-y-8 fade-in">
-            <div class="space-y-4">
-                <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Select Primary Supplier</h2>
-                <div class="relative group">
-                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
-                    <input id="supplierSearch" class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Search suppliers by name..." type="text"/>
-                </div>
-            </div>
-            
-            <div id="supplierList" class="space-y-3"></div>
-            
-            <div class="pt-8 text-center">
-                <p class="text-sm text-outline font-body italic">Don't see your supplier? <a class="text-primary font-semibold hover:underline" href="#" onclick="window.parent.postMessage('goToSuppliers', '*'); return false;">Add a new supplier profile</a></p>
-            </div>
-            
-            <div class="flex justify-end pt-4">
-                <button onclick="goToStep2()" id="nextToItemsBtn" class="px-6 py-3 bg-primary text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    Proceed to Items <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                </button>
-            </div>
-        </div>
-        
-        <!-- STEP 2: Items Selection -->
-        <div id="step2Content" class="max-w-3xl mx-auto space-y-8 fade-in" style="display: none;">
-            <div class="space-y-4">
-                <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Select Items</h2>
-                <div class="bg-primary/5 p-4 rounded-xl flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold">Selected Supplier:</p>
-                        <p id="selectedSupplierName" class="text-lg font-bold text-primary">—</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="forceRefreshProducts()" id="refreshBtn" class="text-sm bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded-lg flex items-center gap-1">
-                            <span class="material-symbols-outlined text-sm">refresh</span> Refresh
-                        </button>
-                        <button onclick="goToStep1()" class="text-sm text-primary hover:underline">Change Supplier</button>
+    <main class="flex-grow flex flex-col md:flex-row w-full max-w-screen-2xl mx-auto overflow-hidden">
+
+        <section id="contentArea" class="flex-grow p-8 bg-surface-container-lowest overflow-y-auto">
+            <!-- STEP 1: Supplier Selection -->
+            <div id="step1Content" class="max-w-3xl mx-auto space-y-8 fade-in">
+                <div class="space-y-4">
+                    <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Select Primary
+                        Supplier</h2>
+                    <div class="relative group">
+                        <span
+                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+                        <input id="supplierSearch"
+                            class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
+                            placeholder="Search suppliers by name..." type="text" />
                     </div>
                 </div>
-                <div class="relative group">
-                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
-                    <input id="itemSearch" class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary transition-all" placeholder="Search items by name or SKU..." type="text"/>
+
+                <div id="supplierList" class="space-y-3"></div>
+
+                <div class="pt-8 text-center">
+                    <p class="text-sm text-outline font-body italic">Don't see your supplier? <a
+                            class="text-primary font-semibold hover:underline" href="#"
+                            onclick="window.parent.postMessage('goToSuppliers', '*'); return false;">Add a new supplier
+                            profile</a></p>
+                </div>
+
+                <div class="flex justify-end pt-4">
+                    <button onclick="goToStep2()" id="nextToItemsBtn"
+                        class="px-6 py-3 bg-primary text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                        Proceed to Items <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
                 </div>
             </div>
-            
-            <div id="itemsList" class="space-y-3"></div>
-            
-            <div id="cartSummary" class="bg-slate-50 rounded-xl p-4">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-semibold">Subtotal:</span>
-                    <span id="cartSubtotal" class="text-xl font-bold text-primary">₱0.00</span>
+
+            <!-- STEP 2: Items Selection -->
+            <div id="step2Content" class="max-w-3xl mx-auto space-y-8 fade-in" style="display: none;">
+                <div class="space-y-4">
+                    <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Select Items</h2>
+                    <div class="bg-primary/5 p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold">Selected Supplier:</p>
+                            <p id="selectedSupplierName" class="text-lg font-bold text-primary">—</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="forceRefreshProducts()" id="refreshBtn"
+                                class="text-sm bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded-lg flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">refresh</span> Refresh
+                            </button>
+                            <button onclick="goToStep1()" class="text-sm text-primary hover:underline">Change
+                                Supplier</button>
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <span
+                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+                        <input id="itemSearch"
+                            class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary transition-all"
+                            placeholder="Search items by name or SKU..." type="text" />
+                    </div>
                 </div>
-                <div class="text-xs text-slate-500">Items in cart: <span id="cartCount">0</span></div>
+
+                <div id="itemsList" class="space-y-3"></div>
+
+                <div id="cartSummary" class="bg-slate-50 rounded-xl p-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold">Subtotal:</span>
+                        <span id="cartSubtotal" class="text-xl font-bold text-primary">₱0.00</span>
+                    </div>
+                    <div class="text-xs text-slate-500">Items in cart: <span id="cartCount">0</span></div>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button onclick="goToStep1()"
+                        class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl font-semibold flex items-center gap-2 hover:bg-slate-300 transition-all">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span> Back
+                    </button>
+                    <button onclick="goToStep3()" id="nextToReviewBtn"
+                        class="px-6 py-3 bg-primary text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                        Proceed to Review <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                </div>
             </div>
-            
-            <div class="flex justify-between pt-4">
-                <button onclick="goToStep1()" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl font-semibold flex items-center gap-2 hover:bg-slate-300 transition-all">
-                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back
-                </button>
-                <button onclick="goToStep3()" id="nextToReviewBtn" class="px-6 py-3 bg-primary text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    Proceed to Review <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                </button>
+
+            <!-- STEP 3: Review Order -->
+            <div id="step3Content" class="max-w-3xl mx-auto space-y-8 fade-in" style="display: none;">
+                <div class="space-y-4">
+                    <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Review Order</h2>
+                    <div class="bg-primary/5 p-4 rounded-xl">
+                        <p class="text-sm font-semibold">Order Summary</p>
+                        <div class="h-px bg-slate-200 my-3"></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Order Reference:</span>
+                                <span id="reviewRef" class="font-semibold font-mono">—</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Supplier:</span>
+                                <span id="reviewSupplier" class="font-semibold">—</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Priority:</span>
+                                <span id="reviewPriority" class="font-semibold">NORMAL</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Delivery Warehouse:</span>
+                                <span id="reviewTerminal" class="font-semibold">—</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Items:</span>
+                                <span id="reviewItemCount" class="font-semibold">0</span>
+                            </div>
+                            <div class="border-t border-slate-200 pt-2 mt-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Subtotal:</span>
+                                    <span id="reviewSubtotal" class="font-semibold">₱0.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Priority Fee:</span>
+                                    <span id="reviewPriorityFee" class="font-semibold">₱0</span>
+                                </div>
+                                <div class="flex justify-between text-lg font-bold mt-2 pt-2 border-t border-slate-200">
+                                    <span>Total Amount:</span>
+                                    <span id="reviewTotal" class="text-primary">₱0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="reviewItemsList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+                </div>
+
+                <div class="flex justify-between pt-4">
+                    <button onclick="goToStep2()"
+                        class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl font-semibold flex items-center gap-2 hover:bg-slate-300 transition-all">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Items
+                    </button>
+                    <button onclick="submitOrder()" id="submitOrderBtn"
+                        class="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-green-700 transition-all">
+                        Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>
+                    </button>
+                </div>
             </div>
-        </div>
-        
-        <!-- STEP 3: Review Order -->
-        <div id="step3Content" class="max-w-3xl mx-auto space-y-8 fade-in" style="display: none;">
-            <div class="space-y-4">
-                <h2 class="text-3xl font-extrabold text-on-surface font-headline tracking-tight">Review Order</h2>
-                <div class="bg-primary/5 p-4 rounded-xl">
-                    <p class="text-sm font-semibold">Order Summary</p>
-                    <div class="h-px bg-slate-200 my-3"></div>
+        </section>
+
+        <aside class="w-full md:w-[400px] bg-surface-container-low p-8 flex flex-col justify-between">
+            <div class="space-y-10">
+                <div>
+                    <span
+                        class="text-[0.6875rem] uppercase tracking-[0.1rem] font-bold text-outline font-label">Configuration</span>
+                    <h3 class="text-2xl font-bold font-headline mt-2">Order Metadata</h3>
+                </div>
+                <div class="space-y-6">
                     <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="text-slate-600">Order Reference:</span>
-                            <span id="reviewRef" class="font-semibold font-mono">—</span>
+                        <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Order
+                            Reference</label>
+                        <input id="internalRef"
+                            class="w-full bg-slate-100 border-none rounded-lg p-3 text-sm font-mono font-semibold text-primary cursor-not-allowed"
+                            type="text" readonly />
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Order
+                            Priority</label>
+                        <div class="flex gap-2">
+                            <button onclick="setPriority('NORMAL')" id="priorityNormal"
+                                class="flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all">NORMAL</button>
+                            <button onclick="setPriority('URGENT')" id="priorityUrgent"
+                                class="flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all">URGENT</button>
+                            <button onclick="setPriority('CRITICAL')" id="priorityCritical"
+                                class="flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all">CRITICAL</button>
                         </div>
-                        <div class="flex justify-between">
-                            <span class="text-slate-600">Supplier:</span>
-                            <span id="reviewSupplier" class="font-semibold">—</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-slate-600">Priority:</span>
-                            <span id="reviewPriority" class="font-semibold">NORMAL</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-slate-600">Delivery Terminal:</span>
-                            <span id="reviewTerminal" class="font-semibold">—</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-slate-600">Items:</span>
-                            <span id="reviewItemCount" class="font-semibold">0</span>
-                        </div>
-                        <div class="border-t border-slate-200 pt-2 mt-2">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-600">Subtotal:</span>
-                                <span id="reviewSubtotal" class="font-semibold">₱0.00</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-600">Priority Fee:</span>
-                                <span id="reviewPriorityFee" class="font-semibold">₱0</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-600">Terminal Fee:</span>
-                                <span id="reviewTerminalFee" class="font-semibold">₱0</span>
-                            </div>
-                            <div class="flex justify-between text-lg font-bold mt-2 pt-2 border-t border-slate-200">
-                                <span>Total Amount:</span>
-                                <span id="reviewTotal" class="text-primary">₱0.00</span>
-                            </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Delivery Warehouse</label>
+                        <div class="relative">
+                            <select id="deliveryWarehouse" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm appearance-none">
+                                <option value="1">Mariano's Delivery Hub - Bulakan, Bulacan</option>
+                                <option value="2">Hanubis Center - Mexico, Pampanga</option>
+                                <option value="3">Canto Warehouse Inc. - Chinatown, Manila</option>
+                                <option value="4">Gervas Logistics Facility - Negros Occidental</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
                         </div>
                     </div>
                 </div>
-                <div id="reviewItemsList" class="space-y-2 max-h-64 overflow-y-auto"></div>
-            </div>
-            
-            <div class="flex justify-between pt-4">
-                <button onclick="goToStep2()" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl font-semibold flex items-center gap-2 hover:bg-slate-300 transition-all">
-                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Items
-                </button>
-                <button onclick="submitOrder()" id="submitOrderBtn" class="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-green-700 transition-all">
-                    Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>
-                </button>
-            </div>
-        </div>
-    </section>
-    
-    <aside class="w-full md:w-[400px] bg-surface-container-low p-8 flex flex-col justify-between">
-        <div class="space-y-10">
-            <div>
-                <span class="text-[0.6875rem] uppercase tracking-[0.1rem] font-bold text-outline font-label">Configuration</span>
-                <h3 class="text-2xl font-bold font-headline mt-2">Order Metadata</h3>
-            </div>
-            <div class="space-y-6">
-                <div class="space-y-2">
-                    <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Order Reference</label>
-                    <input id="internalRef" class="w-full bg-slate-100 border-none rounded-lg p-3 text-sm font-mono font-semibold text-primary cursor-not-allowed" type="text" readonly/>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Order Priority</label>
-                    <div class="flex gap-2">
-                        <button onclick="setPriority('NORMAL')" id="priorityNormal" class="flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all">NORMAL</button>
-                        <button onclick="setPriority('URGENT')" id="priorityUrgent" class="flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all">URGENT</button>
-                        <button onclick="setPriority('CRITICAL')" id="priorityCritical" class="flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all">CRITICAL</button>
-                    </div>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Delivery Terminal</label>
-                    <div class="relative">
-                        <select id="deliveryTerminal" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm appearance-none">
-                            <option value="A1">Central Warehouse - A1 (₱600)</option>
-                            <option value="B4">East Coast Hub - B4 (₱455)</option>
-                            <option value="C2">Pacific Transit - C2 (₱745)</option>
-                            <option value="D3">Southern Distribution - D3 (₱255)</option>
-                        </select>
-                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-surface-container-lowest p-6 rounded-xl space-y-4">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <span class="text-[0.6875rem] uppercase font-bold text-outline">Estimated Lead Time</span>
-                        <div id="leadTimeDisplay" class="text-3xl font-extrabold font-headline text-primary mt-1">—</div>
-                    </div>
-                    <span class="material-symbols-outlined text-primary-container">speed</span>
-                </div>
-                <div class="h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
-                    <div id="leadTimeBar" class="h-full w-0 bg-gradient-to-r from-primary to-primary-container"></div>
-                </div>
-                <p class="text-[0.75rem] text-on-surface-variant leading-tight">Based on selected supplier's performance metrics.</p>
-            </div>
-        </div>
-    </aside>
-</main>
 
-<div id="successModal" class="success-modal-overlay">
-    <div class="success-card">
-        <div class="success-icon">
-            <span class="material-symbols-outlined">check</span>
+                <div class="bg-surface-container-lowest p-6 rounded-xl space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[0.6875rem] uppercase font-bold text-outline">Estimated Lead Time</span>
+                            <div id="leadTimeDisplay" class="text-3xl font-extrabold font-headline text-primary mt-1">—
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-primary-container">speed</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-surface-container-low rounded-full overflow-hidden">
+                        <div id="leadTimeBar" class="h-full w-0 bg-gradient-to-r from-primary to-primary-container">
+                        </div>
+                    </div>
+                    <p class="text-[0.75rem] text-on-surface-variant leading-tight">Based on selected supplier's
+                        performance metrics.</p>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div id="successModal" class="success-modal-overlay">
+        <div class="success-card">
+            <div class="success-icon">
+                <span class="material-symbols-outlined">check</span>
+            </div>
+            <h3 class="text-xl font-bold text-on-surface mb-2">Order Placed Successfully!</h3>
+            <p id="successOrderRef" class="text-slate-500 text-sm mb-4">Your order has been saved</p>
+            <button onclick="closeSuccessAndExit()"
+                class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-all">
+                Done
+            </button>
         </div>
-        <h3 class="text-xl font-bold text-on-surface mb-2">Order Placed Successfully!</h3>
-        <p id="successOrderRef" class="text-slate-500 text-sm mb-4">Your order has been saved</p>
-        <button onclick="closeSuccessAndExit()" class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-all">
-            Done
-        </button>
     </div>
-</div>
 
-<script>
-    // ========== STATE VARIABLES ==========
-    let selectedSupplier = null;
-    let cart = [];
-    let currentPriority = "NORMAL";
-    let currentStep = 1;
-    let allSuppliers = [];
-    let allProducts = {};
-    
-    const terminalFees = { "A1": 600, "B4": 455, "C2": 745, "D3": 255 };
-    const terminalDays = { "A1": 1, "B4": 3, "C2": 6, "D3": 2 };
-    const priorityFees = { "NORMAL": 0, "URGENT": 3000, "CRITICAL": 5000 };
-    const priorityDays = { "NORMAL": 0, "URGENT": 2, "CRITICAL": 4 };
-    
-    // DOM Elements
-    const step1Content = document.getElementById('step1Content');
-    const step2Content = document.getElementById('step2Content');
-    const step3Content = document.getElementById('step3Content');
-    const step1Dot = document.getElementById('step1Dot');
-    const step2Dot = document.getElementById('step2Dot');
-    const step3Dot = document.getElementById('step3Dot');
-    const step1Label = document.getElementById('step1Label');
-    const step2Label = document.getElementById('step2Label');
-    const step3Label = document.getElementById('step3Label');
-    const supplierList = document.getElementById('supplierList');
-    const itemsList = document.getElementById('itemsList');
-    const cartSubtotalSpan = document.getElementById('cartSubtotal');
-    const cartCountSpan = document.getElementById('cartCount');
-    const selectedSupplierNameSpan = document.getElementById('selectedSupplierName');
-    const nextToItemsBtn = document.getElementById('nextToItemsBtn');
-    const nextToReviewBtn = document.getElementById('nextToReviewBtn');
-    const supplierSearch = document.getElementById('supplierSearch');
-    const itemSearch = document.getElementById('itemSearch');
-    const leadTimeDisplay = document.getElementById('leadTimeDisplay');
-    const leadTimeBar = document.getElementById('leadTimeBar');
-    const deliveryTerminal = document.getElementById('deliveryTerminal');
-    const internalRefInput = document.getElementById('internalRef');
-    const successModal = document.getElementById('successModal');
-    
-    // Helper function to add cache-busting
-    function getApiUrl(endpoint, params = {}) {
-        const url = new URL(endpoint, window.location.href);
-        url.searchParams.set('_t', Date.now());
-        Object.keys(params).forEach(key => {
-            url.searchParams.set(key, params[key]);
-        });
-        return url.toString();
-    }
-    
-    // ========== FETCH SUPPLIERS ==========
-    async function fetchSuppliers() {
-        try {
-            const url = getApiUrl('api/get_suppliers.php');
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.success) {
-                allSuppliers = data.suppliers;
-                renderSuppliers();
-                await fetchAllSupplierProducts();
-            } else {
-                supplierList.innerHTML = '<div class="text-center py-8 text-red-500">Failed to load suppliers</div>';
-            }
-        } catch (error) {
-            console.error('Error fetching suppliers:', error);
-            supplierList.innerHTML = '<div class="text-center py-8 text-red-500">Connection error. Please refresh.</div>';
+    <script>
+        // ========== STATE VARIABLES ==========
+        let selectedSupplier = null;
+        let cart = [];
+        let currentPriority = "NORMAL";
+        let currentStep = 1;
+        let allSuppliers = [];
+        let allProducts = {};
+
+        const priorityFees = { "NORMAL": 0, "URGENT": 3000, "CRITICAL": 5000 };
+        const priorityDays = { "NORMAL": 0, "URGENT": 2, "CRITICAL": 4 };
+
+        // DOM Elements
+        const step1Content = document.getElementById('step1Content');
+        const step2Content = document.getElementById('step2Content');
+        const step3Content = document.getElementById('step3Content');
+        const step1Dot = document.getElementById('step1Dot');
+        const step2Dot = document.getElementById('step2Dot');
+        const step3Dot = document.getElementById('step3Dot');
+        const step1Label = document.getElementById('step1Label');
+        const step2Label = document.getElementById('step2Label');
+        const step3Label = document.getElementById('step3Label');
+        const supplierList = document.getElementById('supplierList');
+        const itemsList = document.getElementById('itemsList');
+        const cartSubtotalSpan = document.getElementById('cartSubtotal');
+        const cartCountSpan = document.getElementById('cartCount');
+        const selectedSupplierNameSpan = document.getElementById('selectedSupplierName');
+        const nextToItemsBtn = document.getElementById('nextToItemsBtn');
+        const nextToReviewBtn = document.getElementById('nextToReviewBtn');
+        const supplierSearch = document.getElementById('supplierSearch');
+        const itemSearch = document.getElementById('itemSearch');
+        const leadTimeDisplay = document.getElementById('leadTimeDisplay');
+        const leadTimeBar = document.getElementById('leadTimeBar');
+        const deliveryWarehouse = document.getElementById('deliveryWarehouse');
+        const internalRefInput = document.getElementById('internalRef');
+        const successModal = document.getElementById('successModal');
+
+        function getApiUrl(endpoint, params = {}) {
+            const url = new URL(endpoint, window.location.href);
+            url.searchParams.set('_t', Date.now());
+            Object.keys(params).forEach(key => { url.searchParams.set(key, params[key]); });
+            return url.toString();
         }
-    }
-    
-    // Fetch products for all suppliers
-    async function fetchAllSupplierProducts() {
-        for (const supplier of allSuppliers) {
+
+        async function fetchSuppliers() {
             try {
-                const url = getApiUrl('api/get_supplier.php', { id: supplier.id });
+                const url = getApiUrl('api/get_suppliers.php');
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.success) {
+                    allSuppliers = data.suppliers;
+                    renderSuppliers();
+                    await fetchAllSupplierProducts();
+                } else {
+                    supplierList.innerHTML = '<div class="text-center py-8 text-red-500">Failed to load suppliers</div>';
+                }
+            } catch (error) {
+                console.error('Error fetching suppliers:', error);
+                supplierList.innerHTML = '<div class="text-center py-8 text-red-500">Connection error. Please refresh.</div>';
+            }
+        }
+
+        async function fetchAllSupplierProducts() {
+            for (const supplier of allSuppliers) {
+                try {
+                    const url = getApiUrl('api/get_supplier.php', { id: supplier.id });
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    if (data.success && data.products) {
+                        allProducts[supplier.id] = data.products;
+                    } else {
+                        allProducts[supplier.id] = [];
+                    }
+                } catch (error) {
+                    console.error(`Error fetching products for supplier ${supplier.id}:`, error);
+                    allProducts[supplier.id] = [];
+                }
+            }
+            if (selectedSupplier) renderItems();
+        }
+
+        async function forceRefreshProducts() {
+            if (!selectedSupplier) return;
+            const refreshBtn = document.getElementById('refreshBtn');
+            const originalText = refreshBtn.innerHTML;
+            refreshBtn.innerHTML = '<span class="material-symbols-outlined text-sm refreshing">refresh</span> Refreshing...';
+            refreshBtn.disabled = true;
+            try {
+                const url = getApiUrl('api/get_supplier.php', { id: selectedSupplier.id });
                 const response = await fetch(url);
                 const data = await response.json();
                 if (data.success && data.products) {
-                    allProducts[supplier.id] = data.products;
-                } else {
-                    allProducts[supplier.id] = [];
+                    allProducts[selectedSupplier.id] = data.products;
+                    renderItems();
+                    cart = [];
+                    updateCartDisplay();
+                    showToast('Refreshed', 'Products updated successfully');
                 }
             } catch (error) {
-                console.error(`Error fetching products for supplier ${supplier.id}:`, error);
-                allProducts[supplier.id] = [];
+                console.error('Error refreshing products:', error);
+                showToast('Error', 'Failed to refresh products', true);
+            } finally {
+                refreshBtn.innerHTML = originalText;
+                refreshBtn.disabled = false;
             }
         }
-        if (selectedSupplier) {
-            renderItems();
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `position: fixed; bottom: 20px; right: 20px; background: ${type === 'error' ? '#ef4444' : '#22c55e'}; color: white; padding: 12px 20px; border-radius: 8px; z-index: 9999; font-size: 14px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15);`;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
-    }
-    
-    // Force refresh products for current supplier
-    async function forceRefreshProducts() {
-        if (!selectedSupplier) return;
-        
-        const refreshBtn = document.getElementById('refreshBtn');
-        const originalText = refreshBtn.innerHTML;
-        refreshBtn.innerHTML = '<span class="material-symbols-outlined text-sm refreshing">refresh</span> Refreshing...';
-        refreshBtn.disabled = true;
-        
-        try {
-            const url = getApiUrl('api/get_supplier.php', { id: selectedSupplier.id });
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.success && data.products) {
-                allProducts[selectedSupplier.id] = data.products;
-                renderItems();
-                // Clear cart when refreshing products
-                cart = [];
-                updateCartDisplay();
-                showToast('Refreshed', 'Products updated successfully');
+
+        function generateOrderReference() {
+            const year = new Date().getFullYear();
+            const supplier = selectedSupplier ? selectedSupplier.name.split(' ') : null;
+            let companyCode = 'OR';
+            if (supplier && supplier.length >= 2) {
+                companyCode = (supplier[0].charAt(0) + supplier[1].charAt(0)).toUpperCase();
+            } else if (supplier) {
+                companyCode = supplier[0].substring(0, 2).toUpperCase();
             }
-        } catch (error) {
-            console.error('Error refreshing products:', error);
-            showToast('Error', 'Failed to refresh products', true);
-        } finally {
-            refreshBtn.innerHTML = originalText;
-            refreshBtn.disabled = false;
-        }
-    }
-    
-    function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed; bottom: 20px; right: 20px; 
-            background: ${type === 'error' ? '#ef4444' : '#22c55e'}; 
-            color: white; padding: 12px 20px; 
-            border-radius: 8px; z-index: 9999;
-            font-size: 14px; font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        `;
-        toast.innerHTML = message;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-    
-    function generateOrderReference() {
-        const currentYear = new Date().getFullYear();
-        const timestamp = Date.now().toString().slice(-6);
-        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-        
-        if (selectedSupplier) {
-            const words = selectedSupplier.name.split(' ');
-            let companyCode = words.length >= 2 ? (words[0].charAt(0) + words[1].charAt(0)).toUpperCase() : words[0].substring(0, 2).toUpperCase();
-            const reference = `ORD-${currentYear}-${companyCode}-${timestamp}${random}`;
+            const reference = `ORD-${year}-${companyCode}-${Date.now()}`;
             internalRefInput.value = reference;
             return reference;
         }
-        return `ORD-${currentYear}-PX-${timestamp}${random}`;
-    }
-    
-    function calculateLeadTimeRange() {
-        if (!selectedSupplier) return { min: 0, max: 0 };
-        let minDays = parseInt(selectedSupplier.lead_time) || 7;
-        let maxDays = minDays + 2;
-        const terminal = deliveryTerminal.value;
-        minDays += terminalDays[terminal] || 0;
-        maxDays += terminalDays[terminal] || 0;
-        minDays -= priorityDays[currentPriority];
-        maxDays -= priorityDays[currentPriority];
-        minDays = Math.max(1, minDays);
-        maxDays = Math.max(minDays, maxDays);
-        return { min: minDays, max: maxDays };
-    }
-    
-    function updateLeadTimeDisplay() {
-        const { min, max } = calculateLeadTimeRange();
-        leadTimeDisplay.innerText = min === max ? `${min} Day${min !== 1 ? 's' : ''}` : `${min}-${max} Days`;
-        const avgDays = (min + max) / 2;
-        leadTimeBar.style.width = `${Math.min(100, (avgDays / 20) * 100)}%`;
-    }
-    
-    function calculateTotalWithFees() {
-        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const priorityFee = priorityFees[currentPriority];
-        const terminalFee = terminalFees[deliveryTerminal.value];
-        return { subtotal, priorityFee, terminalFee, total: subtotal + priorityFee + terminalFee };
-    }
-    
-    function updateCartDisplay() {
-        const { subtotal, priorityFee, terminalFee, total } = calculateTotalWithFees();
-        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-        
-        cartSubtotalSpan.innerText = `₱${subtotal.toLocaleString()}`;
-        cartCountSpan.innerText = count;
-        nextToReviewBtn.disabled = cart.length === 0;
-        
-        document.getElementById('reviewRef').innerText = internalRefInput.value;
-        document.getElementById('reviewSupplier').innerText = selectedSupplier?.name || '—';
-        document.getElementById('reviewPriority').innerText = currentPriority;
-        document.getElementById('reviewTerminal').innerText = deliveryTerminal.options[deliveryTerminal.selectedIndex].text;
-        document.getElementById('reviewItemCount').innerText = count;
-        document.getElementById('reviewSubtotal').innerText = `₱${subtotal.toLocaleString()}`;
-        document.getElementById('reviewPriorityFee').innerText = `₱${priorityFee.toLocaleString()}`;
-        document.getElementById('reviewTerminalFee').innerText = `₱${terminalFee.toLocaleString()}`;
-        document.getElementById('reviewTotal').innerText = `₱${total.toLocaleString()}`;
-        
-        const reviewItemsList = document.getElementById('reviewItemsList');
-        reviewItemsList.innerHTML = cart.map(item => `
+
+        function calculateLeadTimeRange() {
+            if (!selectedSupplier) return { min: 0, max: 0 };
+            let minDays = parseInt(selectedSupplier.lead_time) || 7;
+            let maxDays = minDays + 2;
+            minDays -= priorityDays[currentPriority];
+            maxDays -= priorityDays[currentPriority];
+            minDays = Math.max(1, minDays);
+            maxDays = Math.max(minDays, maxDays);
+            return { min: minDays, max: maxDays };
+        }
+
+        function updateLeadTimeDisplay() {
+            const { min, max } = calculateLeadTimeRange();
+            leadTimeDisplay.innerText = min === max ? `${min} Day${min !== 1 ? 's' : ''}` : `${min}-${max} Days`;
+            const avgDays = (min + max) / 2;
+            leadTimeBar.style.width = `${Math.min(100, (avgDays / 20) * 100)}%`;
+        }
+
+        function calculateTotalWithFees() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const priorityFee = priorityFees[currentPriority];
+            return { subtotal, priorityFee, total: subtotal + priorityFee };
+        }
+
+        function updateCartDisplay() {
+            const { subtotal, priorityFee, total } = calculateTotalWithFees();
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            cartSubtotalSpan.innerText = `₱${subtotal.toLocaleString()}`;
+            cartCountSpan.innerText = count;
+            nextToReviewBtn.disabled = cart.length === 0;
+
+            document.getElementById('reviewRef').innerText = internalRefInput.value;
+            document.getElementById('reviewSupplier').innerText = selectedSupplier?.name || '—';
+            document.getElementById('reviewPriority').innerText = currentPriority;
+            
+            const selectedWarehouseId = parseInt(deliveryWarehouse.value);  // Make sure this is parseInt
+            let warehouseDisplay = "";
+            if (selectedWarehouseId === "1") warehouseDisplay = "Mariano's Delivery Hub";
+            else if (selectedWarehouseId === "2") warehouseDisplay = "Hanubis Center";
+            else if (selectedWarehouseId === "3") warehouseDisplay = "Canto Warehouse Inc.";
+            else if (selectedWarehouseId === "4") warehouseDisplay = "Gervas Logistics Facility";
+            document.getElementById('reviewTerminal').innerText = warehouseDisplay;
+            
+            document.getElementById('reviewItemCount').innerText = count;
+            document.getElementById('reviewSubtotal').innerText = `₱${subtotal.toLocaleString()}`;
+            document.getElementById('reviewPriorityFee').innerText = `₱${priorityFee.toLocaleString()}`;
+            document.getElementById('reviewTotal').innerText = `₱${total.toLocaleString()}`;
+
+            const reviewItemsList = document.getElementById('reviewItemsList');
+            reviewItemsList.innerHTML = cart.map(item => `
             <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
                 <div class="flex items-center gap-3">
-                    ${item.image ? 
-                        `<img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=Product'">` :
-                        `<div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                            ${item.name.substring(0, 2).toUpperCase()}
-                        </div>`
-                    }
+                    ${item.image ? `<img src="${item.image}" class="w-10 h-10 rounded-lg object-cover" onerror="this.src='https://placehold.co/100x100?text=Product'">` : `<div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">${item.name.substring(0, 2).toUpperCase()}</div>`}
                     <div><p class="font-medium text-sm">${escapeHtml(item.name)}</p><p class="text-xs text-slate-500">${item.sku || 'N/A'}</p></div>
                 </div>
                 <div class="text-right"><p class="font-semibold text-primary">₱${(item.price * item.quantity).toLocaleString()}</p><p class="text-xs text-primary/70">${item.quantity} item${item.quantity !== 1 ? 's' : ''}</p></div>
             </div>
         `).join('');
-        if (cart.length === 0) reviewItemsList.innerHTML = '<div class="text-center py-4 text-slate-400">No items added yet</div>';
-    }
-    
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
-    
-    function renderSuppliers() {
-        const searchTerm = supplierSearch.value.toLowerCase();
-        const filtered = allSuppliers.filter(s => s.name.toLowerCase().includes(searchTerm) || (s.category && s.category.toLowerCase().includes(searchTerm)) || (s.contact_person && s.contact_person.toLowerCase().includes(searchTerm)) || (s.address && s.address.toLowerCase().includes(searchTerm)));
-        
-        if (filtered.length === 0) {
-            supplierList.innerHTML = '<div class="text-center py-8 text-slate-400">No suppliers found</div>';
-            nextToItemsBtn.disabled = true;
-            return;
+            if (cart.length === 0) reviewItemsList.innerHTML = '<div class="text-center py-4 text-slate-400">No items added yet</div>';
         }
-        
-        supplierList.innerHTML = filtered.map(supplier => `
+
+        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+
+        function renderSuppliers() {
+            const searchTerm = supplierSearch.value.toLowerCase();
+            const filtered = allSuppliers.filter(s => s.name.toLowerCase().includes(searchTerm) || (s.category && s.category.toLowerCase().includes(searchTerm)) || (s.contact_person && s.contact_person.toLowerCase().includes(searchTerm)) || (s.address && s.address.toLowerCase().includes(searchTerm)));
+
+            if (filtered.length === 0) {
+                supplierList.innerHTML = '<div class="text-center py-8 text-slate-400">No suppliers found</div>';
+                nextToItemsBtn.disabled = true;
+                return;
+            }
+
+            supplierList.innerHTML = filtered.map(supplier => `
             <div class="group flex items-start p-6 ${selectedSupplier?.id === supplier.id ? 'bg-primary/5 border-2 border-primary' : 'bg-surface-container-low hover:bg-surface-container'} transition-all cursor-pointer rounded-xl" onclick="selectSupplier(${supplier.id})">
                 <div class="w-12 h-12 rounded-lg ${selectedSupplier?.id === supplier.id ? 'bg-primary' : 'bg-surface-container-highest'} flex items-center justify-center mr-6 flex-shrink-0">
                     <span class="material-symbols-outlined ${selectedSupplier?.id === supplier.id ? 'text-white' : 'text-outline'}">${getCategoryIcon(supplier.category)}</span>
@@ -628,53 +674,50 @@
                 <div class="ml-6">${selectedSupplier?.id === supplier.id ? '<span class="material-symbols-outlined text-primary" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : '<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 transition-opacity">radio_button_unchecked</span>'}</div>
             </div>
         `).join('');
-        nextToItemsBtn.disabled = !selectedSupplier;
-    }
-    
-    function getCategoryIcon(category) {
-        const icons = { 'Electronics':'developer_board', 'Machinery':'settings', 'Logistics':'local_shipping', 'Sensors':'sensors', 'Components':'build', 'Industrial':'factory', 'Raw Materials':'forest', 'Packaging':'inventory', 'Services':'support_agent' };
-        return icons[category] || 'business';
-    }
-    
-    async function selectSupplier(id) {
-        selectedSupplier = allSuppliers.find(s => s.id === id);
-        renderSuppliers();
-        generateOrderReference();
-        updateLeadTimeDisplay();
-        updateCartDisplay();
-        
-        const location = selectedSupplier?.address || 'Location not specified';
-        const leadTime = selectedSupplier?.lead_time || '—';
-        selectedSupplierNameSpan.innerHTML = `<div class="text-lg font-bold text-primary">${escapeHtml(selectedSupplier?.name)}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-2"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">location_on</span> ${escapeHtml(location)}</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span> Lead time: ${leadTime} days</span></div>`;
-        
-        cart = [];
-        updateCartDisplay();
-        if (currentStep === 2) {
-            // Force fresh products when selecting supplier in step 2
-            await forceRefreshProducts();
+            nextToItemsBtn.disabled = !selectedSupplier;
         }
-    }
-    
-    function renderItems() {
-        if (!selectedSupplier) return;
-        const products = allProducts[selectedSupplier.id] || [];
-        const searchTerm = itemSearch.value.toLowerCase();
-        const filtered = products.filter(p => (p.product_name && p.product_name.toLowerCase().includes(searchTerm)) || (p.product_sku && p.product_sku.toLowerCase().includes(searchTerm)));
-        
-        if (filtered.length === 0) {
-            itemsList.innerHTML = '<div class="text-center py-8 text-slate-400">No products available from this supplier</div>';
-            return;
+
+        function getCategoryIcon(category) {
+            const icons = { 'Electronics': 'developer_board', 'Machinery': 'settings', 'Logistics': 'local_shipping', 'Sensors': 'sensors', 'Components': 'build', 'Industrial': 'factory', 'Raw Materials': 'forest', 'Packaging': 'inventory', 'Services': 'support_agent' };
+            return icons[category] || 'business';
         }
-        
-        itemsList.innerHTML = filtered.map(product => {
-            const cartItem = cart.find(c => c.id === product.id);
-            const quantity = cartItem ? cartItem.quantity : 0;
-            const productImage = product.product_image || null;
-            return `
+
+        async function selectSupplier(id) {
+            selectedSupplier = allSuppliers.find(s => s.id === id);
+            renderSuppliers();
+            generateOrderReference();
+            updateLeadTimeDisplay();
+            updateCartDisplay();
+
+            const location = selectedSupplier?.address || 'Location not specified';
+            const leadTime = selectedSupplier?.lead_time || '—';
+            selectedSupplierNameSpan.innerHTML = `<div class="text-lg font-bold text-primary">${escapeHtml(selectedSupplier?.name)}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-2 flex-wrap"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">location_on</span> ${escapeHtml(location)}</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span> Lead time: ${leadTime} days</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">category</span> ${escapeHtml(selectedSupplier.category || 'Uncategorized')}</span></div>`;
+
+            cart = [];
+            updateCartDisplay();
+            if (currentStep === 2) await forceRefreshProducts();
+        }
+
+        function renderItems() {
+            if (!selectedSupplier) return;
+            const products = allProducts[selectedSupplier.id] || [];
+            const searchTerm = itemSearch.value.toLowerCase();
+            const filtered = products.filter(p => (p.product_name && p.product_name.toLowerCase().includes(searchTerm)) || (p.product_sku && p.product_sku.toLowerCase().includes(searchTerm)));
+
+            if (filtered.length === 0) {
+                itemsList.innerHTML = '<div class="text-center py-8 text-slate-400">No products available from this supplier</div>';
+                return;
+            }
+
+            itemsList.innerHTML = filtered.map(product => {
+                const cartItem = cart.find(c => c.id === product.id);
+                const quantity = cartItem ? cartItem.quantity : 0;
+                const productImage = product.product_image || null;
+                return `
                 <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
                     <div class="flex-grow">
                         <div class="flex items-center gap-3">
-                            ${productImage ? `<img src="${productImage}" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='https://placehold.co/100x100?text=Product'">` : `<div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">${(product.product_name || 'P').substring(0, 2).toUpperCase()}</div>`}
+                            ${productImage ? `<img src="${productImage}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='https://placehold.co/100x100?text=Product'">` : `<div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">${(product.product_name || 'P').substring(0, 2).toUpperCase()}</div>`}
                             <div><h4 class="font-semibold">${escapeHtml(product.product_name)}</h4>${product.product_sku ? `<span class="text-xs text-slate-400 font-mono">${escapeHtml(product.product_sku)}</span>` : ''}</div>
                         </div>
                         <p class="text-sm text-slate-500 mt-2">₱${parseFloat(product.price).toLocaleString()} each</p>
@@ -686,157 +729,169 @@
                     </div>
                 </div>
             `;
-        }).join('');
-        updateCartDisplay();
-    }
-    
-    function updateCart(itemId, delta, name, sku, price, image) {
-        const existing = cart.find(c => c.id === itemId);
-        if (delta > 0) {
-            if (existing) existing.quantity++;
-            else cart.push({ id: itemId, name, sku, price, quantity: 1, image });
-        } else if (delta < 0 && existing) {
-            if (existing.quantity > 1) existing.quantity--;
-            else cart = cart.filter(c => c.id !== itemId);
+            }).join('');
+            updateCartDisplay();
         }
-        updateCartDisplay();
-        renderItems();
-    }
-    
-    function setPriority(priority) {
-        currentPriority = priority;
-        document.getElementById('priorityNormal').className = priority === 'NORMAL' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
-        document.getElementById('priorityUrgent').className = priority === 'URGENT' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
-        document.getElementById('priorityCritical').className = priority === 'CRITICAL' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
-        updateLeadTimeDisplay();
-        updateCartDisplay();
-    }
-    
-    function updateStepUI() {
-        step1Content.style.display = 'none';
-        step2Content.style.display = 'none';
-        step3Content.style.display = 'none';
-        if (currentStep === 1) step1Content.style.display = 'block';
-        if (currentStep === 2) step2Content.style.display = 'block';
-        if (currentStep === 3) step3Content.style.display = 'block';
-        
-        const steps = [
-            { dot: step1Dot, label: step1Label, active: currentStep === 1, completed: currentStep > 1 },
-            { dot: step2Dot, label: step2Label, active: currentStep === 2, completed: currentStep > 2 },
-            { dot: step3Dot, label: step3Label, active: currentStep === 3, completed: currentStep > 3 }
-        ];
-        steps.forEach((step, idx) => {
-            if (step.completed) {
-                step.dot.className = 'w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold';
-                step.dot.innerText = '✓';
-                step.label.className = 'text-xs font-semibold text-green-600';
-            } else if (step.active) {
-                step.dot.className = 'w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold';
-                step.dot.innerText = idx + 1;
-                step.label.className = 'text-xs font-semibold text-primary';
-            } else {
-                step.dot.className = 'w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold';
-                step.dot.innerText = idx + 1;
-                step.label.className = 'text-xs font-medium text-slate-500';
+
+        function updateCart(itemId, delta, name, sku, price, image) {
+            const existing = cart.find(c => c.id === itemId);
+            if (delta > 0) {
+                if (existing) existing.quantity++;
+                else cart.push({ id: itemId, name, sku, price, quantity: 1, image });
+            } else if (delta < 0 && existing) {
+                if (existing.quantity > 1) existing.quantity--;
+                else cart = cart.filter(c => c.id !== itemId);
+            }
+            updateCartDisplay();
+            renderItems();
+        }
+
+        function setPriority(priority) {
+            currentPriority = priority;
+            document.getElementById('priorityNormal').className = priority === 'NORMAL' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+            document.getElementById('priorityUrgent').className = priority === 'URGENT' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+            document.getElementById('priorityCritical').className = priority === 'CRITICAL' ? 'flex-1 py-2 px-3 rounded-full bg-primary text-white text-xs font-bold transition-all' : 'flex-1 py-2 px-3 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold hover:bg-outline-variant transition-all';
+            updateLeadTimeDisplay();
+            updateCartDisplay();
+        }
+
+        function updateStepUI() {
+            step1Content.style.display = 'none';
+            step2Content.style.display = 'none';
+            step3Content.style.display = 'none';
+            if (currentStep === 1) step1Content.style.display = 'block';
+            if (currentStep === 2) step2Content.style.display = 'block';
+            if (currentStep === 3) step3Content.style.display = 'block';
+
+            const steps = [
+                { dot: step1Dot, label: step1Label, active: currentStep === 1, completed: currentStep > 1 },
+                { dot: step2Dot, label: step2Label, active: currentStep === 2, completed: currentStep > 2 },
+                { dot: step3Dot, label: step3Label, active: currentStep === 3, completed: currentStep > 3 }
+            ];
+            steps.forEach((step, idx) => {
+                if (step.completed) {
+                    step.dot.className = 'w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold';
+                    step.dot.innerText = '✓';
+                    step.label.className = 'text-xs font-semibold text-green-600';
+                } else if (step.active) {
+                    step.dot.className = 'w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold';
+                    step.dot.innerText = idx + 1;
+                    step.label.className = 'text-xs font-semibold text-primary';
+                } else {
+                    step.dot.className = 'w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold';
+                    step.dot.innerText = idx + 1;
+                    step.label.className = 'text-xs font-medium text-slate-500';
+                }
+            });
+        }
+
+        function goToStep2() {
+            if (!selectedSupplier) return;
+            currentStep = 2;
+            updateStepUI();
+            renderItems();
+        }
+
+        function goToStep1() { currentStep = 1; updateStepUI(); renderSuppliers(); }
+        function goToStep3() { if (cart.length === 0) return; currentStep = 3; updateStepUI(); updateCartDisplay(); }
+
+        function closeSuccessAndExit() {
+            successModal.classList.remove('active');
+            cart = [];
+            updateCartDisplay();
+            renderItems();
+            updateStepUI();
+            setPriority('NORMAL');
+            if (selectedSupplier) generateOrderReference();
+            updateLeadTimeDisplay();
+            updateCartDisplay();
+            if (window.parent !== window) {
+                window.parent.postMessage('orderCreated', '*');
+                window.parent.postMessage('closeOrderModal', '*');
+            }
+        }
+
+        function submitOrder() {
+            const { subtotal, priorityFee, total } = calculateTotalWithFees();
+            const { min, max } = calculateLeadTimeRange();
+            const submitBtn = document.getElementById('submitOrderBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Saving... <span class="material-symbols-outlined text-sm">hourglass_empty</span>';
+
+            const orderReference = internalRefInput.value;
+            const selectedWarehouseId = deliveryWarehouse.value;
+            
+            let selectedWarehouseName = "";
+            if (selectedWarehouseId === "1") selectedWarehouseName = "Mariano's Delivery Hub";
+            else if (selectedWarehouseId === "2") selectedWarehouseName = "Hanubis Center";
+            else if (selectedWarehouseId === "3") selectedWarehouseName = "Canto Warehouse Inc.";
+            else if (selectedWarehouseId === "4") selectedWarehouseName = "Gervas Logistics Facility";
+
+            const itemsWithLatestImages = cart.map(i => {
+                const latestProduct = allProducts[selectedSupplier.id]?.find(p => p.id === i.id);
+                return { name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, image: latestProduct?.product_image || i.image || null };
+            });
+
+            const orderData = {
+                orderReference,
+                supplier: selectedSupplier.name,
+                supplierCategory: selectedSupplier.category,
+                items: itemsWithLatestImages,
+                subtotal,
+                priorityFee,
+                terminalFee: 0,
+                total,
+                priority: currentPriority,
+                deliveryWarehouse: selectedWarehouseName,
+                warehouseId: parseInt(selectedWarehouseId),
+                leadTimeMin: min,
+                leadTimeMax: max,
+                orderDate: new Date().toISOString()
+            };
+
+            fetch('api/save_order.php', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('successOrderRef').innerHTML = `Reference: ${orderReference}<br><span class="text-xs text-slate-400">Order saved to ${selectedWarehouseName}</span>`;
+                        successModal.classList.add('active');
+                        cart = [];
+                        updateCartDisplay();
+                        renderItems();
+                        setTimeout(() => { if (selectedSupplier) generateOrderReference(); }, 100);
+                    } else {
+                        alert('Error saving order: ' + data.error);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to save order. Please check if the server is running.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>';
+                });
+        }
+
+        window.addEventListener('storage', (e) => { if (e.key === 'supplierUpdateBroadcast') fetchSuppliers(); });
+        window.addEventListener('suppliersDataUpdated', () => fetchSuppliers());
+        window.addEventListener('focus', () => { if (selectedSupplier && currentStep === 2) forceRefreshProducts(); });
+        window.addEventListener('message', (event) => {
+            if (event.data === 'supplierUpdated' || event.data === 'supplierSaved') {
+                fetchSuppliers();
+                if (selectedSupplier) setTimeout(() => forceRefreshProducts(), 500);
             }
         });
-    }
-    
-    function goToStep2() {
-        if (!selectedSupplier) return;
-        currentStep = 2;
-        const location = selectedSupplier.address || 'Location not specified';
-        const leadTime = selectedSupplier.lead_time || '—';
-        selectedSupplierNameSpan.innerHTML = `<div class="text-lg font-bold text-primary">${escapeHtml(selectedSupplier.name)}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-2 flex-wrap"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">location_on</span> ${escapeHtml(location)}</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">schedule</span> Lead time: ${leadTime} days</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">category</span> ${escapeHtml(selectedSupplier.category || 'Uncategorized')}</span></div>`;
-        updateStepUI();
-        renderItems();
-    }
-    
-    function goToStep1() { currentStep = 1; updateStepUI(); renderSuppliers(); }
-    function goToStep3() { if (cart.length === 0) return; currentStep = 3; updateStepUI(); updateCartDisplay(); }
-    
-    function closeSuccessAndExit() {
-        successModal.classList.remove('active');
-        cart = [];
-        updateCartDisplay();
-        renderItems();
-        updateStepUI();
-        setPriority('NORMAL');
-        deliveryTerminal.value = 'A1';
-        if (selectedSupplier) generateOrderReference();
-        updateLeadTimeDisplay();
-        updateCartDisplay();
-        if (window.parent !== window) {
-            window.parent.postMessage('orderCreated', '*');
-            window.parent.postMessage('closeOrderModal', '*');
-        }
-    }
-    
-    function submitOrder() {
-        const { subtotal, priorityFee, terminalFee, total } = calculateTotalWithFees();
-        const { min, max } = calculateLeadTimeRange();
-        const submitBtn = document.getElementById('submitOrderBtn');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = 'Saving... <span class="material-symbols-outlined text-sm">hourglass_empty</span>';
-        
-        const orderReference = internalRefInput.value;
-        const itemsWithLatestImages = cart.map(i => {
-            const latestProduct = allProducts[selectedSupplier.id]?.find(p => p.id === i.id);
-            return { name: i.name, sku: i.sku, quantity: i.quantity, price: i.price, image: latestProduct?.product_image || i.image || null };
-        });
-        
-        const orderData = {
-            orderReference, supplier: selectedSupplier.name, supplierCategory: selectedSupplier.category,
-            items: itemsWithLatestImages, subtotal, priorityFee, terminalFee, total,
-            priority: currentPriority, deliveryTerminal: deliveryTerminal.options[deliveryTerminal.selectedIndex].text,
-            leadTimeMin: min, leadTimeMax: max, orderDate: new Date().toISOString()
-        };
-        
-        fetch('api/save_order.php', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('successOrderRef').innerHTML = `Reference: ${orderReference}<br><span class="text-xs text-slate-400">Order saved successfully</span>`;
-                successModal.classList.add('active');
-                cart = [];
-                updateCartDisplay();
-                renderItems();
-                setTimeout(() => { if (selectedSupplier) generateOrderReference(); }, 100);
-            } else {
-                alert('Error saving order: ' + data.error);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to save order. Please check if the server is running.');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Confirm & Place Order <span class="material-symbols-outlined text-sm">check_circle</span>';
-        });
-    }
-    
-    // Event Listeners
-    window.addEventListener('storage', (e) => { if (e.key === 'supplierUpdateBroadcast') fetchSuppliers(); });
-    window.addEventListener('suppliersDataUpdated', () => fetchSuppliers());
-    window.addEventListener('focus', () => { if (selectedSupplier && currentStep === 2) forceRefreshProducts(); });
-    window.addEventListener('message', (event) => {
-        if (event.data === 'supplierUpdated' || event.data === 'supplierSaved') {
-            fetchSuppliers();
-            if (selectedSupplier) setTimeout(() => forceRefreshProducts(), 500);
-        }
-    });
-    
-    supplierSearch.addEventListener('input', renderSuppliers);
-    itemSearch.addEventListener('input', renderItems);
-    deliveryTerminal.addEventListener('change', () => { updateLeadTimeDisplay(); updateCartDisplay(); });
-    
-    // Initialize
-    fetchSuppliers();
-    generateOrderReference();
-</script>
+
+        supplierSearch.addEventListener('input', renderSuppliers);
+        itemSearch.addEventListener('input', renderItems);
+
+        fetchSuppliers();
+        generateOrderReference();
+    </script>
 </body>
+
 </html>

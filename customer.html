@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers | MeWooHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-manrope {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .main-content {
+            margin-left: 288px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.5rem;
+            color: #475569;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: #e2e8f0;
+            color: #2563eb;
+            transform: translateX(4px);
+        }
+
+        .nav-link-active {
+            background: white;
+            color: #2563eb;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .tab-button.active {
+            color: #0041c8;
+            border-bottom-color: #0041c8;
+        }
+
+        .status-pending {
+            background-color: #ffdad6;
+            color: #93000a;
+        }
+
+        .status-processing {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-shipped {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-delivered {
+            background-color: #dce1ff;
+            color: #0039b3;
+        }
+
+        .status-cancelled {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+
+        .order-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .order-details-modal.active {
+            display: flex;
+        }
+
+        .order-details-card {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: slideUpFloat 0.35s ease-out;
+        }
+
+        .order-details-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-details-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .order-item-row {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s;
+            gap: 1rem;
+        }
+
+        .order-item-row:hover {
+            background: #f8fafc;
+        }
+
+        .product-image-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 0.75rem;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        @keyframes slideUpFloat {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .clickable-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .clickable-row:hover {
+            background-color: #f1f5f9;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            border-left: 4px solid #22c55e;
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+
+        .action-select {
+            padding: 0.4rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-select:hover {
+            border-color: #0041c8;
+            background: #f8fafc;
+        }
+
+        .action-select:focus {
+            outline: none;
+            border-color: #0041c8;
+            box-shadow: 0 0 0 2px rgba(0, 65, 200, 0.2);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            border: 1px solid #eef2f6;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border-color: #cbd5e1;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-top: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.7;
+        }
+
+        /* Image error fallback */
+        .product-image-thumb.error-fallback {
+            background: linear-gradient(135deg, #c7d2fe 0%, #a78bfa 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- SIDEBAR -->
+    <aside
+        class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-sm border-r border-slate-200/80 shadow-sm z-40 flex flex-col">
+        <div class="px-6 pt-8 pb-6 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
+                    <span class="material-symbols-outlined text-white text-2xl"
+                        style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                </div>
+                <div>
+                    <h1 class="font-manrope font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span
+                            class="text-blue-600">Hub</span></h1>
+                    <p class="text-[10px] font-semibold uppercase text-slate-400 tracking-wider">Customer Portal</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-1.5">
+            <a href="warehouse.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
+            <a href="inventory.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
+            <a href="customer.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1;">groups</span><span>Customers</span></a>
+            <a href="orders.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
+            <a href="suppliers.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
+            <a href="analytics.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
+        </nav>
+        <div class="px-4 pb-8 pt-4 border-t border-slate-100">
+            <div class="mt-4 space-y-1"><a href="login.html" class="nav-link text-xs"><span
+                        class="material-symbols-outlined text-sm">logout</span> Logout</a></div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div style="max-width: 1600px; margin: 0 auto;">
+            <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                        <span class="material-symbols-outlined text-sm">groups</span><span>Customer Management</span>
+                    </div>
+                    <h1 class="text-4xl font-manrope font-extrabold text-slate-800 tracking-tight">Customer Orders</h1>
+                    <p class="text-slate-500 text-sm mt-1">Manage and track all customer purchases</p>
+                </div>
+            </div>
+
+            <!-- Stats Cards - Row 1 (4 cards) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Total Orders</p>
+                        <p id="totalOrders" class="stat-value text-blue-700">0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-blue-300">shopping_cart</span>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Total Revenue</p>
+                        <p id="totalRevenue" class="stat-value text-green-600">₱0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-green-300">payments</span>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Items Sold</p>
+                        <p id="totalItemsSold" class="stat-value text-purple-600">0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-purple-300">inventory_2</span>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Delivered</p>
+                        <p id="deliveredCount" class="stat-value text-indigo-600">0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-indigo-300">check_circle</span>
+                </div>
+            </div>
+
+            <!-- Stats Cards - Row 2 (4 cards) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Pending</p>
+                        <p id="pendingCount" class="stat-value text-red-600">0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-red-300">pending</span>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Processing</p>
+                        <p id="processingCount" class="stat-value text-blue-600">0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-blue-300">settings</span>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Shipped</p>
+                        <p id="shippedCount" class="stat-value text-emerald-600">0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-emerald-300">local_shipping</span>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="stat-label">Cancelled</p>
+                        <p id="cancelledCount" class="stat-value text-rose-600">0</p>
+                    </div>
+                    <span class="stat-icon material-symbols-outlined text-rose-300">cancel</span>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="border-b border-gray-200 mb-6">
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="switchTab('pending')" id="tabPending" class="tab-button active">Pending</button>
+                    <button onclick="switchTab('processing')" id="tabProcessing" class="tab-button">Processing</button>
+                    <button onclick="switchTab('shipped')" id="tabShipped" class="tab-button">Shipped</button>
+                    <button onclick="switchTab('delivered')" id="tabDelivered" class="tab-button">Delivered</button>
+                    <button onclick="switchTab('cancelled')" id="tabCancelled" class="tab-button">Cancelled</button>
+                    <button onclick="switchTab('all')" id="tabAll" class="tab-button">All Orders</button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
+                <div class="flex flex-wrap gap-3 items-center">
+                    <div class="relative flex-1 min-w-[200px]">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
+                        <input type="text" id="searchInput" placeholder="Search by customer name, order #, product..."
+                            class="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <input type="date" id="dateFilter"
+                        class="border border-slate-200 rounded-xl px-4 py-2.5 text-sm bg-white">
+                    <button onclick="loadOrders()"
+                        class="px-6 py-2.5 bg-[#0041c8] text-white rounded-xl text-sm font-semibold hover:bg-[#0035a3] transition-all">Search</button>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Order #</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Customer</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Items</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Total</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Date</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr>
+                                <td colspan="7" class="px-6 py-12 text-center text-slate-400">Loading customer orders...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="order-details-modal">
+        <div class="order-details-card">
+            <div class="order-details-header">
+                <div>
+                    <h3 class="text-xl font-bold font-manrope" id="modalOrderRef">Order Details</h3>
+                    <p class="text-sm text-slate-500 mt-1" id="modalCustomer">—</p>
+                </div>
+                <button class="order-details-close" onclick="closeOrderDetails()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="order-details-body">
+                <div class="mb-4 p-3 bg-slate-50 rounded-lg">
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div><span class="text-slate-500">Order Date:</span> <span id="modalDate"
+                                class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Status:</span> <span id="modalStatus"
+                                class="font-medium">—</span></div>
+                    </div>
+                </div>
+                <h4 class="font-semibold text-lg mb-3">Ordered Items</h4>
+                <div id="modalItemsList" class="space-y-2"></div>
+                <div class="mt-4 pt-3 border-t border-gray-200 flex justify-between items-center">
+                    <span class="font-bold text-lg">Total:</span>
+                    <span id="modalTotal" class="font-bold text-xl text-blue-700">₱0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="successToast" class="toast-notification">
+        <div class="toast-icon"><span class="material-symbols-outlined">check</span></div>
+        <div>
+            <div class="font-semibold text-sm">Success</div>
+            <div class="text-xs text-slate-500">Action completed</div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'pending';
+        let ordersData = [];
+        let updatingOrderId = null;
+
+        // Helper function to get correct image URL
+        function getImageUrl(imagePath) {
+            if (!imagePath || imagePath === '') {
+                return null;
+            }
+            // If it already starts with /final%20project/, don't add it again
+            if (imagePath.startsWith('/final%20project/') || imagePath.startsWith('http')) {
+                return imagePath;
+            }
+            // If it starts with uploads/, add the prefix
+            if (imagePath.startsWith('uploads/')) {
+                return `/final%20project/${imagePath}`;
+            }
+            // Otherwise, assume it's just the filename
+            return `/final%20project/uploads/products/${imagePath}`;
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('successToast');
+            const icon = toast.querySelector('.toast-icon');
+            icon.style.background = isError ? '#dc2626' : '#22c55e';
+            toast.querySelector('.font-semibold').innerText = isError ? 'Error' : 'Success';
+            toast.querySelector('.text-xs').innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function (m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            return new Date(dateStr).toLocaleDateString('en-PH');
+        }
+
+        async function loadOrders() {
+            const search = document.getElementById('searchInput')?.value || '';
+            const date = document.getElementById('dateFilter')?.value || '';
+
+            try {
+                let url = `api/get_customer_orders.php?`;
+                if (search) url += `search=${encodeURIComponent(search)}&`;
+                if (date) url += `date_from=${date}&date_to=${date}`;
+
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.success) {
+                    ordersData = data.orders;
+
+                    const stats = data.stats || {};
+                    document.getElementById('totalOrders').innerText = stats.total_orders || 0;
+                    document.getElementById('totalRevenue').innerHTML = `₱${(stats.total_revenue || 0).toLocaleString()}`;
+                    document.getElementById('totalItemsSold').innerText = stats.total_items_sold || 0;
+                    document.getElementById('pendingCount').innerText = stats.pending || 0;
+                    document.getElementById('processingCount').innerText = stats.processing || 0;
+                    document.getElementById('shippedCount').innerText = stats.shipped || 0;
+                    document.getElementById('deliveredCount').innerText = stats.delivered || 0;
+                    document.getElementById('cancelledCount').innerText = stats.cancelled || 0;
+
+                    let filteredOrders = ordersData;
+                    if (currentTab !== 'all') {
+                        filteredOrders = ordersData.filter(order => order.status === currentTab);
+                    }
+                    renderOrders(filteredOrders);
+                } else throw new Error(data.error);
+            } catch (e) { showToast('Error loading orders', true); console.error(e); }
+        }
+
+        function getStatusOptions(currentStatus) {
+            const allStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+            const statusLabels = {
+                'pending': 'Pending',
+                'processing': 'Processing',
+                'shipped': 'Shipped',
+                'delivered': 'Delivered',
+                'cancelled': 'Cancelled'
+            };
+
+            let options = '';
+            for (const status of allStatuses) {
+                const selected = status === currentStatus ? 'selected' : '';
+                options += `<option value="${status}" ${selected}>${statusLabels[status]}</option>`;
+            }
+            return options;
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            if (!orders.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-12 text-center text-slate-400">No ' + (currentTab !== 'all' ? currentTab : '') + ' orders found.</td></tr>';
+                return;
+            }
+
+            let html = '';
+            for (const order of orders) {
+                let statusClass = '';
+                if (order.status === 'delivered') statusClass = 'status-delivered';
+                else if (order.status === 'pending') statusClass = 'status-pending';
+                else if (order.status === 'processing') statusClass = 'status-processing';
+                else if (order.status === 'shipped') statusClass = 'status-shipped';
+                else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+
+                const totalItems = order.total_items || (order.items ? order.items.reduce((a, b) => a + parseInt(b.quantity || 0), 0) : order.item_count || 0);
+
+                html += `<tr class="clickable-row" onclick="showOrderDetails(${order.id})">
+                    <td class="px-6 py-4 font-mono text-sm font-semibold text-blue-700">${escapeHtml(order.order_number)}</td>
+                    <td class="px-6 py-4 font-medium">${escapeHtml(order.customer_name)}</td>
+                    <td class="px-6 py-4">${totalItems} pcs</td>
+                    <td class="px-6 py-4 font-semibold text-green-600">₱${parseFloat(order.total_amount).toLocaleString()}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${order.status.toUpperCase()}</span></td>
+                    <td class="px-6 py-4 text-sm text-slate-500">${formatDate(order.created_at)}</td>
+                    <td class="px-6 py-4" onclick="event.stopPropagation()">
+                        <select class="action-select" onchange="updateOrderStatus(${order.id}, this.value)" data-order-id="${order.id}">
+                            ${getStatusOptions(order.status)}
+                        </select>
+                    </td>
+                </tr>`;
+            }
+            tbody.innerHTML = html;
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            if (updatingOrderId === orderId) {
+                showToast('Please wait, previous update is processing...', true);
+                return;
+            }
+
+            updatingOrderId = orderId;
+
+            const selectElement = document.querySelector(`select[data-order-id="${orderId}"]`);
+            if (selectElement) {
+                selectElement.disabled = true;
+                selectElement.style.opacity = '0.6';
+            }
+
+            try {
+                const res = await fetch('api/update_customer_order.php', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderId, status: newStatus })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Order #${orderId} status updated to ${newStatus.toUpperCase()}`);
+                    loadOrders();
+                    window.parent.postMessage('orderStatusChanged', '*');
+                } else {
+                    showToast(data.error || 'Update failed', true);
+                    loadOrders();
+                }
+            } catch (e) {
+                showToast('Error updating status', true);
+                loadOrders();
+            } finally {
+                updatingOrderId = null;
+                if (selectElement) {
+                    selectElement.disabled = false;
+                    selectElement.style.opacity = '1';
+                }
+            }
+        }
+
+        async function showOrderDetails(orderId) {
+            try {
+                const order = ordersData.find(o => o.id === orderId);
+                if (!order) return;
+
+                let items = order.items || [];
+                if (!items.length) {
+                    const res = await fetch(`api/get_customer_order_items.php?order_id=${orderId}`);
+                    const data = await res.json();
+                    if (data.success) items = data.items;
+                }
+
+                document.getElementById('modalOrderRef').innerHTML = `Customer Order #${order.order_number}`;
+                document.getElementById('modalCustomer').innerHTML = `<div><strong>${escapeHtml(order.customer_name)}</strong><br><span class="text-xs">${escapeHtml(order.customer_address || 'No address')}</span><br>📞 ${escapeHtml(order.customer_phone || '—')}  ✉️ ${escapeHtml(order.customer_email || '—')}</div>`;
+                document.getElementById('modalDate').innerHTML = formatDate(order.created_at);
+
+                let statusClass = '';
+                if (order.status === 'delivered') statusClass = 'status-delivered';
+                else if (order.status === 'pending') statusClass = 'status-pending';
+                else if (order.status === 'processing') statusClass = 'status-processing';
+                else if (order.status === 'shipped') statusClass = 'status-shipped';
+                else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+                document.getElementById('modalStatus').innerHTML = `<span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${order.status.toUpperCase()}</span>`;
+                document.getElementById('modalTotal').innerHTML = `₱${parseFloat(order.total_amount).toLocaleString()}`;
+
+                if (items && items.length) {
+                    let itemsHtml = '';
+                    for (const item of items) {
+                        // Get the correct image URL
+                        let imageUrl = getImageUrl(item.product_image);
+                        let initial = escapeHtml(item.product_name?.charAt(0) || 'P');
+
+                        itemsHtml += `<div class="order-item-row">
+                            <div class="product-image-thumb" data-initial="${initial}">
+                                ${imageUrl ?
+                                `<img src="${imageUrl}" alt="${escapeHtml(item.product_name)}" class="w-full h-full object-cover rounded-lg" 
+                                        onerror="this.parentElement.classList.add('error-fallback'); this.style.display='none'; this.parentElement.innerHTML='${initial}'">` :
+                                initial
+                            }
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">${escapeHtml(item.product_name)}</span>
+                                    <span class="font-semibold">₱${(item.unit_price * item.quantity).toLocaleString()}</span>
+                                </div>
+                                <div class="text-xs text-slate-500">${item.quantity} x ₱${parseFloat(item.unit_price).toLocaleString()}</div>
+                                ${item.product_sku ? `<div class="text-xs text-slate-400">SKU: ${escapeHtml(item.product_sku)}</div>` : ''}
+                            </div>
+                        </div>`;
+                    }
+                    document.getElementById('modalItemsList').innerHTML = itemsHtml;
+                } else {
+                    document.getElementById('modalItemsList').innerHTML = '<div class="text-center py-4 text-slate-400">No item details available</div>';
+                }
+                document.getElementById('orderDetailsModal').classList.add('active');
+            } catch (e) { showToast('Error loading order details', true); }
+        }
+
+        function closeOrderDetails() {
+            document.getElementById('orderDetailsModal').classList.remove('active');
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            const tabButtons = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'All'];
+            for (const t of tabButtons) {
+                const btn = document.getElementById(`tab${t}`);
+                if (btn) btn.classList.remove('active');
+            }
+            const tabMap = { pending: 'Pending', processing: 'Processing', shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled', all: 'All' };
+            const activeTab = document.getElementById(`tab${tabMap[tab]}`);
+            if (activeTab) activeTab.classList.add('active');
+            loadOrders();
+        }
+
+        document.getElementById('searchInput')?.addEventListener('input', function () {
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(loadOrders, 400);
+        });
+        document.getElementById('dateFilter')?.addEventListener('change', loadOrders);
+
+        window.addEventListener('message', function (event) {
+            if (event.data === 'orderCreated' || event.data === 'orderStatusChanged') loadOrders();
+        });
+
+        loadOrders();
+    </script>
+</body>
+
+</html>

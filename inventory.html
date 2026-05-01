@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Inventory | MeWooHub</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
         .main-content {
             margin-left: 288px;
-            padding: 0.5rem;
+            padding: 2rem;
             min-height: 100vh;
         }
 
@@ -33,12 +53,18 @@
             text-decoration: none;
             font-weight: 500;
         }
-        .nav-link:hover { background: #e2e8f0; color: #2563eb; transform: translateX(4px); }
+
+        .nav-link:hover {
+            background: #e2e8f0;
+            color: #2563eb;
+            transform: translateX(4px);
+        }
+
         .nav-link-active {
             background: white;
             color: #2563eb;
             font-weight: 600;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .filter-popup {
@@ -48,7 +74,7 @@
             width: 280px;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             z-index: 200;
             transform: translateY(100px);
             opacity: 0;
@@ -56,11 +82,13 @@
             transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             overflow: hidden;
         }
+
         .filter-popup.open {
             transform: translateY(0);
             opacity: 1;
             visibility: visible;
         }
+
         .filter-popup-header {
             padding: 1rem;
             background: #f8fafc;
@@ -69,16 +97,19 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .filter-popup-body {
             padding: 1rem;
             max-height: 400px;
             overflow-y: auto;
         }
+
         .filter-section {
             margin-bottom: 1rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid #edf2f7;
         }
+
         .filter-title {
             font-size: 0.7rem;
             font-weight: 800;
@@ -90,6 +121,7 @@
             align-items: center;
             gap: 8px;
         }
+
         .filter-option {
             display: flex;
             align-items: center;
@@ -102,16 +134,19 @@
             font-weight: 500;
             color: #334155;
         }
+
         .filter-option:hover {
             background: #f1f5f9;
             padding-left: 8px;
         }
+
         .filter-checkbox {
             width: 18px;
             height: 18px;
             accent-color: #0041c8;
             cursor: pointer;
         }
+
         .apply-filters-btn {
             margin: 0 1rem 1rem 1rem;
             background: #0041c8;
@@ -125,7 +160,11 @@
             border: none;
             font-size: 0.85rem;
         }
-        .apply-filters-btn:hover { background: #0032a0; }
+
+        .apply-filters-btn:hover {
+            background: #0032a0;
+        }
+
         .reset-filters-btn {
             margin: 0 1rem 1rem 1rem;
             background: white;
@@ -139,17 +178,21 @@
             transition: all 0.2s;
             font-size: 0.8rem;
         }
-        .reset-filters-btn:hover { background: #f8fafc; }
+
+        .reset-filters-btn:hover {
+            background: #f8fafc;
+        }
 
         .filter-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             z-index: 150;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s;
         }
+
         .filter-overlay.active {
             opacity: 1;
             visibility: visible;
@@ -164,14 +207,18 @@
             height: calc(100vh - 40px);
             background: white;
             z-index: 300;
-            box-shadow: -5px 0 30px rgba(0,0,0,0.15);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.15);
             transform: translateX(calc(100% + 20px));
             transition: transform 0.3s ease-out;
             overflow-y: auto;
             border-radius: 20px;
             margin-top: 20px;
         }
-        .product-modal.open { transform: translateX(0); }
+
+        .product-modal.open {
+            transform: translateX(0);
+        }
+
         .product-modal-header {
             padding: 1.5rem;
             background: #0041c8;
@@ -184,28 +231,42 @@
             z-index: 10;
             border-radius: 20px 0 0 0;
         }
-        .product-modal-header h3 { font-size: 1.25rem; font-weight: bold; }
+
+        .product-modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
         .product-modal-close {
             cursor: pointer;
             padding: 0.5rem;
             border-radius: 50%;
             transition: background 0.2s;
         }
-        .product-modal-close:hover { background: rgba(255,255,255,0.2); }
-        .product-modal-body { padding: 1.5rem; }
+
+        .product-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .product-modal-body {
+            padding: 1.5rem;
+        }
+
         .modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             z-index: 250;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s;
         }
+
         .modal-backdrop.active {
             opacity: 1;
             visibility: visible;
         }
+
         .stock-pulse-gradient {
             background: linear-gradient(135deg, #0041c8 0%, #0055ff 100%);
         }
@@ -216,14 +277,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
             z-index: 1300;
             display: none;
             align-items: center;
             justify-content: center;
         }
-        .confirm-overlay.active { display: flex; }
+
+        .confirm-overlay.active {
+            display: flex;
+        }
+
         .confirm-dialog {
             background: white;
             border-radius: 1.5rem;
@@ -232,21 +297,41 @@
             padding: 1.5rem;
             text-align: center;
         }
+
         .confirm-icon {
             display: flex;
             justify-content: center;
             margin-bottom: 1rem;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.2); }
-        }
-        .animate-pulse-custom { animation: pulse 1.5s ease-in-out infinite; }
 
-        .table-row-hover { cursor: pointer; }
-        .table-row-hover:hover { background-color: #f1f5f9; }
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+        }
+
+        .animate-pulse-custom {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .table-row-hover {
+            cursor: pointer;
+        }
+
+        .table-row-hover:hover {
+            background-color: #f1f5f9;
+        }
     </style>
 </head>
+
 <body>
     <div id="modalBackdrop" class="modal-backdrop"></div>
 
@@ -278,16 +363,26 @@
                     <span class="material-symbols-outlined text-sm">category</span> Categories
                 </div>
                 <div id="categoryGroup">
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Electronics" class="filter-checkbox"> Electronics</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Machinery" class="filter-checkbox"> Machinery</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Logistics" class="filter-checkbox"> Logistics</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Sensors" class="filter-checkbox"> Sensors</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Components" class="filter-checkbox"> Components</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Industrial" class="filter-checkbox"> Industrial</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Raw Materials" class="filter-checkbox"> Raw Materials</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Packaging" class="filter-checkbox"> Packaging</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Services" class="filter-checkbox"> Services</label>
-                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Other" class="filter-checkbox"> Other</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Electronics"
+                            class="filter-checkbox"> Electronics</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Machinery"
+                            class="filter-checkbox"> Machinery</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Logistics"
+                            class="filter-checkbox"> Logistics</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Sensors"
+                            class="filter-checkbox"> Sensors</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Components"
+                            class="filter-checkbox"> Components</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Industrial"
+                            class="filter-checkbox"> Industrial</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Raw Materials"
+                            class="filter-checkbox"> Raw Materials</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Packaging"
+                            class="filter-checkbox"> Packaging</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Services"
+                            class="filter-checkbox"> Services</label>
+                    <label class="filter-option"><input type="checkbox" name="categoryCheckbox" value="Other"
+                            class="filter-checkbox"> Other</label>
                 </div>
             </div>
             <div class="filter-section">
@@ -295,9 +390,12 @@
                     <span class="material-symbols-outlined text-sm">inventory</span> Stock Level
                 </div>
                 <div id="stockGroup">
-                    <label class="filter-option"><input type="checkbox" name="stockCheckbox" value="low" class="filter-checkbox"> Low (≤ 50)</label>
-                    <label class="filter-option"><input type="checkbox" name="stockCheckbox" value="normal" class="filter-checkbox"> Normal (51-500)</label>
-                    <label class="filter-option"><input type="checkbox" name="stockCheckbox" value="high" class="filter-checkbox"> High (501+)</label>
+                    <label class="filter-option"><input type="checkbox" name="stockCheckbox" value="low"
+                            class="filter-checkbox"> Low (≤ 50)</label>
+                    <label class="filter-option"><input type="checkbox" name="stockCheckbox" value="normal"
+                            class="filter-checkbox"> Normal (51-500)</label>
+                    <label class="filter-option"><input type="checkbox" name="stockCheckbox" value="high"
+                            class="filter-checkbox"> High (501+)</label>
                 </div>
             </div>
             <div class="filter-section">
@@ -305,9 +403,12 @@
                     <span class="material-symbols-outlined text-sm">check_circle</span> Status
                 </div>
                 <div id="statusGroup">
-                    <label class="filter-option"><input type="checkbox" name="statusCheckbox" value="In Stock" class="filter-checkbox"> In Stock</label>
-                    <label class="filter-option"><input type="checkbox" name="statusCheckbox" value="Low Stock" class="filter-checkbox"> Low Stock</label>
-                    <label class="filter-option"><input type="checkbox" name="statusCheckbox" value="No Stock" class="filter-checkbox"> No Stock</label>
+                    <label class="filter-option"><input type="checkbox" name="statusCheckbox" value="In Stock"
+                            class="filter-checkbox"> In Stock</label>
+                    <label class="filter-option"><input type="checkbox" name="statusCheckbox" value="Low Stock"
+                            class="filter-checkbox"> Low Stock</label>
+                    <label class="filter-option"><input type="checkbox" name="statusCheckbox" value="No Stock"
+                            class="filter-checkbox"> No Stock</label>
                 </div>
             </div>
         </div>
@@ -315,27 +416,34 @@
         <button id="resetFiltersBtn" class="reset-filters-btn">Reset All</button>
     </div>
 
-    <aside class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-sm border-r border-slate-200/80 shadow-sm z-40 flex flex-col">
+    <aside
+        class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-sm border-r border-slate-200/80 shadow-sm z-40 flex flex-col">
         <div class="px-6 pt-8 pb-6 border-b border-slate-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
-                    <span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
+                    <span class="material-symbols-outlined text-white text-2xl"
+                        style="font-variation-settings: 'FILL' 1;">inventory_2</span>
                 </div>
                 <div>
-                    <h1 style="font-family:'Manrope',sans-serif;" class="font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span class="text-blue-600">Hub</span></h1>
+                    <h1 style="font-family:'Manrope',sans-serif;"
+                        class="font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span
+                            class="text-blue-600">Hub</span></h1>
                     <p class="text-[10px] font-semibold uppercase text-slate-400 tracking-wider">Precision Control</p>
                 </div>
             </div>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-1.5">
-            <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined text-sm">dashboard</span><span>Dashboard</span></a>
+            <a href="warehouse.html" class="nav-link"><span class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
             <a href="inventory.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">inventory_2</span><span>Inventory</span></a>
+            <a href="customer.html" class="nav-link"><span class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
             <a href="orders.html" class="nav-link"><span class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
             <a href="suppliers.html" class="nav-link"><span class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
             <a href="analytics.html" class="nav-link"><span class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
         </nav>
         <div class="px-4 pb-6 pt-4">
-            <button id="filterButton" class="w-full py-2 bg-[#0041c8] text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[#0035a3] hover:scale-[1.02] active:scale-95">
+            <button id="filterButton"
+                class="w-full py-2 bg-[#0041c8] text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[#0035a3] hover:scale-[1.02] active:scale-95">
                 <span class="material-symbols-outlined text-sm">filter_list</span>
                 Category Filter
             </button>
@@ -352,42 +460,46 @@
 
     <div class="main-content">
         <div style="max-width: 1600px; margin: 0 auto;">
-            <!-- Header -->
-            <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+            <!-- Header - REMOVED filter summary line -->
+            <div class="flex flex-wrap justify-between items-end gap-4 mb-6">
                 <div>
                     <div class="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
                         <span class="material-symbols-outlined text-sm">inventory_2</span>
                         <span>Inventory Management</span>
                     </div>
                     <h1 class="text-4xl font-manrope font-extrabold text-slate-800 tracking-tight">Inventory Matrix</h1>
-                    <p class="text-slate-500 text-sm mt-1">Managing inventory items · <span id="filterSummary" class="text-blue-600 text-xs font-semibold">Active filters: none</span></p>
+                    <p class="text-slate-500 text-sm mt-1">Manage and track all inventory items</p>
                 </div>
             </div>
 
-            <!-- Stats Cards - Larger padding (p-6) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Total Value</p>
                         <p id="totalValue" class="text-3xl font-black text-slate-800 mt-1">₱0</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-blue-300">payments</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Active Items</p>
                         <p id="totalItems" class="text-3xl font-black text-emerald-600 mt-1">0</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-emerald-300">inventory_2</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Out of Stock</p>
                         <p id="outOfStock" class="text-3xl font-black text-red-600 mt-1">0</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-red-300">cancel</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Low Stock</p>
                         <p id="lowStock" class="text-3xl font-black text-amber-600 mt-1">0</p>
@@ -396,20 +508,24 @@
                 </div>
             </div>
 
-            <!-- Filter Bar - Larger padding (p-6) -->
+            <!-- Filter Bar -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
                 <div class="flex flex-wrap gap-3 items-center">
                     <div class="relative flex-1 min-w-[200px]">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
-                        <input type="text" id="searchInput" placeholder="Search by product name or SKU..." class="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 outline-none">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
+                        <input type="text" id="searchInput" placeholder="Search by product name or SKU..."
+                            class="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 outline-none">
                     </div>
-                    <select id="statusFilter" class="border border-slate-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:ring-blue-200">
+                    <select id="statusFilter"
+                        class="border border-slate-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:ring-blue-200">
                         <option value="">All Status</option>
                         <option value="In Stock">In Stock</option>
                         <option value="Low Stock">Low Stock</option>
                         <option value="No Stock">No Stock</option>
                     </select>
-                    <select id="categoryFilter" class="border border-slate-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:ring-blue-200">
+                    <select id="categoryFilter"
+                        class="border border-slate-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:ring-blue-200">
                         <option value="">All Categories</option>
                         <option value="Electronics">Electronics</option>
                         <option value="Machinery">Machinery</option>
@@ -425,18 +541,30 @@
                 </div>
             </div>
 
-            <!-- Inventory Table - Larger cell padding -->
+            <!-- Inventory Table -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Product Details</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Category</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Stock Level</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Price</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Actions</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Product Details</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Category</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Stock Level</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Price</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Actions</th>
                             </tr>
                         </thead>
                         <tbody id="inventoryTableBody"></tbody>
@@ -446,10 +574,13 @@
 
             <!-- Pagination Footer -->
             <div class="mt-6 flex justify-between items-center px-2">
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider" id="showingInfo">Showing 0 of 0 items</p>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider" id="showingInfo">Showing 0 of 0
+                    items</p>
                 <div class="flex gap-2">
-                    <button id="prevBtn" class="px-6 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-slate-600 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
-                    <button id="nextBtn" class="px-6 py-2.5 bg-[#0041c8] text-white rounded-lg text-sm font-semibold hover:bg-[#0035a3] transition-all disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+                    <button id="prevBtn"
+                        class="px-6 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-slate-600 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+                    <button id="nextBtn"
+                        class="px-6 py-2.5 bg-[#0041c8] text-white rounded-lg text-sm font-semibold hover:bg-[#0035a3] transition-all disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
                 </div>
             </div>
         </div>
@@ -462,10 +593,13 @@
                 <span class="material-symbols-outlined text-red-500 text-4xl">delete_forever</span>
             </div>
             <div class="font-bold text-lg" id="deleteProductConfirmTitle">Delete Product?</div>
-            <div class="text-slate-500 text-sm my-3" id="deleteProductConfirmMessage">This product will be removed from inventory.</div>
+            <div class="text-slate-500 text-sm my-3" id="deleteProductConfirmMessage">This product will be removed from
+                inventory.</div>
             <div class="flex gap-3">
-                <button id="deleteProductCancelBtn" class="flex-1 py-2 rounded-lg bg-slate-100 font-semibold">Cancel</button>
-                <button id="deleteProductConfirmBtn" class="flex-1 py-2 rounded-lg bg-red-600 text-white font-semibold">Delete</button>
+                <button id="deleteProductCancelBtn"
+                    class="flex-1 py-2 rounded-lg bg-slate-100 font-semibold">Cancel</button>
+                <button id="deleteProductConfirmBtn"
+                    class="flex-1 py-2 rounded-lg bg-red-600 text-white font-semibold">Delete</button>
             </div>
         </div>
     </div>
@@ -499,12 +633,12 @@
 
             productModalBody.innerHTML = `
                 <div class="rounded-xl overflow-hidden mb-6">
-                    ${productImage ? 
-                        `<img src="${productImage}" class="w-full h-56 object-contain" alt="${escapeHtml(product.name)}" onerror="this.src='https://placehold.co/400x400/0041c8/white?text=${escapeHtml(product.name.charAt(0))}'">` :
-                        `<div class="w-full h-56 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    ${productImage ?
+                    `<img src="${productImage}" class="w-full h-56 object-contain" alt="${escapeHtml(product.name)}" onerror="this.src='https://placehold.co/400x400/0041c8/white?text=${escapeHtml(product.name.charAt(0))}'">` :
+                    `<div class="w-full h-56 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                             <span class="text-white text-6xl font-bold">${escapeHtml(product.name.charAt(0))}</span>
                         </div>`
-                    }
+                }
                 </div>
                 <div class="mb-6">
                     <span class="text-[0.6875rem] font-bold tracking-[0.05rem] text-slate-500 uppercase block mb-2">SKU: ${escapeHtml(product.sku)}</span>
@@ -606,8 +740,8 @@
         }
 
         modalBackdrop.addEventListener('click', closeProductModal);
-        
-        document.addEventListener('keydown', function(e) {
+
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 if (productModal.classList.contains('open')) closeProductModal();
                 if (deleteProductConfirmOverlay && deleteProductConfirmOverlay.classList.contains('active')) {
@@ -618,36 +752,193 @@
             }
         });
 
-        async function fetchInventory() {
-            try {
-                const response = await fetch(`api/get_inventory.php`);
-                const result = await response.json();
-                if (result.success) {
-                    allInventoryData = result.data;
-                    applyLocalFilters();
-                    updateStatsFromData(allInventoryData);
-                } else {
-                    showError('Failed to load inventory data');
-                }
-            } catch (error) {
-                showError('Connection error. Please check if server is running.');
-            }
+        // ===== FILTER POPUP FUNCTIONALITY =====
+        const filterButton = document.getElementById('filterButton');
+        const filterPopup = document.getElementById('filterPopup');
+        const filterOverlay = document.getElementById('filterOverlay');
+        const closeFilterBtn = document.getElementById('closeFilterBtn');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+
+        let activeFilterCategories = [];
+        let activeFilterStockLevels = [];
+        let activeFilterStatuses = [];
+
+        function openFilterPopup() {
+            filterPopup.classList.add('open');
+            filterOverlay.classList.add('active');
+
+            document.querySelectorAll('input[name="categoryCheckbox"]').forEach(cb => {
+                cb.checked = activeFilterCategories.includes(cb.value);
+            });
+            document.querySelectorAll('input[name="stockCheckbox"]').forEach(cb => {
+                cb.checked = activeFilterStockLevels.includes(cb.value);
+            });
+            document.querySelectorAll('input[name="statusCheckbox"]').forEach(cb => {
+                cb.checked = activeFilterStatuses.includes(cb.value);
+            });
         }
 
-        function applyLocalFilters() {
+        function closeFilterPopup() {
+            filterPopup.classList.remove('open');
+            filterOverlay.classList.remove('active');
+        }
+
+        function applyFilters() {
+            activeFilterCategories = [];
+            document.querySelectorAll('input[name="categoryCheckbox"]:checked').forEach(cb => {
+                activeFilterCategories.push(cb.value);
+            });
+
+            activeFilterStockLevels = [];
+            document.querySelectorAll('input[name="stockCheckbox"]:checked').forEach(cb => {
+                activeFilterStockLevels.push(cb.value);
+            });
+
+            activeFilterStatuses = [];
+            document.querySelectorAll('input[name="statusCheckbox"]:checked').forEach(cb => {
+                activeFilterStatuses.push(cb.value);
+            });
+
+            applyAdvancedFilters();
+            closeFilterPopup();
+        }
+
+        function resetFilters() {
+            activeFilterCategories = [];
+            activeFilterStockLevels = [];
+            activeFilterStatuses = [];
+
+            document.querySelectorAll('.filter-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+
+            const categorySelect = document.getElementById('categoryFilter');
+            const statusSelect = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+
+            if (categorySelect) categorySelect.value = '';
+            if (statusSelect) statusSelect.value = '';
+            if (searchInput) searchInput.value = '';
+
+            applyAdvancedFilters();
+            closeFilterPopup();
+        }
+
+        function applyAdvancedFilters() {
             filteredData = allInventoryData.filter(item => {
-                // Category filter from dropdown
+                let itemStatus = item.stock === 0 ? 'No Stock' : (item.stock <= 50 ? 'Low Stock' : 'In Stock');
+                let itemStockLevel = item.stock <= 50 ? 'low' : (item.stock <= 500 ? 'normal' : 'high');
+
+                if (activeFilterCategories.length > 0) {
+                    if (!activeFilterCategories.includes(item.category)) return false;
+                }
+
                 const categorySelect = document.getElementById('categoryFilter');
                 const selectedCategory = categorySelect ? categorySelect.value : '';
                 if (selectedCategory && selectedCategory !== '' && item.category !== selectedCategory) return false;
-                
-                // Status filter from dropdown
+
+                if (activeFilterStockLevels.length > 0) {
+                    if (!activeFilterStockLevels.includes(itemStockLevel)) return false;
+                }
+
+                if (activeFilterStatuses.length > 0) {
+                    if (!activeFilterStatuses.includes(itemStatus)) return false;
+                }
+
+                const statusSelect = document.getElementById('statusFilter');
+                const selectedStatus = statusSelect ? statusSelect.value : '';
+                if (selectedStatus && selectedStatus !== '' && itemStatus !== selectedStatus) return false;
+
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput && searchInput.value) {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    if (!item.name.toLowerCase().includes(searchTerm) && !item.sku.toLowerCase().includes(searchTerm)) return false;
+                }
+
+                return true;
+            });
+
+            updateStatsFromData(filteredData);
+            currentPage = 1;
+            renderTable();
+        }
+
+        if (filterButton) {
+            filterButton.addEventListener('click', openFilterPopup);
+        }
+        if (closeFilterBtn) {
+            closeFilterBtn.addEventListener('click', closeFilterPopup);
+        }
+        if (filterOverlay) {
+            filterOverlay.addEventListener('click', closeFilterPopup);
+        }
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', applyFilters);
+        }
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', resetFilters);
+        }
+
+        async function fetchInventory() {
+    try {
+        const response = await fetch(`api/get_inventory.php`);
+        const result = await response.json();
+        if (result.success) {
+            let rawData = [];
+
+            if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+                for (let warehouseId in result.data) {
+                    if (Array.isArray(result.data[warehouseId])) {
+                        rawData.push(...result.data[warehouseId]);
+                    }
+                }
+            } else if (Array.isArray(result.data)) {
+                rawData = result.data;
+            }
+
+            // Merge items with the same name across warehouses
+            const mergedMap = {};
+            rawData.forEach(item => {
+    const key = item.name.toLowerCase().trim();
+    if (mergedMap[key]) {
+        mergedMap[key].stock += parseInt(item.stock) || 0;
+        mergedMap[key].price = Math.max(mergedMap[key].price, parseFloat(item.price) || 0);
+        // If this item has an image and the current merged one doesn't, use this one's image
+        if (item.image_url && !mergedMap[key].image_url) {
+            mergedMap[key].image_url = item.image_url;
+        }
+    } else {
+        mergedMap[key] = {
+            ...item,
+            stock: parseInt(item.stock) || 0,
+            price: parseFloat(item.price) || 0
+        };
+    }
+});
+
+            allInventoryData = Object.values(mergedMap);
+            applyLocalFilters();
+            updateStatsFromData(allInventoryData);
+        } else {
+            showError('Failed to load inventory data');
+        }
+    } catch (error) {
+        console.error('Error loading inventory:', error);
+        showError('Connection error. Please check if server is running.');
+    }
+}
+        function applyLocalFilters() {
+            filteredData = allInventoryData.filter(item => {
+                const categorySelect = document.getElementById('categoryFilter');
+                const selectedCategory = categorySelect ? categorySelect.value : '';
+                if (selectedCategory && selectedCategory !== '' && item.category !== selectedCategory) return false;
+
                 const statusSelect = document.getElementById('statusFilter');
                 const selectedStatus = statusSelect ? statusSelect.value : '';
                 let itemStatus = item.stock === 0 ? 'No Stock' : (item.stock <= 50 ? 'Low Stock' : 'In Stock');
                 if (selectedStatus && selectedStatus !== '' && itemStatus !== selectedStatus) return false;
-                
-                // Search filter
+
                 const searchInput = document.getElementById('searchInput');
                 if (searchInput && searchInput.value) {
                     const searchTerm = searchInput.value.toLowerCase();
@@ -658,7 +949,6 @@
             updateStatsFromData(filteredData);
             currentPage = 1;
             renderTable();
-            updateFilterSummary();
         }
 
         function updateStatsFromData(data) {
@@ -666,7 +956,7 @@
             const totalItems = data.length;
             const outOfStock = data.filter(item => item.stock === 0).length;
             const lowStock = data.filter(item => item.stock > 0 && item.stock <= 50).length;
-            
+
             document.getElementById('totalValue').innerText = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 0 }).format(totalValue || 0);
             document.getElementById('totalItems').innerText = totalItems;
             document.getElementById('outOfStock').innerText = outOfStock;
@@ -674,21 +964,7 @@
         }
 
         function showError(message) {
-            document.getElementById('inventoryTableBody').innerHTML = `<td><td colspan="6" class="px-8 py-12 text-center text-red-500">${message}</td></tr>`;
-        }
-
-        function updateFilterSummary() {
-            const summaryEl = document.getElementById('filterSummary');
-            const categorySelect = document.getElementById('categoryFilter');
-            const statusSelect = document.getElementById('statusFilter');
-            const searchInput = document.getElementById('searchInput');
-            
-            let activeList = [];
-            if (categorySelect && categorySelect.value) activeList.push(`Category: ${categorySelect.value}`);
-            if (statusSelect && statusSelect.value) activeList.push(`Status: ${statusSelect.value}`);
-            if (searchInput && searchInput.value) activeList.push(`Search: "${searchInput.value}"`);
-            
-            summaryEl.innerHTML = activeList.length === 0 ? `Active filters: none` : `🔍 Filters: ${activeList.join(' · ')}`;
+            document.getElementById('inventoryTableBody').innerHTML = `<tr><td colspan="6" class="px-8 py-12 text-center text-red-500">${message}</td></tr>`;
         }
 
         function renderTable() {
@@ -720,10 +996,10 @@
                         <td class="px-8 py-5 cursor-pointer" onclick='openProductModal(${itemJson})'>
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden">
-                                    ${item.image_url ? 
-                                        `<img src="${item.image_url}" alt="${escapeHtml(item.name)}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400?text=Product'">` :
-                                        `<div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold">${escapeHtml(item.name.charAt(0))}</div>`
-                                    }
+                                    ${item.image_url ?
+                        `<img src="${item.image_url}" alt="${escapeHtml(item.name)}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400?text=Product'">` :
+                        `<div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold">${escapeHtml(item.name.charAt(0))}</div>`
+                    }
                                 </div>
                                 <div>
                                     <div class="font-bold text-slate-800">${escapeHtml(item.name)}</div>
@@ -766,16 +1042,16 @@
 
         function previousPage() { if (currentPage > 1) { currentPage--; renderTable(); } }
         function nextPage() { const totalPages = Math.ceil(filteredData.length / itemsPerPage); if (currentPage < totalPages) { currentPage++; renderTable(); } }
-        
-        function escapeHtml(str) { 
-            if(!str) return ''; 
-            return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); 
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
         }
 
         function deleteInventoryProduct(productId, productName) {
             pendingDeleteProductId = productId;
             pendingDeleteProductName = productName;
-            
+
             document.getElementById('deleteProductConfirmTitle').innerText = 'Delete Product?';
             document.getElementById('deleteProductConfirmMessage').innerHTML = `Remove "<strong>${escapeHtml(productName)}</strong>" from inventory?<br><span class="text-xs text-slate-400">This will NOT delete it from suppliers.</span>`;
             deleteProductConfirmOverlay.classList.add('active');
@@ -783,15 +1059,15 @@
 
         async function confirmDeleteInventoryProduct() {
             if (!pendingDeleteProductId) return;
-            
+
             try {
-                const response = await fetch('/final%20project/api/delete_inventory_product.php', {
+                const response = await fetch('api/delete_inventory_product.php', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: pendingDeleteProductId })
                 });
                 const data = await response.json();
-                
+
                 if (data.success) {
                     showToast('Product Deleted', `"${pendingDeleteProductName}" removed from inventory`);
                     fetchInventory();
@@ -824,12 +1100,11 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Event Listeners
         document.getElementById('prevBtn').onclick = previousPage;
         document.getElementById('nextBtn').onclick = nextPage;
 
         if (deleteProductCancelBtn) {
-            deleteProductCancelBtn.addEventListener('click', function() {
+            deleteProductCancelBtn.addEventListener('click', function () {
                 deleteProductConfirmOverlay.classList.remove('active');
                 pendingDeleteProductId = null;
                 pendingDeleteProductName = null;
@@ -843,10 +1118,10 @@
         const searchInput = document.getElementById('searchInput');
         const statusFilter = document.getElementById('statusFilter');
         const categoryFilter = document.getElementById('categoryFilter');
-        
+
         let debounceTimer;
         if (searchInput) {
-            searchInput.addEventListener('input', function() {
+            searchInput.addEventListener('input', function () {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => applyLocalFilters(), 300);
             });
@@ -854,12 +1129,12 @@
         if (statusFilter) statusFilter.addEventListener('change', applyLocalFilters);
         if (categoryFilter) categoryFilter.addEventListener('change', applyLocalFilters);
 
-        window.addEventListener('message', function(event) {
+        window.addEventListener('message', function (event) {
             if (event.data === 'orderCreated' || event.data === 'orderStatusChanged') fetchInventory();
         });
 
-        // Initialize
         fetchInventory();
     </script>
 </body>
+
 </html>

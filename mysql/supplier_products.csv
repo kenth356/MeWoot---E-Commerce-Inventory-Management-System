@@ -1,9 +1,4 @@
 id,supplier_id,product_name,product_sku,price,product_image,min_order_qty,created_at,updated_at
-298,6,"Conveyor Belt",CNV-4431-A,48450.00,uploads/products/69dbb0781598d_1776005240.avif,1,"2026-04-12 22:47:24","2026-04-12 22:47:24"
-299,6,"Industrial Robot Arm",ROB-9912-X,136250.00,uploads/products/69dbac30964a7_1776004144.webp,1,"2026-04-12 22:47:24","2026-04-12 22:47:24"
-300,6,"PLC Controller",PLC-2281-B,35375.00,uploads/products/69dbaeb43ec34_1776004788.jpg,1,"2026-04-12 22:47:24","2026-04-12 22:47:24"
-301,6,"Servo Motor",SRV-6672-C,18500.00,uploads/products/69dba7bc84b60_1776003004.jpg,1,"2026-04-12 22:47:24","2026-04-12 22:47:24"
-302,6,"Vibration Sensor",VIB-8843-D,5175.00,uploads/products/69dbaed93a458_1776004825.jpg,1,"2026-04-12 22:47:24","2026-04-12 22:47:24"
 303,1,"Capacitor Kit",CAP-4401-B,699.99,uploads/products/69dba3a553d87_1776001957.jpg,1,"2026-04-12 22:51:46","2026-04-12 22:51:46"
 304,1,"Connector Set",CON-8812-D,1250.50,uploads/products/69dbb0b9b4c05_1776005305.webp,1,"2026-04-12 22:51:46","2026-04-12 22:51:46"
 305,1,"Microprocessor Chip",CHP-7842-X,2599.99,uploads/products/69dbb0d6eea86_1776005334.webp,1,"2026-04-12 22:51:46","2026-04-12 22:51:46"
@@ -24,8 +19,14 @@ id,supplier_id,product_name,product_sku,price,product_image,min_order_qty,create
 340,5,"LED Display",LED-9912-X,3675.50,uploads/products/69dbb5a93e75d_1776006569.avif,1,"2026-04-12 23:12:41","2026-04-12 23:12:41"
 341,5,"Power Supply Unit",PSU-4431-A,7899.00,uploads/products/69dbb618bae99_1776006680.png,1,"2026-04-12 23:12:41","2026-04-12 23:12:41"
 342,5,"Wire Harness",WIR-6672-C,1005.50,uploads/products/69dbb6688f9a5_1776006760.jpg,1,"2026-04-12 23:12:41","2026-04-12 23:12:41"
-358,2,"Bearing Kit",BRG-6678-E,3650.00,uploads/products/69dbbe5462ee6_1776008788.jpg,1,"2026-04-12 23:46:29","2026-04-12 23:46:29"
-359,2,"Drive Belt",BEL-4422-D,1875.50,uploads/products/69dbb4149415c_1776006164.webp,1,"2026-04-12 23:46:29","2026-04-12 23:46:29"
-360,2,"Gear Assembly",GEA-2234-B,10399.99,uploads/products/69dbb49b98fbb_1776006299.png,1,"2026-04-12 23:46:29","2026-04-12 23:46:29"
-361,2,"Hydraulic Pump",HYP-5512-X,24500.00,uploads/products/69dbb4bb862b0_1776006331.jpg,1,"2026-04-12 23:46:29","2026-04-12 23:46:29"
-362,2,"Motor Controller",MTR-9981-C,17450.00,uploads/products/69dbb4dccdf14_1776006364.webp,1,"2026-04-12 23:46:29","2026-04-12 23:46:29"
+365,10,Sillpun,SIL-0101,12000.00,uploads/products/69e861e804a0b_1776837096.jpg,1,"2026-04-22 13:51:39","2026-04-22 13:51:39"
+376,6,"Conveyor Belt",CNV-4431-A,48450.00,uploads/products/69eee0138edd5_1777262611.webp,NULL,NULL,NULL
+377,6,"Industrial Robot Arm",ROB-9912-X,136250.00,uploads/products/69dbac30964a7_1776004144.webp,NULL,NULL,NULL
+378,6,"PLC Controller",PLC-2281-B,35375.00,uploads/products/69dbaeb43ec34_1776004788.jpg,NULL,NULL,NULL
+379,6,"Servo Motor",SRV-6672-C,18500.00,uploads/products/69dba7bc84b60_1776003004.jpg,NULL,NULL,NULL
+380,6,"Vibration Sensor",VIB-8843-D,5175.00,uploads/products/69dbaed93a458_1776004825.jpg,NULL,NULL,NULL
+381,2,"Bearing Kit",BRG-6678-E,3650.00,uploads/products/69eede4576a85_1777262149.jpg,NULL,NULL,NULL
+382,2,"Drive Belt",BEL-4422-D,1875.50,uploads/products/69dbb4149415c_1776006164.webp,NULL,NULL,NULL
+383,2,"Gear Assembly",GEA-2234-B,10399.99,uploads/products/69ef2b374925d_1777281847.webp,NULL,NULL,NULL
+384,2,"Hydraulic Pump",HYP-5512-X,24500.00,uploads/products/69dbb4bb862b0_1776006331.jpg,NULL,NULL,NULL
+385,2,"Motor Controller",MTR-9981-C,17450.00,uploads/products/69dbb4dccdf14_1776006364.webp,NULL,NULL,NULL

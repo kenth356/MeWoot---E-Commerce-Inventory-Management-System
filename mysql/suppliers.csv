@@ -1,7 +1,8 @@
 id,name,category,contact_person,email,phone,address,lead_time,min_order_qty,status,notes,created_at,updated_at
 1,"Global Logistics Partners",Electronics,"Robert Alingco",alingco@globallogistics.com,+1-555-0101,"Negros Occidental, Philippines",4,1,active,NULL,"2026-04-12 16:58:17","2026-04-12 22:51:46"
-2,"Precision Components Inc.",Machinery,"Alliah Viray",viray@precision.com,+49-555-0202,"Costa Leona, Philippines",10,1,active,NULL,"2026-04-12 16:58:17","2026-04-12 23:46:29"
+2,"Precision Components Inc.",Machinery,"Alliah Viray",viray@precision.com,+49-555-0202,"Costa Leona, Philippines",10,1,active,NULL,"2026-04-12 16:58:17","2026-04-27 17:24:10"
 3,"Northern Star Distribution",Logistics,"David Lee",david@northernstar.com,+1-555-0303,"Arizona, United States",2,1,active,NULL,"2026-04-12 16:58:17","2026-04-12 23:00:35"
 4,"MicroSystems Group",Sensors,"Neil Basnig",neilpogi@microsystems.com,+81-3-1234-5678,"Paris, France",6,1,active,NULL,"2026-04-12 16:58:17","2026-04-12 22:57:41"
 5,"TechSource International",Components,"Nathan Ping",pingnathan@techsource.com,+81-3-1234-5678,"Beijing, China",5,1,active,NULL,"2026-04-12 16:58:17","2026-04-12 23:12:41"
-6,"Apex Manufacturing Co.",Industrial,"Ken Gervas",gervas@apexmanu.com,+86-138-1234-5678,Singapore,8,1,active,NULL,"2026-04-12 16:58:17","2026-04-12 22:47:24"
+6,"Apex Manufacturing Co.",Industrial,"Ken Gervas",gervas@apexmanu.com,+86-138-1234-5678,Singapore,8,1,active,NULL,"2026-04-12 16:58:17","2026-04-27 12:03:33"
+10,robertcompany,Electronics,"Robert Abayata",robertabayata@robertcomp.com,"0922 745 9826","muamuamonge, Philippines",7,1,active,NULL,"2026-04-22 13:51:39","2026-04-22 13:51:39"

@@ -1,0 +1,14 @@
+Field,Type,Null,Key,Default,Extra
+id,int,NO,PRI,NULL,auto_increment
+name,varchar(255),YES,,NULL,
+category,varchar(100),YES,,NULL,
+contact_person,varchar(255),YES,,NULL,
+email,varchar(255),YES,,NULL,
+phone,varchar(50),YES,,NULL,
+address,text,YES,,NULL,
+lead_time,int,YES,,NULL,
+min_order_qty,int,YES,,NULL,
+status,"enum('active','inactive')",YES,,NULL,
+notes,text,YES,,NULL,
+created_at,timestamp,YES,,NULL,
+updated_at,timestamp,YES,,NULL,

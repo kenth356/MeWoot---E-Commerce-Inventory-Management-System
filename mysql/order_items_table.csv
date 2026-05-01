@@ -1,0 +1,8 @@
+Field,Type,Null,Key,Default,Extra
+id,int,NO,PRI,NULL,auto_increment
+order_id,int,YES,,NULL,
+item_name,varchar(100),YES,,NULL,
+item_sku,varchar(50),YES,,NULL,
+quantity,int,YES,,NULL,
+price,"decimal(12,2)",YES,,NULL,
+item_image,text,YES,,NULL,

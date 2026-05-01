@@ -1,0 +1,12 @@
+Field,Type,Null,Key,Default,Extra
+id,int,NO,PRI,NULL,auto_increment
+name,varchar(255),YES,MUL,NULL,
+sku,varchar(100),YES,UNI,NULL,
+category,varchar(100),YES,,NULL,
+stock,int,YES,,NULL,
+price,"decimal(10,2)",YES,,NULL,
+image_url,text,YES,,NULL,
+created_at,timestamp,YES,,NULL,
+updated_at,timestamp,YES,,NULL,
+warehouse_id,int,NO,,1,
+warehouse_name,varchar(100),YES,,NULL,

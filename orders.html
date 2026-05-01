@@ -130,8 +130,9 @@
             </div>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-1.5">
-            <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined text-sm">dashboard</span><span>Dashboard</span></a>
+            <a href="warehouse.html" class="nav-link"><span class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
             <a href="inventory.html" class="nav-link"><span class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
+            <a href="customer.html" class="nav-link"><span class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
             <a href="orders.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">shopping_cart</span><span>Orders</span></a>
             <a href="suppliers.html" class="nav-link"><span class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
             <a href="analytics.html" class="nav-link"><span class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
@@ -155,7 +156,7 @@
     <!-- Main Content -->
     <div class="main-content">
         <div style="max-width: 1600px; margin: 0 auto;">
-            <!-- Header - Redesigned -->
+            <!-- Header -->
             <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
                 <div>
                     <div class="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
@@ -167,7 +168,7 @@
                 </div>
             </div>
 
-            <!-- Stats Cards - Redesigned with larger padding -->
+            <!-- Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
@@ -209,7 +210,7 @@
             <!-- Tabs -->
             <div class="border-b border-gray-200 mb-6">
                 <div class="flex gap-2">
-                    <button onclick="switchTab('active')" id="tabActive" class="tab-button active">Active Orders (Pending)</button>
+                    <button onclick="switchTab('pending')" id="tabPending" class="tab-button active">Active Orders (Pending)</button>
                     <button onclick="switchTab('delivered')" id="tabDelivered" class="tab-button">Delivered</button>
                     <button onclick="switchTab('cancelled')" id="tabCancelled" class="tab-button">Cancelled</button>
                     <button onclick="switchTab('archived')" id="tabArchived" class="tab-button">Archived</button>
@@ -217,7 +218,7 @@
                 </div>
             </div>
 
-            <!-- Filter Bar - Redesigned with larger padding -->
+            <!-- Filter Bar -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
                 <div class="flex flex-wrap gap-3 items-center">
                     <div class="relative">
@@ -232,10 +233,11 @@
                     </div>
                     <input type="text" id="searchInput" placeholder="Search by Order ID, Supplier, or Category..." class="flex-1 min-w-[200px] px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 outline-none">
                     <button onclick="loadOrders()" class="px-6 py-2.5 bg-[#0041c8] text-white rounded-xl text-sm font-semibold hover:bg-[#0035a3] transition-all">Search</button>
+                    <button onclick="clearSearch()" class="px-6 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-300 transition-all">Clear</button>
                 </div>
             </div>
 
-            <!-- Orders Table - Larger cell padding -->
+            <!-- Orders Table -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -321,7 +323,6 @@
         </div>
     </div>
 
-    <!-- Restore Choice Dialog -->
     <div id="restoreChoiceOverlay" class="confirm-overlay">
         <div class="confirm-dialog" style="max-width: 380px;">
             <div class="confirm-icon" style="background: #dce1ff;"><span class="material-symbols-outlined" style="color: #0041c8;">restore</span></div>
@@ -351,7 +352,7 @@
     </div>
 
     <script>
-        let currentTab = 'active';
+        let currentTab = 'pending';
         let pendingClose = false;
         let pendingDeleteId = null;
         let pendingArchiveId = null;
@@ -359,6 +360,7 @@
         let pendingRestoreWithChoiceId = null;
         let pendingRestoreWithChoiceRef = null;
         let ordersData = [];
+        let allOrdersData = [];
 
         const overlay = document.getElementById('floatingOverlay');
         const loadingCard = document.getElementById('loadingCard');
@@ -431,14 +433,35 @@
 
         function closeOrderDetails() { orderDetailsModal.classList.remove('active'); document.body.style.overflow = ''; }
 
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            loadOrders();
+        }
+
         function switchTab(tab) {
             currentTab = tab;
-            ['tabActive','tabDelivered','tabCancelled','tabArchived','tabAll'].forEach(id => document.getElementById(id).classList.remove('active'));
-            if (tab === 'active') { document.getElementById('tabActive').classList.add('active'); document.getElementById('statusFilter').value = 'pending'; }
-            else if (tab === 'delivered') { document.getElementById('tabDelivered').classList.add('active'); document.getElementById('statusFilter').value = 'delivered'; }
-            else if (tab === 'cancelled') { document.getElementById('tabCancelled').classList.add('active'); document.getElementById('statusFilter').value = 'cancelled'; }
-            else if (tab === 'archived') { document.getElementById('tabArchived').classList.add('active'); document.getElementById('statusFilter').value = 'archived'; }
-            else if (tab === 'all') { document.getElementById('tabAll').classList.add('active'); document.getElementById('statusFilter').value = ''; }
+            document.getElementById('tabPending').classList.remove('active');
+            document.getElementById('tabDelivered').classList.remove('active');
+            document.getElementById('tabCancelled').classList.remove('active');
+            document.getElementById('tabArchived').classList.remove('active');
+            document.getElementById('tabAll').classList.remove('active');
+            
+            if (tab === 'pending') {
+                document.getElementById('tabPending').classList.add('active');
+                document.getElementById('statusFilter').value = 'pending';
+            } else if (tab === 'delivered') {
+                document.getElementById('tabDelivered').classList.add('active');
+                document.getElementById('statusFilter').value = 'delivered';
+            } else if (tab === 'cancelled') {
+                document.getElementById('tabCancelled').classList.add('active');
+                document.getElementById('statusFilter').value = 'cancelled';
+            } else if (tab === 'archived') {
+                document.getElementById('tabArchived').classList.add('active');
+                document.getElementById('statusFilter').value = 'archived';
+            } else if (tab === 'all') {
+                document.getElementById('tabAll').classList.add('active');
+                document.getElementById('statusFilter').value = '';
+            }
             loadOrders();
         }
 
@@ -583,37 +606,60 @@
         function loadOrders() {
             let status = document.getElementById('statusFilter').value;
             const search = document.getElementById('searchInput').value;
-            if (currentTab === 'active' && status === '') { status = 'pending'; document.getElementById('statusFilter').value = 'pending'; }
-            fetch(`api/get_orders.php?status=${encodeURIComponent(status)}&search=${encodeURIComponent(search)}`)
+            
+            if (currentTab === 'pending' && status === '') { 
+                status = 'pending'; 
+                document.getElementById('statusFilter').value = 'pending'; 
+            }
+            
+            console.log('Loading orders with status:', status, 'search:', search);
+            
+            // Build URL with both status and search parameters
+            let url = `api/get_orders.php?`;
+            if (status && status !== '') {
+                url += `status=${encodeURIComponent(status)}&`;
+            }
+            if (search && search !== '') {
+                url += `search=${encodeURIComponent(search)}`;
+            }
+            
+            console.log('Fetching URL:', url);
+            
+            fetch(url)
                 .then(r => r.json())
                 .then(data => {
-                    if (data.success) { ordersData = data.orders; updateStats(data.counts); renderOrdersTable(data.orders); }
-                    else document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="7" class="px-8 py-12 text-center text-red-500">Error: ${data.error}</td></tr>`;
+                    console.log('API Response:', data);
+                    if (data.success) { 
+                        const filteredOrders = data.orders || []; 
+                        renderOrdersTable(filteredOrders); 
+                        
+                        if (data.counts) {
+                            document.getElementById('totalOrders').innerText = data.counts.total_orders || 0;
+                            document.getElementById('pendingOrders').innerText = data.counts.pending || 0;
+                            document.getElementById('deliveredOrders').innerText = data.counts.delivered || 0;
+                            document.getElementById('cancelledOrders').innerText = data.counts.cancelled || 0;
+                            document.getElementById('archivedOrders').innerText = data.counts.archived || 0;
+                        }
+                    } else {
+                        console.error('API error:', data.error);
+                        document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="7" class="px-8 py-12 text-center text-red-500">Error: ${data.error}</table></tr>`;
+                        if (data.error.includes('Unknown column')) {
+                            showToast('Database error: The "search" column may not exist in the orders table. Please check the API.', true);
+                        }
+                    }
                 })
-                .catch(() => { document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="7" class="px-8 py-12 text-center text-red-500">Failed to connect to server.</td></tr>`; });
-        }
-
-        function updateStats(counts) {
-            document.getElementById('totalOrders').innerText = counts.total_orders || 0;
-            document.getElementById('pendingOrders').innerText = counts.pending || 0;
-            document.getElementById('deliveredOrders').innerText = counts.delivered || 0;
-            document.getElementById('cancelledOrders').innerText = counts.cancelled || 0;
-            document.getElementById('archivedOrders').innerText = counts.archived || 0;
-        }
-
-        function highlightText(text, searchTerm) {
-            if (!searchTerm || !text) return escapeHtml(text);
-            const escapedText = escapeHtml(text);
-            const regex = new RegExp(`(${escapeHtml(searchTerm).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-            return escapedText.replace(regex, `<span style="color: #0041c8; font-weight: 600;">$1</span>`);
+                .catch((error) => { 
+                    console.error('Fetch error:', error);
+                    document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="7" class="px-8 py-12 text-center text-red-500">Failed to connect to server. Make sure the API is accessible.${error.message ? '<br>' + error.message : ''}</td></tr>`;
+                    showToast('Connection error: ' + error.message, true);
+                });
         }
 
         function renderOrdersTable(orders) {
             const tableBody = document.getElementById('ordersTableBody');
-            const searchTerm = document.getElementById('searchInput').value;
             if (!orders || orders.length === 0) {
                 let message = 'No orders found.';
-                if (currentTab === 'active') message = 'No pending orders. Click "New Order" to create one.';
+                if (currentTab === 'pending') message = 'No pending orders. Click "New Order" to create one.';
                 else if (currentTab === 'delivered') message = 'No delivered orders yet.';
                 else if (currentTab === 'archived') message = 'No archived orders.';
                 else if (currentTab === 'all') message = 'No orders found. Click "New Order" to create one.';
@@ -668,12 +714,12 @@
 
                 const orderJson = JSON.stringify(order).replace(/"/g, '&quot;');
                 return `
-                    <tr class="border-t clickable-row transition-colors" onclick="showOrderDetails(${orderJson})">
-                        <td class="px-8 py-5"><span class="font-mono text-sm font-semibold text-blue-700">${highlightText(order.order_reference, searchTerm)}</span></td>
+                    <tr class="border-t clickable-row transition-colors" onclick='showOrderDetails(${orderJson})'>
+                        <td class="px-8 py-5"><span class="font-mono text-sm font-semibold text-blue-700">${escapeHtml(order.order_reference)}</span></td>
                         <td class="px-8 py-5">
-                            <div class="font-medium text-sm">${highlightText(order.supplier_name, searchTerm)}</div>
-                            <div class="text-xs text-slate-500">${highlightText(order.supplier_category || '', searchTerm)}</div>
-                        </td>
+                            <div class="font-medium text-sm">${escapeHtml(order.supplier_name)}</div>
+                            <div class="text-xs text-slate-500">${escapeHtml(order.supplier_category || '')}</div>
+                         </td>
                         <td class="px-8 py-5 text-sm">${formatDate(order.order_date)}</td>
                         <td class="px-8 py-5 font-semibold text-sm">₱${parseFloat(order.total_amount).toLocaleString()}</td>
                         <td class="px-8 py-5"><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${order.status.toUpperCase()}</span></td>
@@ -684,16 +730,31 @@
         }
 
         function updateOrderStatus(orderId, newStatus) {
-            fetch('api/update_order.php', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: orderId, status: newStatus }) })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        const msg = newStatus === 'pending' ? 'Order changed to pending' : newStatus === 'delivered' ? 'Order marked as delivered' : `Order status changed to ${newStatus}`;
-                        showToast('Status Updated', msg);
-                        loadOrders();
-                    } else showToast('Error', 'Failed to update order status', true);
-                })
-                .catch(() => showToast('Error', 'Failed to update order status', true));
+            console.log(`Updating order ${orderId} to status: ${newStatus}`);
+            
+            fetch('api/update_order.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: orderId, status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const msg = newStatus === 'pending' ? 'Order changed to pending' : 
+                            newStatus === 'delivered' ? 'Order marked as delivered' : 
+                            `Order status changed to ${newStatus}`;
+                    showToast('Status Updated', msg);
+                    loadOrders();
+                } else {
+                    showToast('Error', data.error || 'Failed to update order status', true);
+                    loadOrders();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error', 'Failed to connect to server', true);
+                loadOrders();
+            });
         }
 
         function formatDate(dateString) { if (!dateString) return '—'; return new Date(dateString).toLocaleDateString('en-PH'); }
@@ -702,12 +763,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             loadOrders();
             const statusFilter = document.getElementById('statusFilter');
-            const searchInput = document.getElementById('searchInput');
+            
             if (statusFilter) statusFilter.addEventListener('change', loadOrders);
-            if (searchInput) {
-                let debounceTimer;
-                searchInput.addEventListener('input', function () { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => loadOrders(), 300); });
-            }
         });
 
         document.addEventListener('keydown', function (e) {

@@ -28,27 +28,46 @@ function saveOrder($orderData, $pdo) {
     try {
         $pdo->beginTransaction();
         
+        // Updated INSERT statement with warehouse columns
         $stmt = $pdo->prepare("
             INSERT INTO orders (
                 order_reference, supplier_name, supplier_category, priority, 
-                delivery_terminal, subtotal, priority_fee, terminal_fee, 
-                total_amount, lead_time_min, lead_time_max, items_count, status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+                delivery_terminal, warehouse_name, warehouse_id, subtotal, priority_fee, terminal_fee, 
+                total_amount, lead_time_min, lead_time_max, items_count, order_date, status, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'pending', NOW())
         ");
+        
+        // Extract warehouse ID from name (optional, but helpful)
+        $warehouseId = null;
+        $warehouseName = $orderData['deliveryWarehouse'] ?? $orderData['warehouseName'] ?? null;
+        
+        // Simple mapping of warehouse name to ID
+        $warehouseMap = [
+            "Mariano's Delivery Hub" => 1,
+            "Hanubis Center" => 2,
+            "Canto Warehouse Inc." => 3,
+            "Gervas Logistics Facility" => 4
+        ];
+        
+        if ($warehouseName && isset($warehouseMap[$warehouseName])) {
+            $warehouseId = $warehouseMap[$warehouseName];
+        }
         
         $stmt->execute([
             $orderData['orderReference'],
             $orderData['supplier'],
             $orderData['supplierCategory'] ?? null,
             $orderData['priority'],
-            $orderData['deliveryTerminal'],
+            $orderData['deliveryTerminal'] ?? $orderData['deliveryWarehouse'],
+            $warehouseName,
+            $warehouseId,
             $orderData['subtotal'],
             $orderData['priorityFee'],
-            $orderData['terminalFee'],
+            $orderData['terminalFee'] ?? 0,
             $orderData['total'],
             $orderData['leadTimeMin'],
             $orderData['leadTimeMax'],
-            count($orderData['items'])
+            array_sum(array_column($orderData['items'], 'quantity'))
         ]);
         
         $orderId = $pdo->lastInsertId();
@@ -62,7 +81,7 @@ function saveOrder($orderData, $pdo) {
             $itemStmt->execute([
                 $orderId,
                 $item['name'],
-                $item['sku'],
+                $item['sku'] ?? '',
                 $item['quantity'],
                 $item['price'],
                 $item['image'] ?? null
@@ -74,6 +93,7 @@ function saveOrder($orderData, $pdo) {
         
     } catch(PDOException $e) {
         $pdo->rollBack();
+        error_log("Save order error: " . $e->getMessage());
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
@@ -133,38 +153,30 @@ function getOrderItems($pdo, $orderId) {
     try {
         $stmt = $pdo->prepare("SELECT item_name, item_sku, quantity, price, item_image FROM order_items WHERE order_id = ?");
         $stmt->execute([$orderId]);
-        return $stmt->fetchAll();
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $items;
     } catch(PDOException $e) {
+        error_log("getOrderItems error: " . $e->getMessage());
         return [];
     }
 }
 
 function updateOrderStatus($pdo, $orderId, $status) {
     try {
-        $stmt = $pdo->prepare("SELECT status FROM orders WHERE id = ?");
-        $stmt->execute([$orderId]);
-        $currentOrder = $stmt->fetch();
-        
-        if (!$currentOrder) {
-            return ['success' => false, 'error' => 'Order not found'];
+        // Validate status
+        $allowedStatuses = ['pending', 'delivered', 'archived', 'cancelled'];
+        if (!in_array($status, $allowedStatuses)) {
+            return ['success' => false, 'error' => 'Invalid status'];
         }
-        
-        $oldStatus = $currentOrder['status'];
         
         $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
         $stmt->execute([$status, $orderId]);
         
-        if ($oldStatus === 'pending' && $status === 'delivered') {
-            $items = getOrderItems($pdo, $orderId);
-            if (!empty($items)) {
-                $inventoryResult = updateInventoryStock($pdo, $items);
-                if (!$inventoryResult['success']) {
-                    error_log("Inventory update failed: " . $inventoryResult['error']);
-                }
-            }
+        if ($stmt->rowCount() > 0) {
+            return ['success' => true, 'message' => 'Order status updated'];
+        } else {
+            return ['success' => false, 'error' => 'Order not found or no changes made'];
         }
-        
-        return ['success' => true];
     } catch(PDOException $e) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
@@ -194,69 +206,109 @@ function deleteOrder($pdo, $orderId) {
     }
 }
 
-function updateInventoryStock($pdo, $items) {
+// FIXED: This function now correctly handles warehouse-specific inventory
+function updateInventoryStock($pdo, $items, $warehouseId = null, $warehouseName = null) {
     try {
-        $pdo->beginTransaction();
+        // If no warehouse ID is provided, we cannot proceed
+        if (!$warehouseId) {
+            error_log("updateInventoryStock called without warehouse_id!");
+            return ['success' => false, 'error' => 'Warehouse ID is required to update inventory'];
+        }
         
-        $stmt = $pdo->prepare("UPDATE inventory SET stock = stock + ? WHERE sku = ?");
+        $warehouseNames = [
+            1 => "Mariano's Delivery Hub",
+            2 => "Hanubis Center", 
+            3 => "Canto Warehouse Inc.",
+            4 => "Gervas Logistics Facility"
+        ];
+        
+        $warehouseNameToUse = $warehouseName ?: ($warehouseNames[$warehouseId] ?? "Warehouse $warehouseId");
         
         foreach ($items as $item) {
-            $sku = $item['item_sku'];
-            $quantity = $item['quantity'];
-            $name = $item['item_name'];
-            $price = $item['price'];
-            $image = $item['item_image'] ?? null;
-            
-            // First, try to get the category from supplier_products
+            $sku      = $item['item_sku'];
+            $quantity = (int)$item['quantity'];
+            $name     = $item['item_name'];
+            $price    = (float)$item['price'];
+            $image    = $item['item_image'] ?? null;
+
+            if (empty($sku) || empty($name)) {
+                error_log("Skipping item with empty sku or name: " . json_encode($item));
+                continue;
+            }
+
+            // Get category from supplier_products
             $categoryStmt = $pdo->prepare("
-                SELECT s.category 
-                FROM supplier_products sp
+                SELECT s.category FROM supplier_products sp
                 JOIN suppliers s ON s.id = sp.supplier_id
                 WHERE sp.product_sku = ? OR sp.product_name = ?
                 LIMIT 1
             ");
             $categoryStmt->execute([$sku, $name]);
-            $categoryResult = $categoryStmt->fetch();
+            $categoryResult = $categoryStmt->fetch(PDO::FETCH_ASSOC);
             $category = $categoryResult ? $categoryResult['category'] : 'Uncategorized';
-            
-            $stmt->execute([$quantity, $sku]);
-            
-            if ($stmt->rowCount() === 0) {
-                // Product doesn't exist, insert it with correct category
+
+            // CRITICAL FIX: Check if product exists in THIS SPECIFIC warehouse
+            $checkStmt = $pdo->prepare("
+                SELECT id, stock, price FROM inventory 
+                WHERE sku = ? AND warehouse_id = ?
+                LIMIT 1
+            ");
+            $checkStmt->execute([$sku, $warehouseId]);
+            $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existing) {
+                // Product exists in this warehouse - update stock and price
+                $newStock = $existing['stock'] + $quantity;
+                $newPrice = ($price > 0) ? $price : $existing['price'];
+                
+                $updateStmt = $pdo->prepare("
+                    UPDATE inventory 
+                    SET stock = ?, 
+                        price = ?,
+                        image_url = COALESCE(NULLIF(image_url, ''), ?),
+                        category = CASE 
+                            WHEN (category = 'Uncategorized' OR category IS NULL) AND ? != 'Uncategorized' 
+                            THEN ? 
+                            ELSE category 
+                        END,
+                        updated_at = NOW()
+                    WHERE sku = ? AND warehouse_id = ?
+                ");
+                $updateStmt->execute([
+                    $newStock, 
+                    $newPrice, 
+                    $image,
+                    $category, $category,
+                    $sku, 
+                    $warehouseId
+                ]);
+                
+                error_log("Updated inventory for {$name} in warehouse {$warehouseId}: stock {$existing['stock']} → {$newStock}");
+            } else {
+                // Product does NOT exist in this warehouse - create new entry for this warehouse only
                 $insertStmt = $pdo->prepare("
-                    INSERT INTO inventory (name, sku, category, stock, price, image_url) 
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    INSERT INTO inventory (name, sku, category, stock, price, image_url, warehouse_id, warehouse_name, created_at, updated_at) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
                 ");
                 $insertStmt->execute([
-                    $name,
-                    $sku,
-                    $category,
-                    $quantity,
-                    $price,
-                    $image
+                    $name, 
+                    $sku, 
+                    $category, 
+                    $quantity, 
+                    $price, 
+                    $image, 
+                    $warehouseId, 
+                    $warehouseNameToUse
                 ]);
-            } else {
-                // Product exists, update category if it's 'Uncategorized' and we found a real category
-                if ($category !== 'Uncategorized') {
-                    $updateCategoryStmt = $pdo->prepare("
-                        UPDATE inventory SET category = ? WHERE sku = ? AND (category = 'Uncategorized' OR category IS NULL)
-                    ");
-                    $updateCategoryStmt->execute([$category, $sku]);
-                }
                 
-                // Update image if not already set
-                $updateImageStmt = $pdo->prepare("
-                    UPDATE inventory SET image_url = COALESCE(image_url, ?) WHERE sku = ? AND (image_url IS NULL OR image_url = '')
-                ");
-                $updateImageStmt->execute([$image, $sku]);
+                error_log("Created new inventory entry for {$name} in warehouse {$warehouseId} with stock {$quantity}");
             }
         }
-        
-        $pdo->commit();
-        return ['success' => true, 'message' => 'Inventory updated successfully'];
-        
-    } catch(Exception $e) {
-        $pdo->rollBack();
+
+        return ['success' => true];
+
+    } catch (Exception $e) {
+        error_log("updateInventoryStock error: " . $e->getMessage());
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
@@ -281,8 +333,8 @@ function addInventoryItem($pdo, $itemData) {
         }
         
         $stmt = $pdo->prepare("
-            INSERT INTO inventory (name, sku, category, stock, price, image_url)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO inventory (name, sku, category, stock, price, image_url, warehouse_id, warehouse_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
             stock = stock + VALUES(stock),
             price = VALUES(price),
@@ -300,7 +352,9 @@ function addInventoryItem($pdo, $itemData) {
             $category,
             $itemData['stock'],
             $itemData['price'],
-            $itemData['image_url'] ?? null
+            $itemData['image_url'] ?? null,
+            $itemData['warehouse_id'] ?? null,
+            $itemData['warehouse_name'] ?? null
         ]);
         
         return ['success' => true, 'id' => $pdo->lastInsertId()];

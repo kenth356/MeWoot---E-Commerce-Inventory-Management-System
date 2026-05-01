@@ -200,16 +200,12 @@
             </div>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-1.5 sidebar-nav">
-            <a href="dashboard.html" class="nav-link"><span
-                    class="material-symbols-outlined text-sm">dashboard</span><span>Dashboard</span></a>
-            <a href="inventory.html" class="nav-link"><span
-                    class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
-            <a href="orders.html" class="nav-link"><span
-                    class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
-            <a href="suppliers.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm"
-                    style="font-variation-settings: 'FILL' 1;">local_shipping</span><span>Suppliers</span></a>
-            <a href="analytics.html" class="nav-link"><span
-                    class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
+            <a href="warehouse.html" class="nav-link"><span class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
+            <a href="inventory.html" class="nav-link"><span class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
+            <a href="customer.html" class="nav-link"><span class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
+            <a href="orders.html" class="nav-link"><span class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
+            <a href="suppliers.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">local_shipping</span><span>Suppliers</span></a>
+            <a href="analytics.html" class="nav-link"><span class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
         </nav>
         <div class="px-4 pb-8 pt-4 border-t border-slate-100">
             <div class="mt-5 space-y-1">
@@ -429,7 +425,7 @@
             const category = document.getElementById('categoryFilter').value;
 
             // CORRECTED PATH for "final project" folder
-            const apiUrl = '/MeWoot/api/get_suppliers.php';
+            const apiUrl = 'api/get_suppliers.php';
 
             console.log('Loading from:', apiUrl);
 
@@ -575,7 +571,7 @@
 
         document.getElementById('deleteConfirmBtn').addEventListener('click', function () {
             if (!pendingDeleteId) return;
-            fetch('/final%20project/api/delete_supplier.php', {
+            fetch('api/delete_supplier.php', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: pendingDeleteId })

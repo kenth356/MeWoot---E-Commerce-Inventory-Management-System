@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Warehouse | MeWooHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        h1, h2, h3, .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .card-hover {
+            transition: all 0.2s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.02);
+        }
+
+        .status-badge-optimal { background-color: #e3f2fd; color: #0041c8; font-weight: 600; }
+        .status-badge-alert { background-color: #ffebee; color: #b91c1c; font-weight: 600; }
+        .status-badge-warning { background-color: #ffedd5; color: #b45309; font-weight: 600; }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 0.5rem;
+            color: #475569;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-link:hover { background: #e2e8f0; color: #2563eb; transform: translateX(4px); }
+        .nav-link-active { background: white; color: #2563eb; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+        .warehouse-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .warehouse-details-modal.active { display: flex; }
+
+        .warehouse-details-card {
+            background: white;
+            border-radius: 2rem;
+            width: 90%;
+            max-width: 900px;
+            height: 85vh;
+            max-height: 700px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.4);
+            animation: modalFadeIn 0.2s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .warehouse-details-header {
+            padding: 1.25rem 1.75rem;
+            background: white;
+            border-bottom: 1px solid #eef2ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .tab-container {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 1.75rem;
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            padding: 0.85rem 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: transparent;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .tab-button.active { color: #0041c8; border-bottom-color: #0041c8; }
+
+        .tab-content {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            background: #ffffff;
+            min-height: 0;
+        }
+
+        .info-grid { display: flex; flex-direction: column; gap: 1rem; }
+        .info-card { background: #ffffff; border-radius: 1rem; padding: 0.25rem 0; border: none; }
+        
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: #f8fafc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0041c8;
+            flex-shrink: 0;
+        }
+
+        .info-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
+        .info-value { font-size: 0.95rem; font-weight: 500; color: #1e293b; }
+
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-pill {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 0.8rem 0.3rem;
+            text-align: center;
+            border: 1px solid #f0f2f5;
+        }
+
+        .stat-pill .value { font-size: 1.3rem; font-weight: 800; color: #0f172a; font-family: 'Manrope', sans-serif; }
+        .stat-pill .label { font-size: 0.65rem; text-transform: uppercase; font-weight: 700; color: #475569; }
+
+        .status-delivered { background-color: #d1fae5; color: #065f46; font-weight: 600; border-radius: 999px; padding: 0.2rem 0.7rem; display: inline-block; font-size: 0.7rem; }
+        .status-pending { background-color: #ffdad6; color: #93000a; font-weight: 600; border-radius: 999px; padding: 0.2rem 0.7rem; display: inline-block; font-size: 0.7rem; }
+        .status-shipped { background-color: #dbeafe; color: #1e40af; font-weight: 600; border-radius: 999px; padding: 0.2rem 0.7rem; display: inline-block; font-size: 0.7rem; }
+        .status-archived { background-color: #e2e8f0; color: #475569; font-weight: 600; border-radius: 999px; padding: 0.2rem 0.7rem; display: inline-block; font-size: 0.7rem; }
+        .status-cancelled { background-color: #fef9c3; color: #854d0e; font-weight: 600; border-radius: 999px; padding: 0.2rem 0.7rem; display: inline-block; font-size: 0.7rem; }
+
+        .delivery-tab-container {
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .delivery-tab-btn {
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+        }
+
+        .delivery-tab-btn.active { background: #0041c8; color: white; }
+
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 0.75rem; background: #f8fafc; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #475569; }
+        .data-table td { padding: 0.85rem 0.75rem; border-bottom: 1px solid #f0f2f5; font-size: 0.85rem; }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            border-left: 4px solid #22c55e;
+        }
+
+        .toast-notification.show { transform: translateX(0); }
+
+        .close-modal-icon {
+            background: #f1f5f9;
+            border-radius: 999px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #475569;
+        }
+
+        .close-modal-icon:hover { background: #e2e8f0; transform: scale(0.96); }
+
+        .warehouse-header-badge {
+            background: #eef2ff;
+            border-radius: 40px;
+            padding: 0.25rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 0.75rem;
+            color: #0041c8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #94a3b8;
+            background: #fafcff;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .warehouse-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.75rem;
+        }
+
+        @media (min-width: 1280px) and (max-width: 1535px) {
+            .warehouse-grid-container { grid-template-columns: repeat(2, minmax(0, 500px)); justify-content: center; }
+        }
+
+        @media (min-width: 1536px) {
+            .warehouse-grid-container { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .action-select { font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; background: white; }
+        .delivery-stats { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        
+        .stat-chip {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .stat-chip .count { font-size: 0.9rem; font-weight: 800; color: #0041c8; margin-right: 0.2rem; }
+        .capacity-bar { transition: width 0.5s ease; }
+        
+        .storage-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .incoming-badge {
+            background-color: #fef3c7;
+            color: #d97706;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .receive-btn {
+            background-color: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .receive-btn:hover {
+            background-color: #059669;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="storageAlert" class="storage-alert hidden">
+        <div class="bg-white rounded-xl shadow-lg border-l-4 border-red-500 p-4 max-w-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-red-500">warning</span>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-800" id="alertTitle">Storage Alert</p>
+                    <p class="text-sm text-slate-600" id="alertMessage"></p>
+                </div>
+                <button onclick="closeStorageAlert()" class="ml-auto text-slate-400 hover:text-slate-600">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <aside class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-sm border-r border-slate-200/80 shadow-sm z-40 flex flex-col">
+        <div class="px-6 pt-8 pb-6 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
+                    <span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                </div>
+                <div>
+                    <h1 class="font-manrope font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span class="text-blue-600">Hub</span></h1>
+                    <p class="text-[10px] font-semibold uppercase text-slate-400 tracking-wider">Warehouse Control</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-1.5">
+            <a href="warehouse.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">warehouse</span><span>Warehouse</span></a>
+            <a href="inventory.html" class="nav-link"><span class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
+            <a href="customer.html" class="nav-link"><span class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
+            <a href="orders.html" class="nav-link"><span class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
+            <a href="suppliers.html" class="nav-link"><span class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
+            <a href="analytics.html" class="nav-link"><span class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
+        </nav>
+        <div class="px-4 pb-8 pt-4 border-t border-slate-100">
+            <div class="mt-5 space-y-1">
+                <a href="login.html" class="nav-link text-xs">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="ml-72 p-8">
+        <div class="max-w-[1600px] mx-auto">
+            <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+                        <span class="material-symbols-outlined text-sm">warehouse</span>
+                        <span>Warehouse Management</span>
+                    </div>
+                    <h1 class="text-4xl font-manrope font-extrabold text-slate-800 tracking-tight">Warehouse Portfolio</h1>
+                    <p class="text-slate-500 text-sm mt-1">Monitor stock levels, inventory, and customer deliveries per facility</p>
+                </div>
+                <button onclick="refreshAllData()" class="bg-white border border-blue-200 text-blue-700 px-5 py-2.5 rounded-xl font-bold shadow-sm flex items-center gap-2 transition-all hover:bg-blue-50">
+                    <span class="material-symbols-outlined">refresh</span>
+                    Sync Data
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
+                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Total Facilities</p><p id="totalFacilities" class="text-3xl font-black text-blue-700 mt-1">0</p></div>
+                    <span class="material-symbols-outlined text-4xl text-blue-300">warehouse</span>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
+                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Total Units</p><p id="totalUnits" class="text-3xl font-black text-emerald-600 mt-1">0</p></div>
+                    <span class="material-symbols-outlined text-4xl text-emerald-300">inventory</span>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
+                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Total Value</p><p id="totalValue" class="text-3xl font-black text-purple-700 mt-1">₱0</p></div>
+                    <span class="material-symbols-outlined text-4xl text-purple-300">payments</span>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
+                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Alert Status</p><p id="alertCount" class="text-3xl font-black text-red-600 mt-1">0</p></div>
+                    <span class="material-symbols-outlined text-4xl text-red-300">warning</span>
+                </div>
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex justify-between items-center">
+                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Avg. Efficiency</p><p id="avgEfficiency" class="text-3xl font-black text-blue-700 mt-1">0%</p></div>
+                    <span class="material-symbols-outlined text-4xl text-blue-300">speed</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mb-8">
+                <div class="flex flex-wrap gap-3 items-center">
+                    <select id="statusFilter" class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white">
+                        <option value="all">All Facilities</option>
+                        <option value="optimal">Optimal Status</option>
+                        <option value="warning">Warning (70-85%)</option>
+                        <option value="alert">Alert (85-100%)</option>
+                        <option value="critical">Critical (100%+)</option>
+                    </select>
+                    <input type="text" id="searchInput" placeholder="Search by facility name or location..." class="flex-1 min-w-[200px] px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 outline-none">
+                    <button onclick="loadWarehouses()" class="px-6 py-2.5 bg-[#0041c8] text-white rounded-xl text-sm font-semibold hover:bg-[#0035a3] transition-all">Search</button>
+                </div>
+            </div>
+
+            <div id="warehouseGrid" class="warehouse-grid-container">
+                <div class="col-span-full flex justify-center py-12">
+                    <div class="animate-pulse flex gap-3 text-slate-400"><span class="material-symbols-outlined">warehouse</span> Loading warehouses...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="warehouseModal" class="warehouse-details-modal">
+        <div class="warehouse-details-card">
+            <div class="warehouse-details-header">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-2xl text-blue-600">warehouse</span>
+                    <h3 id="modalTitle" class="text-xl font-manrope font-extrabold text-slate-800">Warehouse Details</h3>
+                    <span id="modalStatusBadge" class="warehouse-header-badge"></span>
+                </div>
+                <div class="close-modal-icon" onclick="closeWarehouseModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            </div>
+            <div class="tab-container">
+                <button onclick="switchWarehouseTab('info')" id="tabInfo" class="tab-button active">📋 Information</button>
+                <button onclick="switchWarehouseTab('inventory')" id="tabInventoryBtn" class="tab-button">📦 Inventory</button>
+                <button onclick="switchWarehouseTab('incoming')" id="tabIncomingBtn" class="tab-button">📥 Incoming Orders</button>
+                <button onclick="switchWarehouseTab('orders')" id="tabOrdersBtn" class="tab-button">🚚 Customer Orders</button>
+            </div>
+            <div id="tabInfoContent" class="tab-content">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-row">
+                            <div class="info-icon"><span class="material-symbols-outlined text-xl">location_on</span></div>
+                            <div class="flex-1">
+                                <div class="info-label">Address / Location</div>
+                                <div class="info-value" id="modalAddress">—</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-icon"><span class="material-symbols-outlined text-xl">person</span></div>
+                            <div class="flex-1">
+                                <div class="info-label">Warehouse Manager</div>
+                                <div class="info-value" id="modalContactPerson">—</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-icon"><span class="material-symbols-outlined text-xl">call</span></div>
+                            <div class="flex-1">
+                                <div class="info-label">Phone Number</div>
+                                <div class="info-value" id="modalPhone">—</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-icon"><span class="material-symbols-outlined text-xl">mail</span></div>
+                            <div class="flex-1">
+                                <div class="info-label">Email Address</div>
+                                <div class="info-value" id="modalEmail">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-mini">
+                        <div class="stat-pill"><div class="value" id="modalCapacity">0%</div><div class="label">Capacity Used</div></div>
+                        <div class="stat-pill"><div class="value" id="modalStockValue">₱0</div><div class="label">Stock Value</div></div>
+                        <div class="stat-pill"><div class="value" id="modalProductCount">0</div><div class="label">Products</div></div>
+                    </div>
+                    <div id="capacityWarning" class="hidden p-3 rounded-lg border-l-4 mb-2"></div>
+                </div>
+            </div>
+            <div id="tabInventoryContent" class="tab-content" style="display: none;">
+                <div id="inventoryTableContainer"></div>
+            </div>
+            <div id="tabIncomingContent" class="tab-content" style="display: none;">
+                <div id="incomingOrdersContainer"></div>
+            </div>
+            <div id="tabOrdersContent" class="tab-content" style="display: none;">
+                <div class="delivery-tab-container">
+                    <button onclick="setOrdersTab('all')" id="ordersTabAll" class="delivery-tab-btn active">📋 All Orders</button>
+                    <button onclick="setOrdersTab('pending')" id="ordersTabPending" class="delivery-tab-btn">⏳ Pending</button>
+                    <button onclick="setOrdersTab('shipped')" id="ordersTabShipped" class="delivery-tab-btn">🚚 Shipped</button>
+                    <button onclick="setOrdersTab('delivered')" id="ordersTabDelivered" class="delivery-tab-btn">✅ Delivered</button>
+                    <button onclick="setOrdersTab('cancelled')" id="ordersTabCancelled" class="delivery-tab-btn">❌ Cancelled</button>
+                    <button onclick="setOrdersTab('archived')" id="ordersTabArchived" class="delivery-tab-btn">📦 Archived</button>
+                </div>
+                <div class="delivery-stats" id="modalDeliveryStats"></div>
+                <div id="ordersTableContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="successToast" class="toast-notification">
+        <div class="toast-icon"><span class="material-symbols-outlined">check</span></div>
+        <div>
+            <div class="font-semibold text-sm">Success</div>
+            <div class="text-xs text-slate-500">Action completed</div>
+        </div>
+    </div>
+
+    <script>
+        const warehouseMaxCapacities = { 1: 5000, 2: 3500, 3: 4500, 4: 3000 };
+
+        let warehouses = [
+            { id: 1, name: "Mariano's Delivery Hub", location: "Bulakan, Bulacan", fullAddress: "Brgy. San Jose, Bulakan, Bulacan 3017", baseCapacity: 85, stockValue: 12.4, status: "alert", contactPerson: "Roberto Mariano", phone: "+63 917 555 1234", email: "operations@marianohub.com", maxUnits: 5000 },
+            { id: 2, name: "Hanubis Center", location: "Mexico, Pampanga", fullAddress: "San Juan Industrial Park, Mexico, Pampanga 2021", baseCapacity: 45, stockValue: 22.7, status: "optimal", contactPerson: "Maria Santiago", phone: "+63 918 555 5678", email: "logistics@hanubis.com", maxUnits: 3500 },
+            { id: 3, name: "Canto Warehouse Inc.", location: "Chinatown, Manila", fullAddress: "1123 Ongpin St., Binondo, Manila 1006", baseCapacity: 73, stockValue: 18.3, status: "optimal", contactPerson: "William Canto", phone: "+63 920 555 9012", email: "w.canto@cantowarehouse.com", maxUnits: 4500 },
+            { id: 4, name: "Gervas Logistics Facility", location: "Negros Occidental", fullAddress: "Bacolod-Silay Access Road, Negros Occidental 6100", baseCapacity: 62, stockValue: 8.1, status: "optimal", contactPerson: "Genevieve Gervas", phone: "+63 915 555 3456", email: "gervas.logistics@negros.com", maxUnits: 3000 }
+        ];
+
+        let warehouseInventory = { 1: [], 2: [], 3: [], 4: [] };
+        let warehouseOrders = { 1: [], 2: [], 3: [], 4: [] };
+        let incomingOrders = { 1: [], 2: [], 3: [], 4: [] };
+        let currentWarehouseId = null;
+        let currentOrdersTab = 'all';
+
+        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+
+        function showToast(title, msg, isError = false) {
+            const toast = document.getElementById('successToast');
+            const icon = toast.querySelector('.toast-icon');
+            icon.style.background = isError ? '#dc2626' : '#22c55e';
+            icon.querySelector('.material-symbols-outlined').innerText = isError ? 'error' : 'check';
+            toast.querySelector('.font-semibold').innerText = title;
+            toast.querySelector('.text-xs').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function calculateTotalUnits(warehouseId) {
+            return (warehouseInventory[warehouseId] || []).reduce((sum, item) => sum + (item.quantity || 0), 0);
+        }
+
+        function calculateCapacityPercentage(warehouseId, totalUnits) {
+            const maxUnits = warehouseMaxCapacities[warehouseId] || 5000;
+            return Math.min((totalUnits / maxUnits) * 100, 100);
+        }
+
+        function getWarehouseStatus(capacityPercent) {
+            if (capacityPercent >= 100) return 'critical';
+            if (capacityPercent >= 85) return 'alert';
+            if (capacityPercent >= 70) return 'warning';
+            return 'optimal';
+        }
+
+        function closeStorageAlert() { document.getElementById('storageAlert').classList.add('hidden'); }
+
+        async function refreshAllData() {
+            await loadInventory();
+            await loadIncomingSupplierOrders();
+            await loadSupplierOrdersByStatus('delivered');
+            await loadSupplierOrdersByStatus('pending');
+            loadCustomerOrders();
+            loadWarehouses();
+            showToast("Sync complete", "Warehouse data refreshed");
+        }
+
+        async function loadInventory() {
+            try {
+                const response = await fetch(`api/get_inventory.php`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                
+                if (data.success && Array.isArray(data.data)) {
+                    warehouseInventory = { 1: [], 2: [], 3: [], 4: [] };
+                    data.data.forEach(product => {
+                        const warehouseId = product.warehouse_id;
+                        if (warehouseId && warehouseId >= 1 && warehouseId <= 4) {
+                            warehouseInventory[warehouseId].push({
+                                id: product.id,
+                                sku: product.sku,
+                                name: product.name,
+                                quantity: parseInt(product.stock) || 0,
+                                unitPrice: parseFloat(product.price) || 0,
+                                totalValue: (parseInt(product.stock) || 0) * (parseFloat(product.price) || 0)
+                            });
+                        }
+                    });
+                    console.log('Inventory loaded:', warehouseInventory);
+                } else {
+                    fallbackInventory();
+                }
+            } catch (e) {
+                console.error('Error loading inventory:', e);
+                fallbackInventory();
+            }
+        }
+
+        function fallbackInventory() {
+            warehouseInventory = {
+                1: [{ id: 1, sku: "SENSOR-001", name: "Smart Sensor Array", quantity: 1250, unitPrice: 1299, totalValue: 1623750 }],
+                2: [{ id: 2, sku: "MOTOR-001", name: "Industrial Motor", quantity: 300, unitPrice: 8999, totalValue: 2699700 }],
+                3: [{ id: 3, sku: "CHIP-001", name: "Microchip Processor", quantity: 500, unitPrice: 49, totalValue: 24500 }],
+                4: [{ id: 4, sku: "PACK-001", name: "Heavy Duty Packaging", quantity: 1200, unitPrice: 199, totalValue: 238800 }]
+            };
+        }
+
+        async function loadIncomingSupplierOrders() {
+            try {
+                const response = await fetch('api/get_orders.php?status=pending');
+                const data = await response.json();
+                incomingOrders = { 1: [], 2: [], 3: [], 4: [] };
+                
+                if (data.success && data.orders) {
+                    data.orders.forEach(order => {
+                        let warehouseId = order.warehouse_id;
+                        
+                        if (!warehouseId && order.warehouse_name) {
+                            if (order.warehouse_name.includes("Mariano's")) warehouseId = 1;
+                            else if (order.warehouse_name.includes("Hanubis")) warehouseId = 2;
+                            else if (order.warehouse_name.includes("Canto")) warehouseId = 3;
+                            else if (order.warehouse_name.includes("Gervas")) warehouseId = 4;
+                        }
+                        
+                        if (!warehouseId && order.delivery_terminal) {
+                            if (order.delivery_terminal.includes("Mariano's")) warehouseId = 1;
+                            else if (order.delivery_terminal.includes("Hanubis")) warehouseId = 2;
+                            else if (order.delivery_terminal.includes("Canto")) warehouseId = 3;
+                            else if (order.delivery_terminal.includes("Gervas")) warehouseId = 4;
+                        }
+                        
+                        if (warehouseId && order.status === 'pending') {
+                            if (order.items && order.items.length > 0) {
+                                order.items.forEach(item => {
+                                    incomingOrders[warehouseId].push({
+                                        orderRef: order.order_reference,
+                                        productName: item.item_name,
+                                        sku: item.item_sku,
+                                        quantity: item.quantity,
+                                        expectedDate: order.order_date,
+                                        status: 'incoming',
+                                        price: item.price
+                                    });
+                                });
+                            } else {
+                                incomingOrders[warehouseId].push({
+                                    orderRef: order.order_reference,
+                                    productName: 'Order Items',
+                                    sku: 'Multiple',
+                                    quantity: order.items_count || 1,
+                                    expectedDate: order.order_date,
+                                    status: 'incoming',
+                                    price: 0
+                                });
+                            }
+                        }
+                    });
+                }
+                console.log('Incoming orders loaded:', incomingOrders);
+            } catch (e) {
+                console.error('Error loading incoming orders:', e);
+            }
+        }
+
+        async function loadSupplierOrdersByStatus(status) {
+            try {
+                const response = await fetch(`api/get_orders.php?status=${status}`);
+                const data = await response.json();
+                
+                if (data.success && data.orders) {
+                    data.orders.forEach(order => {
+                        let warehouseId = order.warehouse_id;
+                        
+                        if (!warehouseId && order.warehouse_name) {
+                            if (order.warehouse_name.includes("Mariano's")) warehouseId = 1;
+                            else if (order.warehouse_name.includes("Hanubis")) warehouseId = 2;
+                            else if (order.warehouse_name.includes("Canto")) warehouseId = 3;
+                            else if (order.warehouse_name.includes("Gervas")) warehouseId = 4;
+                        }
+                        
+                        if (warehouseId && warehouseOrders[warehouseId]) {
+                            const exists = warehouseOrders[warehouseId].some(o => o.id === order.order_reference);
+                            if (!exists) {
+                                warehouseOrders[warehouseId].push({
+                                    id: order.order_reference,
+                                    customer: order.supplier_name,
+                                    product: order.items && order.items[0] ? order.items[0].item_name : 'Multiple Items',
+                                    quantity: order.items_count || 1,
+                                    totalAmount: order.total_amount,
+                                    status: order.status,
+                                    date: new Date(order.order_date).toLocaleDateString('en-PH'),
+                                    type: 'supplier_order'
+                                });
+                            }
+                        }
+                    });
+                    saveOrdersToStorage();
+                }
+            } catch (e) {
+                console.error('Error loading supplier orders:', e);
+            }
+        }
+
+        function loadCustomerOrders() {
+            try {
+                const saved = localStorage.getItem('inventory_orders');
+                if (saved) {
+                    const orders = JSON.parse(saved);
+                    orders.forEach(order => {
+                        let targetWarehouseId = null;
+                        if (order.warehouseId) targetWarehouseId = order.warehouseId;
+                        else if (order.deliveryTerminal) {
+                            if (order.deliveryTerminal.includes("Mariano's")) targetWarehouseId = 1;
+                            else if (order.deliveryTerminal.includes("Hanubis")) targetWarehouseId = 2;
+                            else if (order.deliveryTerminal.includes("Canto")) targetWarehouseId = 3;
+                            else if (order.deliveryTerminal.includes("Gervas")) targetWarehouseId = 4;
+                        }
+                        if (!targetWarehouseId) targetWarehouseId = 1;
+                        if (warehouseOrders[targetWarehouseId]) {
+                            const exists = warehouseOrders[targetWarehouseId].some(o => o.id === (order.orderRef || `ORD-${order.id}`));
+                            if (!exists) {
+                                warehouseOrders[targetWarehouseId].push({
+                                    id: order.orderRef || `ORD-${order.id}`,
+                                    customer: order.customerName || order.customer || "Walk-in Customer",
+                                    product: order.productName || 'General Item',
+                                    quantity: order.quantity || 1,
+                                    totalAmount: order.totalAmount || order.total || 0,
+                                    status: order.status || 'pending',
+                                    date: new Date().toLocaleDateString('en-PH')
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    generateDemoOrders();
+                }
+            } catch (e) { generateDemoOrders(); }
+        }
+
+        function generateDemoOrders() {
+            warehouseOrders = {
+                1: [{ id: "ORD-101", customer: "Alpha Logistics Inc.", product: "Sensor Kit", quantity: 20, totalAmount: 45000, status: "delivered", date: "2025-03-20" }],
+                2: [{ id: "ORD-202", customer: "Beta Solutions Corp", product: "Motors", quantity: 5, totalAmount: 124500, status: "shipped", date: "2025-04-01" }],
+                3: [{ id: "ORD-303", customer: "Gamma Trading Group", product: "Microchips", quantity: 500, totalAmount: 28500, status: "pending", date: "2025-04-05" }],
+                4: [{ id: "ORD-404", customer: "Delta Enterprise", product: "Packaging Rolls", quantity: 120, totalAmount: 23800, status: "delivered", date: "2025-03-28" }]
+            };
+        }
+
+        function saveOrdersToStorage() {
+            const allOrders = [];
+            for (let id in warehouseOrders) {
+                const warehouse = warehouses.find(w => w.id == id);
+                warehouseOrders[id].forEach(order => {
+                    allOrders.push({ ...order, warehouseId: parseInt(id), warehouseName: warehouse?.name || `Warehouse ${id}` });
+                });
+            }
+            localStorage.setItem('warehouse_orders', JSON.stringify(allOrders));
+        }
+
+        function updateOrderStatus(order, warehouseId, newStatus) {
+            const index = warehouseOrders[warehouseId].findIndex(o => o.id === order.id);
+            if (index !== -1) {
+                warehouseOrders[warehouseId][index].status = newStatus;
+                saveOrdersToStorage();
+                if (currentWarehouseId === warehouseId) renderModalOrders();
+                showToast('Status Updated', `Order marked as ${newStatus}`);
+            }
+        }
+
+        function setOrdersTab(tab) {
+            currentOrdersTab = tab;
+            ['all', 'pending', 'shipped', 'delivered', 'cancelled', 'archived'].forEach(t => {
+                const btn = document.getElementById(`ordersTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                if (btn) btn.classList.toggle('active', t === tab);
+            });
+            renderModalOrders();
+        }
+
+        function renderWarehouseGrid() {
+            const grid = document.getElementById('warehouseGrid');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const updatedWarehouses = warehouses.map(warehouse => {
+                const totalUnits = calculateTotalUnits(warehouse.id);
+                const capacityPercent = calculateCapacityPercentage(warehouse.id, totalUnits);
+                const maxUnits = warehouseMaxCapacities[warehouse.id];
+                const status = getWarehouseStatus(capacityPercent);
+                return { ...warehouse, dynamicCapacity: Math.round(capacityPercent), totalUnits, maxUnits, status };
+            });
+
+            let filtered = updatedWarehouses.filter(w => (searchTerm === '' || w.name.toLowerCase().includes(searchTerm) || w.location.toLowerCase().includes(searchTerm)) && (statusFilter === 'all' || w.status === statusFilter));
+
+            const totalUnits = updatedWarehouses.reduce((s, w) => s + w.totalUnits, 0);
+            const avgEfficiency = updatedWarehouses.reduce((s, w) => s + w.dynamicCapacity, 0) / updatedWarehouses.length;
+            const alertCount = updatedWarehouses.filter(w => w.status === 'alert' || w.status === 'critical').length;
+
+            let totalInventoryValue = 0;
+            for (let w = 1; w <= 4; w++) {
+                totalInventoryValue += (warehouseInventory[w] || []).reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+            }
+
+            document.getElementById('totalFacilities').innerText = warehouses.length;
+            document.getElementById('totalUnits').innerText = totalUnits.toLocaleString();
+            document.getElementById('totalValue').innerHTML = `₱${totalInventoryValue.toLocaleString()}`;
+            document.getElementById('alertCount').innerText = alertCount;
+            document.getElementById('avgEfficiency').innerHTML = `${Math.round(avgEfficiency)}%`;
+
+            if (filtered.length === 0) { grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-400 bg-white rounded-2xl">No warehouses match</div>'; return; }
+
+            grid.innerHTML = filtered.map(warehouse => {
+                let statusClass = '', statusText = '', barColor = '';
+                if (warehouse.status === 'critical') { statusClass = 'status-badge-alert'; statusText = '🔴 CRITICAL'; barColor = 'bg-red-600'; }
+                else if (warehouse.status === 'alert') { statusClass = 'status-badge-alert'; statusText = '⚠️ ALERT'; barColor = 'bg-red-500'; }
+                else if (warehouse.status === 'warning') { statusClass = 'status-badge-warning'; statusText = '⚠️ WARNING'; barColor = 'bg-orange-500'; }
+                else { statusClass = 'status-badge-optimal'; statusText = '✅ OPTIMAL'; barColor = 'bg-emerald-500'; }
+
+                const inventoryCount = (warehouseInventory[warehouse.id] || []).filter(item => item.quantity > 0).length;
+                const incomingCount = incomingOrders[warehouse.id] ? incomingOrders[warehouse.id].length : 0;
+                const remainingUnits = warehouse.maxUnits - warehouse.totalUnits;
+                const warehouseStockValue = (warehouseInventory[warehouse.id] || []).reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+
+                return `<div class="group bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-xl hover:border-slate-200 card-hover cursor-pointer" onclick="openWarehouseModal(${warehouse.id})">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center text-blue-700 shadow-sm">
+                                    <span class="material-symbols-outlined text-2xl">warehouse</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-slate-800 font-manrope">${escapeHtml(warehouse.name)}</h3>
+                                    <div class="flex flex-wrap gap-2 mt-1">
+                                        <span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-bold ${statusClass}">${statusText}</span>
+                                        ${incomingCount > 0 ? `<span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-bold incoming-badge"><span class="material-symbols-outlined text-xs">inbound</span> ${incomingCount} incoming</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center gap-2 text-sm text-slate-600">
+                            <span class="material-symbols-outlined text-base text-slate-400">location_on</span>
+                            <span>${escapeHtml(warehouse.location)}</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span class="text-slate-500">Storage Capacity</span>
+                                <span class="text-slate-800">${warehouse.dynamicCapacity}% (${warehouse.totalUnits.toLocaleString()} / ${warehouse.maxUnits.toLocaleString()} units)</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 rounded-full mt-1 overflow-hidden">
+                                <div class="h-full ${barColor} capacity-bar" style="width: ${warehouse.dynamicCapacity}%;"></div>
+                            </div>
+                            ${warehouse.totalUnits > warehouse.maxUnits ? `<p class="text-xs text-red-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-xs">error</span> OVER CAPACITY by ${(warehouse.totalUnits - warehouse.maxUnits).toLocaleString()} units!</p>` : warehouse.dynamicCapacity >= 85 ? `<p class="text-xs text-orange-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-xs">warning</span> Running out of space! Only ${remainingUnits.toLocaleString()} units remaining.</p>` : warehouse.dynamicCapacity >= 70 ? `<p class="text-xs text-amber-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-xs">info</span> ${remainingUnits.toLocaleString()} units remaining.</p>` : `<p class="text-xs text-green-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-xs">check_circle</span> ${remainingUnits.toLocaleString()} units available.</p>`}
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-3 text-sm border-t border-slate-100 pt-4">
+                            <div><p class="text-[11px] font-bold text-slate-400 uppercase">Products</p><p class="text-lg font-bold text-slate-800">${inventoryCount} items</p></div>
+                            <div><p class="text-[11px] font-bold text-slate-400 uppercase">Stock Value</p><p class="text-lg font-bold text-emerald-600">₱${warehouseStockValue.toLocaleString()}</p></div>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center pt-2">
+                            <span class="text-xs text-slate-400 flex items-center gap-1"><span class="material-symbols-outlined text-xs">contact_support</span> ${escapeHtml(warehouse.contactPerson.split(' ')[0])}</span>
+                            <span class="text-blue-700 text-xs font-bold flex items-center gap-1">View Details <span class="material-symbols-outlined text-xs">arrow_forward</span></span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function switchWarehouseTab(tab) {
+            document.getElementById('tabInfo').classList.toggle('active', tab === 'info');
+            document.getElementById('tabInventoryBtn').classList.toggle('active', tab === 'inventory');
+            document.getElementById('tabIncomingBtn').classList.toggle('active', tab === 'incoming');
+            document.getElementById('tabOrdersBtn').classList.toggle('active', tab === 'orders');
+            document.getElementById('tabInfoContent').style.display = tab === 'info' ? 'block' : 'none';
+            document.getElementById('tabInventoryContent').style.display = tab === 'inventory' ? 'block' : 'none';
+            document.getElementById('tabIncomingContent').style.display = tab === 'incoming' ? 'block' : 'none';
+            document.getElementById('tabOrdersContent').style.display = tab === 'orders' ? 'block' : 'none';
+            if (tab === 'inventory') renderModalInventory();
+            if (tab === 'incoming') renderModalIncoming();
+            if (tab === 'orders') renderModalOrders();
+        }
+
+        function renderModalInventory() {
+            const inventory = warehouseInventory[currentWarehouseId] || [];
+            const filteredInventory = inventory.filter(item => item.quantity > 0);
+            const container = document.getElementById('inventoryTableContainer');
+            
+            if (filteredInventory.length === 0) { 
+                container.innerHTML = '<div class="empty-state">📭 No products with stock in this warehouse. Receive incoming orders to add products.</div>'; 
+                return; 
+            }
+            
+            filteredInventory.sort((a, b) => b.quantity - a.quantity);
+            
+            container.innerHTML = `
+                <div class="mb-3 text-xs text-slate-500">
+                    Showing ${filteredInventory.length} product${filteredInventory.length !== 1 ? 's' : ''} with stock
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Product</th>
+                            <th class="text-right">Stock Qty</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-right">Total Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredInventory.map(i => `
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="font-mono text-blue-700 text-sm">${escapeHtml(i.sku)}</td>
+                                <td class="font-medium">${escapeHtml(i.name)}</td>
+                                <td class="font-semibold text-right">${i.quantity.toLocaleString()}</td>
+                                <td class="text-emerald-600 font-semibold text-right">₱${i.unitPrice.toLocaleString()}</td>
+                                <td class="text-purple-600 font-semibold text-right">₱${(i.totalValue).toLocaleString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function renderModalIncoming() {
+            const incoming = incomingOrders[currentWarehouseId] || [];
+            const container = document.getElementById('incomingOrdersContainer');
+            if (incoming.length === 0) { 
+                container.innerHTML = '<div class="empty-state">📭 No incoming orders for this warehouse</div>'; 
+                return; 
+            }
+            container.innerHTML = `<table class="data-table"><thead><tr><th>Order Ref</th><th>Product</th><th>SKU</th><th>Quantity</th><th>Expected Date</th><th>Action</th></tr></thead><tbody>${incoming.map(order => `<tr><td class="font-mono text-blue-700 text-sm">${escapeHtml(order.orderRef)}</td><td class="font-medium">${escapeHtml(order.productName)}</td><td class="font-mono text-slate-500 text-xs">${escapeHtml(order.sku)}</td><td class="font-semibold text-orange-600">${order.quantity} pcs</td><td class="text-slate-500 text-sm">${order.expectedDate ? new Date(order.expectedDate).toLocaleDateString() : 'Pending'}</td><td><button class="receive-btn" onclick="receiveIncomingOrder('${order.orderRef}', '${escapeHtml(order.productName)}', ${order.quantity}, ${currentWarehouseId}, ${order.price || 0})">Receive</button></td></tr>`).join('')}</tbody></table>`;
+        }
+
+        function receiveIncomingOrder(orderRef, productName, quantity, warehouseId, price) {
+            if (confirm(`Receive ${quantity} x "${productName}" to warehouse ${warehouseId}?`)) {
+                console.log('Receiving order:', orderRef, productName, quantity, warehouseId, price);
+                
+                fetch('api/update_order_status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderRef: orderRef, status: 'delivered' })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Update order status response:', data);
+                    if (data.success) {
+                        addInventoryToSpecificWarehouse(warehouseId, productName, quantity, price);
+                        showToast('Order Received', `${quantity} x ${productName} added to Warehouse ${warehouseId}`);
+                        
+                        setTimeout(() => {
+                            loadInventory();
+                            loadIncomingSupplierOrders();
+                            loadSupplierOrdersByStatus('delivered');
+                            if (currentWarehouseId === warehouseId) {
+                                renderModalInventory();
+                                renderModalIncoming();
+                            }
+                            renderWarehouseGrid();
+                        }, 500);
+                    } else {
+                        showToast('Error', data.error || 'Failed to receive order', true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Error', 'Connection error: ' + error.message, true);
+                });
+            }
+        }
+
+        function addInventoryToSpecificWarehouse(warehouseId, productName, quantity, price) {
+            console.log('Adding to inventory:', warehouseId, productName, quantity, price);
+            
+            const existingInWarehouse = warehouseInventory[warehouseId].find(item => item.name === productName);
+            
+            if (existingInWarehouse) {
+                const newQuantity = existingInWarehouse.quantity + quantity;
+                const newPrice = price > 0 ? price : existingInWarehouse.unitPrice;
+                
+                fetch('api/update_inventory_quantity.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        warehouse_id: warehouseId,
+                        product_name: productName,
+                        quantity: newQuantity,
+                        price: newPrice
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Update inventory response:', data);
+                    if (data.success) {
+                        existingInWarehouse.quantity = newQuantity;
+                        existingInWarehouse.unitPrice = newPrice;
+                        existingInWarehouse.totalValue = newQuantity * newPrice;
+                        showToast('Inventory Updated', `${productName} stock updated to ${newQuantity}`);
+                    } else {
+                        showToast('Error', data.error || 'Failed to update inventory', true);
+                    }
+                })
+                .catch(e => {
+                    console.error('Error updating inventory:', e);
+                    showToast('Error', 'Failed to update inventory', true);
+                });
+            } else {
+                const newSku = generateSKU(productName, warehouseId);
+                
+                fetch('api/create_inventory_item.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        warehouse_id: warehouseId,
+                        product_name: productName,
+                        quantity: quantity,
+                        sku: newSku,
+                        price: price || 0
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Create inventory response:', data);
+                    if (data.success) {
+                        warehouseInventory[warehouseId].push({
+                            id: data.inventory_id,
+                            sku: newSku,
+                            name: productName,
+                            quantity: quantity,
+                            unitPrice: price || 0,
+                            totalValue: (price || 0) * quantity
+                        });
+                        showToast('Product Created', `${productName} added to warehouse ${warehouseId}`);
+                        renderModalInventory();
+                    } else {
+                        showToast('Error', data.error || 'Failed to create inventory item', true);
+                    }
+                })
+                .catch(e => {
+                    console.error('Error creating inventory:', e);
+                    showToast('Error', 'Failed to create inventory item. Check if create_inventory_item.php exists.', true);
+                });
+            }
+        }
+
+        function generateSKU(productName, warehouseId) {
+            const initials = productName.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase();
+            return `${initials}-WH${warehouseId}-${Date.now()}`;
+        }
+
+        function renderModalOrders() {
+            let orders = warehouseOrders[currentWarehouseId] || [];
+            if (currentOrdersTab !== 'all') orders = orders.filter(o => o.status === currentOrdersTab);
+            const stats = {
+                all: (warehouseOrders[currentWarehouseId] || []).length,
+                pending: (warehouseOrders[currentWarehouseId] || []).filter(o => o.status === 'pending').length,
+                shipped: (warehouseOrders[currentWarehouseId] || []).filter(o => o.status === 'shipped').length,
+                delivered: (warehouseOrders[currentWarehouseId] || []).filter(o => o.status === 'delivered').length,
+                cancelled: (warehouseOrders[currentWarehouseId] || []).filter(o => o.status === 'cancelled').length,
+                archived: (warehouseOrders[currentWarehouseId] || []).filter(o => o.status === 'archived').length
+            };
+            document.getElementById('modalDeliveryStats').innerHTML = `<span class="stat-chip"><span class="count">${stats.all}</span> Total</span><span class="stat-chip"><span class="count">${stats.pending}</span> Pending</span><span class="stat-chip"><span class="count">${stats.shipped}</span> Shipped</span><span class="stat-chip"><span class="count">${stats.delivered}</span> Delivered</span><span class="stat-chip"><span class="count">${stats.cancelled}</span> Cancelled</span><span class="stat-chip"><span class="count">${stats.archived}</span> Archived</span>`;
+            const container = document.getElementById('ordersTableContainer');
+            if (orders.length === 0) { container.innerHTML = '<div class="empty-state">🚚 No orders for this warehouse</div>'; return; }
+            container.innerHTML = `<table class="data-table"><thead><tr><th>Order ID</th><th>Customer/Supplier</th><th>Product</th><th>Qty</th><th>Amount</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>${orders.map(o => {
+                let statusClass = '';
+                if (o.status === 'delivered') statusClass = 'status-delivered';
+                else if (o.status === 'pending') statusClass = 'status-pending';
+                else if (o.status === 'shipped') statusClass = 'status-shipped';
+                else if (o.status === 'archived') statusClass = 'status-archived';
+                else if (o.status === 'cancelled') statusClass = 'status-cancelled';
+                let actionHtml = '';
+                if (o.status === 'pending') actionHtml = `<select class="action-select" onchange="updateOrderStatus(${JSON.stringify(o).replace(/"/g, '&quot;')}, ${currentWarehouseId}, this.value)" onclick="event.stopPropagation()"><option value="pending" selected>Pending</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancel</option></select>`;
+                else if (o.status === 'shipped') actionHtml = `<select class="action-select" onchange="updateOrderStatus(${JSON.stringify(o).replace(/"/g, '&quot;')}, ${currentWarehouseId}, this.value)" onclick="event.stopPropagation()"><option value="pending">Pending</option><option value="shipped" selected>Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancel</option></select>`;
+                else if (o.status === 'delivered') actionHtml = `<select class="action-select" onchange="updateOrderStatus(${JSON.stringify(o).replace(/"/g, '&quot;')}, ${currentWarehouseId}, this.value)" onclick="event.stopPropagation()"><option value="delivered" selected>Delivered</option><option value="archived">Archive</option><option value="cancelled">Cancel</option></select>`;
+                else if (o.status === 'archived') actionHtml = `<button class="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-lg" onclick="event.stopPropagation(); updateOrderStatus(${JSON.stringify(o).replace(/"/g, '&quot;')}, ${currentWarehouseId}, 'pending')">Restore</button>`;
+                else if (o.status === 'cancelled') actionHtml = `<span class="text-xs text-slate-400">Cancelled</span>`;
+                return `<tr><td class="font-mono text-blue-700">${escapeHtml(o.id)}</td><td class="font-medium">${escapeHtml(o.customer)}</td><td>${escapeHtml(o.product)}</td><td class="text-center">${o.quantity} pcs</td><td class="font-semibold text-emerald-700">₱${o.totalAmount.toLocaleString()}</td><td class="text-center"><span class="${statusClass}">${o.status.toUpperCase()}</span></td><td class="text-slate-500">${o.date}</td><td onclick="event.stopPropagation()">${actionHtml}</td></tr>`;
+            }).join('')}</tbody></table>`;
+        }
+
+        function openWarehouseModal(id) {
+            currentWarehouseId = id;
+            const warehouse = warehouses.find(w => w.id === id);
+            if (!warehouse) return;
+            const totalUnits = calculateTotalUnits(id);
+            const maxUnits = warehouseMaxCapacities[id];
+            const capacityPercent = calculateCapacityPercentage(id, totalUnits);
+            const status = getWarehouseStatus(capacityPercent);
+            document.getElementById('modalTitle').innerText = warehouse.name;
+            let statusText = '', statusColor = '';
+            if (status === 'critical') { statusText = '🔴 CRITICAL'; statusColor = '#fee2e2'; }
+            else if (status === 'alert') { statusText = '⚠️ ALERT'; statusColor = '#fee2e2'; }
+            else if (status === 'warning') { statusText = '⚠️ WARNING'; statusColor = '#ffedd5'; }
+            else { statusText = '✅ OPTIMAL'; statusColor = '#e0f2fe'; }
+            document.getElementById('modalStatusBadge').innerText = statusText;
+            document.getElementById('modalStatusBadge').style.background = statusColor;
+            document.getElementById('modalAddress').innerHTML = `<strong>${escapeHtml(warehouse.fullAddress)}</strong><span class="text-slate-400 text-xs ml-2">${escapeHtml(warehouse.location)}</span>`;
+            document.getElementById('modalContactPerson').innerText = warehouse.contactPerson;
+            document.getElementById('modalPhone').innerText = warehouse.phone;
+            document.getElementById('modalEmail').innerText = warehouse.email;
+            document.getElementById('modalCapacity').innerHTML = `${Math.round(capacityPercent)}%<span class="text-xs text-slate-400 ml-1">(${totalUnits.toLocaleString()}/${maxUnits.toLocaleString()} units)</span>`;
+            const totalStockValue = (warehouseInventory[id] || []).reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+            document.getElementById('modalStockValue').innerHTML = `₱${totalStockValue.toLocaleString()}`;
+            const activeProductCount = (warehouseInventory[id] || []).filter(item => item.quantity > 0).length;
+            document.getElementById('modalProductCount').innerText = activeProductCount;
+            const warningDiv = document.getElementById('capacityWarning');
+            if (capacityPercent >= 85) {
+                warningDiv.className = capacityPercent >= 100 ? 'p-3 rounded-lg border-l-4 border-red-500 bg-red-50 mb-2' : 'p-3 rounded-lg border-l-4 border-orange-500 bg-orange-50 mb-2';
+                warningDiv.innerHTML = capacityPercent >= 100 ? `<div class="flex items-center gap-2"><span class="material-symbols-outlined text-red-500">error</span><span class="text-red-700 font-semibold">CRITICAL: Storage at ${Math.round(capacityPercent)}% capacity! Over capacity by ${(totalUnits - maxUnits).toLocaleString()} units.</span></div>` : `<div class="flex items-center gap-2"><span class="material-symbols-outlined text-orange-500">warning</span><span class="text-orange-700 font-semibold">Warning: Storage at ${Math.round(capacityPercent)}% capacity. Only ${(maxUnits - totalUnits).toLocaleString()} units remaining.</span></div>`;
+                warningDiv.classList.remove('hidden');
+            } else { warningDiv.classList.add('hidden'); }
+            currentOrdersTab = 'all';
+            switchWarehouseTab('info');
+            document.getElementById('warehouseModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWarehouseModal() { document.getElementById('warehouseModal').classList.remove('active'); document.body.style.overflow = ''; currentWarehouseId = null; }
+        function loadWarehouses() { renderWarehouseGrid(); }
+
+        document.getElementById('searchInput').addEventListener('input', loadWarehouses);
+        document.getElementById('statusFilter').addEventListener('change', loadWarehouses);
+        document.getElementById('warehouseModal').addEventListener('click', e => { if (e.target === document.getElementById('warehouseModal')) closeWarehouseModal(); });
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'inventory_orders') { loadCustomerOrders(); loadWarehouses(); if (currentWarehouseId) renderModalOrders(); }
+        });
+
+        async function init() { 
+            await loadInventory(); 
+            await loadIncomingSupplierOrders();
+            await loadSupplierOrdersByStatus('delivered');
+            await loadSupplierOrdersByStatus('pending');
+            loadCustomerOrders(); 
+            loadWarehouses(); 
+        }
+        init();
+    </script>
+</body>
+
+</html>
