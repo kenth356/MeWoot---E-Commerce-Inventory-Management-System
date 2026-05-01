@@ -59,8 +59,8 @@ try {
         $deliveryTerminal = "Gervas Logistics Facility - Negros Occidental";
     }
     
-    // Calculate items count
-    $itemsCount = count($input['items']);
+    // Calculate items count as total quantity across all line items
+    $itemsCount = array_sum(array_column($input['items'], 'quantity'));
     
     error_log("Saving order: $orderRef, warehouse_id: $warehouseId, warehouse_name: $warehouseName");
     

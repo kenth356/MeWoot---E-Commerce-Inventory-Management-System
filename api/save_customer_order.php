@@ -33,9 +33,11 @@ try {
     $orderNumber = 'CUST-' . date('Ymd') . '-' . rand(1000, 9999);
     
     // Insert customer order into customer_details table
+    $warehouseId = isset($data['warehouse_id']) ? intval($data['warehouse_id']) : null;
+
     $stmt = $pdo->prepare("
-        INSERT INTO customer_details (order_number, customer_name, customer_email, customer_phone, customer_address, notes, total_amount, status, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+        INSERT INTO customer_details (order_number, customer_name, customer_email, customer_phone, customer_address, notes, total_amount, status, warehouse_id, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, NOW())
     ");
     
     $stmt->execute([
@@ -45,7 +47,8 @@ try {
         $data['customer_phone'] ?? null,
         $data['customer_address'],
         $data['notes'] ?? null,
-        $data['total_amount']
+        $data['total_amount'],
+        $warehouseId
     ]);
     
     $orderId = $pdo->lastInsertId();

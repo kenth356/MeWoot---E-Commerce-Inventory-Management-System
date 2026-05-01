@@ -6,15 +6,41 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Order Registry | MeWooHub</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #191c1d; }
-        h1, h2, h3, .font-manrope { font-family: 'Manrope', sans-serif; }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        .main-content { margin-left: 288px; padding: 2rem; min-height: 100vh; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #191c1d;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-manrope {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .main-content {
+            margin-left: 288px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
 
         .nav-link {
             display: flex;
@@ -28,8 +54,19 @@
             text-decoration: none;
             font-weight: 500;
         }
-        .nav-link:hover { background: #e2e8f0; color: #2563eb; transform: translateX(4px); }
-        .nav-link-active { background: white; color: #2563eb; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+        .nav-link:hover {
+            background: #e2e8f0;
+            color: #2563eb;
+            transform: translateX(4px);
+        }
+
+        .nav-link-active {
+            background: white;
+            color: #2563eb;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
 
         .tab-button {
             padding: 0.75rem 1.5rem;
@@ -40,13 +77,36 @@
             cursor: pointer;
             background: transparent;
         }
-        .tab-button.active { color: #0041c8; border-bottom-color: #0041c8; }
-        .tab-button:not(.active):hover { color: #64748b; border-bottom-color: #cbd5e1; }
 
-        .status-pending { background-color: #ffdad6; color: #93000a; }
-        .status-delivered { background-color: #dce1ff; color: #0039b3; }
-        .status-archived { background-color: #e2e8f0; color: #475569; }
-        .status-cancelled { background-color: #fef9c3; color: #854d0e; }
+        .tab-button.active {
+            color: #0041c8;
+            border-bottom-color: #0041c8;
+        }
+
+        .tab-button:not(.active):hover {
+            color: #64748b;
+            border-bottom-color: #cbd5e1;
+        }
+
+        .status-pending {
+            background-color: #ffdad6;
+            color: #93000a;
+        }
+
+        .status-delivered {
+            background-color: #dce1ff;
+            color: #0039b3;
+        }
+
+        .status-archived {
+            background-color: #e2e8f0;
+            color: #475569;
+        }
+
+        .status-cancelled {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
 
         select {
             appearance: none;
@@ -57,88 +117,352 @@
             padding-right: 2.5rem;
         }
 
-        .action-buttons { display: flex; gap: 0.5rem; align-items: center; white-space: nowrap; }
-        .action-buttons select { min-width: 85px; width: auto; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 0.375rem; }
-        .action-buttons button { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; padding: 0.25rem; border-radius: 0.375rem; transition: background 0.2s; }
-        .action-buttons button:hover { background: #f1f5f9; }
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .action-buttons select {
+            min-width: 85px;
+            width: auto;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .action-buttons button {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.375rem;
+            transition: background 0.2s;
+        }
+
+        .action-buttons button:hover {
+            background: #f1f5f9;
+        }
 
         .toast-notification {
-            position: fixed; bottom: 30px; right: 30px; background: white; border-radius: 0.75rem;
-            padding: 1rem 1.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: flex;
-            align-items: center; gap: 0.75rem; z-index: 3000; transform: translateX(400px);
-            transition: transform 0.3s ease; border-left: 4px solid #22c55e;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            border-left: 4px solid #22c55e;
         }
-        .toast-notification.show { transform: translateX(0); }
-        .toast-icon { width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .toast-icon .material-symbols-outlined { font-size: 16px; color: white; }
+
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-icon .material-symbols-outlined {
+            font-size: 16px;
+            color: white;
+        }
 
         .floating-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.35); backdrop-filter: blur(8px); z-index: 1000;
-            display: none; align-items: center; justify-content: center; animation: fadeIn 0.25s ease-out;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease-out;
         }
-        .floating-overlay.active { display: flex; }
-        .floating-card { background: white; border-radius: 1.5rem; width: 90%; max-width: 550px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); }
-        .iframe-card { max-width: 1000px !important; position: relative; }
-        .iframe-card iframe { width: 100%; height: 640px; border: none; }
-        .iframe-close-btn { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; background: rgba(255,255,255,0.9); border: 1px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
-        .loading-card { text-align: center; padding: 2rem; }
 
-        .confirm-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
-        .confirm-overlay.active { display: flex; }
-        .confirm-dialog { background: white; border-radius: 1rem; width: 90%; max-width: 340px; padding: 1.5rem; text-align: center; }
-        .confirm-icon { width: 48px; height: 48px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
-        .confirm-buttons { display: flex; gap: 0.75rem; }
-        .confirm-btn { flex: 1; padding: 0.5rem; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; }
-        .confirm-btn-cancel { background: #f1f5f9; color: #475569; }
-        .confirm-btn-confirm { background: #dc2626; color: white; }
-        .confirm-btn-delete { background: #dc2626; color: white; }
+        .floating-overlay.active {
+            display: flex;
+        }
 
-        #restoreChoiceOverlay .space-y-3 button { transition: all 0.2s ease; }
-        #restoreChoiceOverlay .space-y-3 button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .floating-card {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 550px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        }
 
-        .order-details-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index: 1500; display: none; align-items: center; justify-content: center; animation: fadeIn 0.25s ease-out; }
-        .order-details-modal.active { display: flex; }
-        .order-details-card { background: white; border-radius: 1.5rem; width: 90%; max-width: 800px; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; animation: slideUpFloat 0.35s ease-out; }
-        .order-details-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .order-details-body { padding: 1.5rem; overflow-y: auto; flex: 1; }
-        .order-details-close { cursor: pointer; padding: 0.5rem; border-radius: 0.5rem; transition: background 0.2s; background: white; border: none; display: flex; align-items: center; justify-content: center; }
-        .order-details-close:hover { background: #f1f5f9; }
-        .order-item-row { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #e2e8f0; transition: background 0.2s; }
-        .order-item-row:hover { background: #f8fafc; }
+        .iframe-card {
+            max-width: 1000px !important;
+            position: relative;
+        }
 
-        @keyframes slideUpFloat { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .iframe-card iframe {
+            width: 100%;
+            height: 640px;
+            border: none;
+        }
 
-        .clickable-row { cursor: pointer; transition: background 0.2s; }
-        .clickable-row:hover { background-color: #f1f5f9; }
+        .iframe-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .loading-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .confirm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-overlay.active {
+            display: flex;
+        }
+
+        .confirm-dialog {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 340px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .confirm-icon {
+            width: 48px;
+            height: 48px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .confirm-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .confirm-btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .confirm-btn-confirm {
+            background: #dc2626;
+            color: white;
+        }
+
+        .confirm-btn-delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        #restoreChoiceOverlay .space-y-3 button {
+            transition: all 0.2s ease;
+        }
+
+        #restoreChoiceOverlay .space-y-3 button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .order-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .order-details-modal.active {
+            display: flex;
+        }
+
+        .order-details-card {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: slideUpFloat 0.35s ease-out;
+        }
+
+        .order-details-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-details-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .order-details-close {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .order-details-close:hover {
+            background: #f1f5f9;
+        }
+
+        .order-item-row {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s;
+        }
+
+        .order-item-row:hover {
+            background: #f8fafc;
+        }
+
+        @keyframes slideUpFloat {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .clickable-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .clickable-row:hover {
+            background-color: #f1f5f9;
+        }
     </style>
 </head>
 
 <body>
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-sm border-r border-slate-200/80 shadow-sm z-40 flex flex-col">
+    <aside
+        class="fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-sm border-r border-slate-200/80 shadow-sm z-40 flex flex-col">
         <div class="px-6 pt-8 pb-6 border-b border-slate-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
-                    <span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
+                    <span class="material-symbols-outlined text-white text-2xl"
+                        style="font-variation-settings: 'FILL' 1;">inventory_2</span>
                 </div>
                 <div>
-                    <h1 class="font-manrope font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span class="text-blue-600">Hub</span></h1>
+                    <h1 class="font-manrope font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span
+                            class="text-blue-600">Hub</span></h1>
                     <p class="text-[10px] font-semibold uppercase text-slate-400 tracking-wider">Order Registry</p>
                 </div>
             </div>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-1.5">
-            <a href="warehouse.html" class="nav-link"><span class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
-            <a href="inventory.html" class="nav-link"><span class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
-            <a href="customer.html" class="nav-link"><span class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
-            <a href="orders.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">shopping_cart</span><span>Orders</span></a>
-            <a href="suppliers.html" class="nav-link"><span class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
-            <a href="analytics.html" class="nav-link"><span class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
+            <a href="warehouse.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
+            <a href="inventory.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">inventory_2</span><span>Inventory</span></a>
+            <a href="customer.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
+            <a href="orders.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1;">shopping_cart</span><span>Orders</span></a>
+            <a href="suppliers.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
+            <a href="analytics.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
         </nav>
         <div class="px-4 pb-6 pt-4">
-            <button onclick="openFloatingOrderFlow()" class="w-full py-2 bg-[#0041c8] text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[#0035a3]">
+            <button onclick="openFloatingOrderFlow()"
+                class="w-full py-2 bg-[#0041c8] text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[#0035a3]">
                 <span class="material-symbols-outlined text-sm">add</span>
                 New Order
             </button>
@@ -170,35 +494,40 @@
 
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Total Orders</p>
                         <p id="totalOrders" class="text-3xl font-black text-blue-700 mt-1">0</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-blue-300">receipt_long</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Pending</p>
                         <p id="pendingOrders" class="text-3xl font-black text-red-600 mt-1">0</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-red-300">pending</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Delivered</p>
                         <p id="deliveredOrders" class="text-3xl font-black text-blue-600 mt-1">0</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-blue-300">check_circle</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Cancelled</p>
                         <p id="cancelledOrders" class="text-3xl font-black text-red-600 mt-1">0</p>
                     </div>
                     <span class="material-symbols-outlined text-4xl text-red-300">cancel</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
+                <div
+                    class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center">
                     <div>
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wide">Archived</p>
                         <p id="archivedOrders" class="text-3xl font-black text-slate-600 mt-1">0</p>
@@ -210,7 +539,8 @@
             <!-- Tabs -->
             <div class="border-b border-gray-200 mb-6">
                 <div class="flex gap-2">
-                    <button onclick="switchTab('pending')" id="tabPending" class="tab-button active">Active Orders (Pending)</button>
+                    <button onclick="switchTab('pending')" id="tabPending" class="tab-button active">Active Orders
+                        (Pending)</button>
                     <button onclick="switchTab('delivered')" id="tabDelivered" class="tab-button">Delivered</button>
                     <button onclick="switchTab('cancelled')" id="tabCancelled" class="tab-button">Cancelled</button>
                     <button onclick="switchTab('archived')" id="tabArchived" class="tab-button">Archived</button>
@@ -222,18 +552,23 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
                 <div class="flex flex-wrap gap-3 items-center">
                     <div class="relative">
-                        <select id="statusFilter" class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-600 bg-white pr-10 focus:ring-2 focus:ring-blue-200">
+                        <select id="statusFilter"
+                            class="px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-600 bg-white pr-10 focus:ring-2 focus:ring-blue-200">
                             <option value="">All Statuses</option>
                             <option value="pending">Pending</option>
                             <option value="delivered">Delivered</option>
                             <option value="archived">Archived</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-base">expand_more</span>
+                        <span
+                            class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-base">expand_more</span>
                     </div>
-                    <input type="text" id="searchInput" placeholder="Search by Order ID, Supplier, or Category..." class="flex-1 min-w-[200px] px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 outline-none">
-                    <button onclick="loadOrders()" class="px-6 py-2.5 bg-[#0041c8] text-white rounded-xl text-sm font-semibold hover:bg-[#0035a3] transition-all">Search</button>
-                    <button onclick="clearSearch()" class="px-6 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-300 transition-all">Clear</button>
+                    <input type="text" id="searchInput" placeholder="Search by Order ID, Supplier, or Category..."
+                        class="flex-1 min-w-[200px] px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 outline-none">
+                    <button onclick="loadOrders()"
+                        class="px-6 py-2.5 bg-[#0041c8] text-white rounded-xl text-sm font-semibold hover:bg-[#0035a3] transition-all">Search</button>
+                    <button onclick="clearSearch()"
+                        class="px-6 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-300 transition-all">Clear</button>
                 </div>
             </div>
 
@@ -243,17 +578,33 @@
                     <table class="w-full">
                         <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Supplier</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Date</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Amount</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Items</th>
-                                <th class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">Action</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Order ID</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Supplier</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Date</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Total Amount</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Items</th>
+                                <th
+                                    class="px-8 py-5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                                    Action</th>
                             </tr>
                         </thead>
                         <tbody id="ordersTableBody">
-                            <tr><td colspan="7" class="px-8 py-12 text-center text-slate-400">Loading orders...</td></tr>
+                            <tr>
+                                <td colspan="7" class="px-8 py-12 text-center text-slate-400">Loading orders...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -276,18 +627,25 @@
             <div class="order-details-body">
                 <div class="mb-4 p-3 bg-slate-50 rounded-lg">
                     <div class="grid grid-cols-2 gap-3 text-sm">
-                        <div><span class="text-slate-500">Order Date:</span> <span id="modalDate" class="font-medium">—</span></div>
-                        <div><span class="text-slate-500">Status:</span> <span id="modalStatus" class="font-medium">—</span></div>
-                        <div><span class="text-slate-500">Priority:</span> <span id="modalPriority" class="font-medium">—</span></div>
-                        <div><span class="text-slate-500">Delivery Terminal:</span> <span id="modalTerminal" class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Order Date:</span> <span id="modalDate"
+                                class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Status:</span> <span id="modalStatus"
+                                class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Priority:</span> <span id="modalPriority"
+                                class="font-medium">—</span></div>
+                        <div><span class="text-slate-500">Delivery Terminal:</span> <span id="modalTerminal"
+                                class="font-medium">—</span></div>
                     </div>
                 </div>
                 <h4 class="font-semibold text-lg mb-3">Ordered Items</h4>
                 <div id="modalItemsList" class="space-y-2"></div>
                 <div class="mt-4 pt-3 border-t border-gray-200">
-                    <div class="flex justify-between items-center"><span class="font-semibold">Subtotal:</span><span id="modalSubtotal" class="font-semibold">₱0.00</span></div>
-                    <div class="flex justify-between items-center mt-1"><span class="font-semibold">Priority Fee:</span><span id="modalPriorityFee" class="font-semibold">₱0</span></div>
-                    <div class="flex justify-between items-center mt-1"><span class="font-semibold">Terminal Fee:</span><span id="modalTerminalFee" class="font-semibold">₱0</span></div>
+                    <div class="flex justify-between items-center"><span class="font-semibold">Subtotal:</span><span
+                            id="modalSubtotal" class="font-semibold">₱0.00</span></div>
+                    <div class="flex justify-between items-center mt-1"><span class="font-semibold">Priority
+                            Fee:</span><span id="modalPriorityFee" class="font-semibold">₱0</span></div>
+                    <div class="flex justify-between items-center mt-1"><span class="font-semibold">Terminal
+                            Fee:</span><span id="modalTerminalFee" class="font-semibold">₱0</span></div>
                     <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
                         <span class="font-bold text-lg">Total:</span>
                         <span id="modalTotal" class="font-bold text-xl text-blue-700">₱0.00</span>
@@ -300,12 +658,14 @@
     <!-- Floating Overlay -->
     <div id="floatingOverlay" class="floating-overlay">
         <div id="loadingCard" class="floating-card loading-card">
-            <div class="loading-icon"><span class="material-symbols-outlined" style="font-size: 52px; color: #0041c8;">shopping_cart</span></div>
+            <div class="loading-icon"><span class="material-symbols-outlined"
+                    style="font-size: 52px; color: #0041c8;">shopping_cart</span></div>
             <div class="loading-title">Loading Order Form...</div>
             <p class="loading-subtext">Preparing your workspace...</p>
         </div>
         <div id="iframeCard" class="floating-card iframe-card" style="display: none;">
-            <button class="iframe-close-btn" onclick="requestClose()"><span class="material-symbols-outlined">close</span></button>
+            <button class="iframe-close-btn" onclick="requestClose()"><span
+                    class="material-symbols-outlined">close</span></button>
             <iframe id="orderFormIframe" src="about:blank"></iframe>
         </div>
     </div>
@@ -325,14 +685,17 @@
 
     <div id="restoreChoiceOverlay" class="confirm-overlay">
         <div class="confirm-dialog" style="max-width: 380px;">
-            <div class="confirm-icon" style="background: #dce1ff;"><span class="material-symbols-outlined" style="color: #0041c8;">restore</span></div>
+            <div class="confirm-icon" style="background: #dce1ff;"><span class="material-symbols-outlined"
+                    style="color: #0041c8;">restore</span></div>
             <div class="confirm-title" id="restoreChoiceTitle">Restore Order</div>
             <div class="confirm-message" id="restoreChoiceMessage">Where would you like to restore this order?</div>
             <div class="space-y-3 mb-4">
-                <button onclick="confirmRestoreWithStatus('pending')" class="w-full py-3 bg-[#0041c8] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-[#0035a3] transition-all">
+                <button onclick="confirmRestoreWithStatus('pending')"
+                    class="w-full py-3 bg-[#0041c8] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-[#0035a3] transition-all">
                     <span class="material-symbols-outlined text-sm">pending</span> Restore as Pending
                 </button>
-                <button onclick="confirmRestoreWithStatus('delivered')" class="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all">
+                <button onclick="confirmRestoreWithStatus('delivered')"
+                    class="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all">
                     <span class="material-symbols-outlined text-sm">check_circle</span> Restore as Delivered
                 </button>
             </div>
@@ -385,7 +748,7 @@
             document.getElementById('modalPriorityFee').innerHTML = `₱${parseFloat(order.priority_fee || 0).toLocaleString()}`;
             document.getElementById('modalTerminalFee').innerHTML = `₱${parseFloat(order.terminal_fee || 0).toLocaleString()}`;
             document.getElementById('modalTotal').innerHTML = `₱${parseFloat(order.total_amount).toLocaleString()}`;
-            
+
             fetch(`api/get_order_items.php?order_id=${order.id}`)
                 .then(response => response.json())
                 .then(data => {
@@ -393,16 +756,16 @@
                         document.getElementById('modalItemsList').innerHTML = data.items.map(item => {
                             const imageUrl = item.item_image ? item.item_image : null;
                             const productInitial = item.item_name?.charAt(0) || 'P';
-                            
+
                             return `
                                 <div class="order-item-row">
                                     <div class="flex gap-4 w-full">
-                                        ${imageUrl ? 
-                                            `<img src="${imageUrl}" class="w-16 h-16 rounded-lg object-cover bg-slate-100 flex-shrink-0" onerror="this.src='https://placehold.co/80x80/3b82f6/white?text=${encodeURIComponent(productInitial)}'">` :
-                                            `<div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                                        ${imageUrl ?
+                                    `<img src="${imageUrl}" class="w-16 h-16 rounded-lg object-cover bg-slate-100 flex-shrink-0" onerror="this.src='https://placehold.co/80x80/3b82f6/white?text=${encodeURIComponent(productInitial)}'">` :
+                                    `<div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
                                                 ${productInitial}
                                             </div>`
-                                        }
+                                }
                                         <div class="flex-grow">
                                             <div class="flex justify-between items-start">
                                                 <div>
@@ -423,10 +786,10 @@
                         document.getElementById('modalItemsList').innerHTML = '<div class="text-center py-8 text-slate-400">No items found for this order</div>';
                     }
                 })
-                .catch(() => { 
-                    document.getElementById('modalItemsList').innerHTML = '<div class="text-center py-8 text-red-500">Failed to load order items</div>'; 
+                .catch(() => {
+                    document.getElementById('modalItemsList').innerHTML = '<div class="text-center py-8 text-red-500">Failed to load order items</div>';
                 });
-            
+
             orderDetailsModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -445,7 +808,7 @@
             document.getElementById('tabCancelled').classList.remove('active');
             document.getElementById('tabArchived').classList.remove('active');
             document.getElementById('tabAll').classList.remove('active');
-            
+
             if (tab === 'pending') {
                 document.getElementById('tabPending').classList.add('active');
                 document.getElementById('statusFilter').value = 'pending';
@@ -606,14 +969,14 @@
         function loadOrders() {
             let status = document.getElementById('statusFilter').value;
             const search = document.getElementById('searchInput').value;
-            
-            if (currentTab === 'pending' && status === '') { 
-                status = 'pending'; 
-                document.getElementById('statusFilter').value = 'pending'; 
+
+            if (currentTab === 'pending' && status === '') {
+                status = 'pending';
+                document.getElementById('statusFilter').value = 'pending';
             }
-            
+
             console.log('Loading orders with status:', status, 'search:', search);
-            
+
             // Build URL with both status and search parameters
             let url = `api/get_orders.php?`;
             if (status && status !== '') {
@@ -622,17 +985,17 @@
             if (search && search !== '') {
                 url += `search=${encodeURIComponent(search)}`;
             }
-            
+
             console.log('Fetching URL:', url);
-            
+
             fetch(url)
                 .then(r => r.json())
                 .then(data => {
                     console.log('API Response:', data);
-                    if (data.success) { 
-                        const filteredOrders = data.orders || []; 
-                        renderOrdersTable(filteredOrders); 
-                        
+                    if (data.success) {
+                        const filteredOrders = data.orders || [];
+                        renderOrdersTable(filteredOrders);
+
                         if (data.counts) {
                             document.getElementById('totalOrders').innerText = data.counts.total_orders || 0;
                             document.getElementById('pendingOrders').innerText = data.counts.pending || 0;
@@ -648,7 +1011,7 @@
                         }
                     }
                 })
-                .catch((error) => { 
+                .catch((error) => {
                     console.error('Fetch error:', error);
                     document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="7" class="px-8 py-12 text-center text-red-500">Failed to connect to server. Make sure the API is accessible.${error.message ? '<br>' + error.message : ''}</td></tr>`;
                     showToast('Connection error: ' + error.message, true);
@@ -723,7 +1086,7 @@
                         <td class="px-8 py-5 text-sm">${formatDate(order.order_date)}</td>
                         <td class="px-8 py-5 font-semibold text-sm">₱${parseFloat(order.total_amount).toLocaleString()}</td>
                         <td class="px-8 py-5"><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${order.status.toUpperCase()}</span></td>
-                        <td class="px-8 py-5 text-sm">${order.items_count || 0} items</td>
+                        <td class="px-8 py-5 text-sm">${order.items_count || 0} ${order.items_count == 1 ? 'item' : 'items'}</td>
                         <td class="px-8 py-5" onclick="event.stopPropagation()">${actionButtons}</td>
                     </tr>`;
             }).join('');
@@ -731,39 +1094,39 @@
 
         function updateOrderStatus(orderId, newStatus) {
             console.log(`Updating order ${orderId} to status: ${newStatus}`);
-            
+
             fetch('api/update_order.php', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: orderId, status: newStatus })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const msg = newStatus === 'pending' ? 'Order changed to pending' : 
-                            newStatus === 'delivered' ? 'Order marked as delivered' : 
-                            `Order status changed to ${newStatus}`;
-                    showToast('Status Updated', msg);
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const msg = newStatus === 'pending' ? 'Order changed to pending' :
+                            newStatus === 'delivered' ? 'Order marked as delivered' :
+                                `Order status changed to ${newStatus}`;
+                        showToast('Status Updated', msg);
+                        loadOrders();
+                    } else {
+                        showToast('Error', data.error || 'Failed to update order status', true);
+                        loadOrders();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Error', 'Failed to connect to server', true);
                     loadOrders();
-                } else {
-                    showToast('Error', data.error || 'Failed to update order status', true);
-                    loadOrders();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('Error', 'Failed to connect to server', true);
-                loadOrders();
-            });
+                });
         }
 
         function formatDate(dateString) { if (!dateString) return '—'; return new Date(dateString).toLocaleDateString('en-PH'); }
-        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
+        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
         document.addEventListener('DOMContentLoaded', function () {
             loadOrders();
             const statusFilter = document.getElementById('statusFilter');
-            
+
             if (statusFilter) statusFilter.addEventListener('change', loadOrders);
         });
 
@@ -802,11 +1165,12 @@
                 loadingCard.style.display = 'block';
                 iframeCard.style.display = 'none';
                 orderIframe.src = 'about:blank';
-                setTimeout(function() { window.location.replace('suppliers.html'); }, 50);
+                setTimeout(function () { window.location.replace('suppliers.html'); }, 50);
             }
         });
 
         orderDetailsModal.addEventListener('click', function (e) { if (e.target === orderDetailsModal) closeOrderDetails(); });
     </script>
 </body>
+
 </html>

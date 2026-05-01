@@ -434,12 +434,18 @@
             </div>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-1.5">
-            <a href="warehouse.html" class="nav-link"><span class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
-            <a href="inventory.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">inventory_2</span><span>Inventory</span></a>
-            <a href="customer.html" class="nav-link"><span class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
-            <a href="orders.html" class="nav-link"><span class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
-            <a href="suppliers.html" class="nav-link"><span class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
-            <a href="analytics.html" class="nav-link"><span class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
+            <a href="warehouse.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">warehouse</span><span>Warehouse</span></a>
+            <a href="inventory.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1;">inventory_2</span><span>Inventory</span></a>
+            <a href="customer.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">groups</span><span>Customers</span></a>
+            <a href="orders.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
+            <a href="suppliers.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
+            <a href="analytics.html" class="nav-link"><span
+                    class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
         </nav>
         <div class="px-4 pb-6 pt-4">
             <button id="filterButton"
@@ -881,53 +887,53 @@
         }
 
         async function fetchInventory() {
-    try {
-        const response = await fetch(`api/get_inventory.php`);
-        const result = await response.json();
-        if (result.success) {
-            let rawData = [];
+            try {
+                const response = await fetch(`api/get_inventory.php`);
+                const result = await response.json();
+                if (result.success) {
+                    let rawData = [];
 
-            if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
-                for (let warehouseId in result.data) {
-                    if (Array.isArray(result.data[warehouseId])) {
-                        rawData.push(...result.data[warehouseId]);
+                    if (result.data && typeof result.data === 'object' && !Array.isArray(result.data)) {
+                        for (let warehouseId in result.data) {
+                            if (Array.isArray(result.data[warehouseId])) {
+                                rawData.push(...result.data[warehouseId]);
+                            }
+                        }
+                    } else if (Array.isArray(result.data)) {
+                        rawData = result.data;
                     }
+
+                    // Merge items with the same name across warehouses
+                    const mergedMap = {};
+                    rawData.forEach(item => {
+                        const key = item.name.toLowerCase().trim();
+                        if (mergedMap[key]) {
+                            mergedMap[key].stock += parseInt(item.stock) || 0;
+                            mergedMap[key].price = Math.max(mergedMap[key].price, parseFloat(item.price) || 0);
+                            // If this item has an image and the current merged one doesn't, use this one's image
+                            if (item.image_url && !mergedMap[key].image_url) {
+                                mergedMap[key].image_url = item.image_url;
+                            }
+                        } else {
+                            mergedMap[key] = {
+                                ...item,
+                                stock: parseInt(item.stock) || 0,
+                                price: parseFloat(item.price) || 0
+                            };
+                        }
+                    });
+
+                    allInventoryData = Object.values(mergedMap);
+                    applyLocalFilters();
+                    updateStatsFromData(allInventoryData);
+                } else {
+                    showError('Failed to load inventory data');
                 }
-            } else if (Array.isArray(result.data)) {
-                rawData = result.data;
+            } catch (error) {
+                console.error('Error loading inventory:', error);
+                showError('Connection error. Please check if server is running.');
             }
-
-            // Merge items with the same name across warehouses
-            const mergedMap = {};
-            rawData.forEach(item => {
-    const key = item.name.toLowerCase().trim();
-    if (mergedMap[key]) {
-        mergedMap[key].stock += parseInt(item.stock) || 0;
-        mergedMap[key].price = Math.max(mergedMap[key].price, parseFloat(item.price) || 0);
-        // If this item has an image and the current merged one doesn't, use this one's image
-        if (item.image_url && !mergedMap[key].image_url) {
-            mergedMap[key].image_url = item.image_url;
         }
-    } else {
-        mergedMap[key] = {
-            ...item,
-            stock: parseInt(item.stock) || 0,
-            price: parseFloat(item.price) || 0
-        };
-    }
-});
-
-            allInventoryData = Object.values(mergedMap);
-            applyLocalFilters();
-            updateStatsFromData(allInventoryData);
-        } else {
-            showError('Failed to load inventory data');
-        }
-    } catch (error) {
-        console.error('Error loading inventory:', error);
-        showError('Connection error. Please check if server is running.');
-    }
-}
         function applyLocalFilters() {
             filteredData = allInventoryData.filter(item => {
                 const categorySelect = document.getElementById('categoryFilter');

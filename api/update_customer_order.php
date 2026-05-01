@@ -52,63 +52,8 @@ try {
     $updateStmt = $pdo->prepare("UPDATE customer_details SET status = ?, updated_at = NOW() WHERE id = ?");
     $updateStmt->execute([$newStatus, $input['order_id']]);
     
-    // If changing from processing/shipped/pending to delivered, deduct from inventory
-    if (($oldStatus === 'pending' || $oldStatus === 'shipped' || $oldStatus === 'processing') && $newStatus === 'delivered') {
-        
-        // Get order items
-        $itemStmt = $pdo->prepare("SELECT * FROM customer_ordered_products WHERE order_id = ?");
-        $itemStmt->execute([$input['order_id']]);
-        $items = $itemStmt->fetchAll();
-        
-        $inventoryUpdated = true;
-        $errorMessage = '';
-        
-        foreach ($items as $item) {
-            // Find the product in inventory (may exist in multiple warehouses)
-            $inventoryStmt = $pdo->prepare("
-                SELECT id, stock, warehouse_id, warehouse_name 
-                FROM inventory 
-                WHERE id = ? OR (name = ? OR sku = ?)
-                ORDER BY stock DESC
-                LIMIT 1
-            ");
-            $inventoryStmt->execute([$item['product_id'], $item['product_name'], $item['product_sku']]);
-            $inventoryItem = $inventoryStmt->fetch();
-            
-            if ($inventoryItem) {
-                $newStock = $inventoryItem['stock'] - $item['quantity'];
-                
-                if ($newStock < 0) {
-                    $inventoryUpdated = false;
-                    $errorMessage = "Insufficient stock for {$item['product_name']}. Available: {$inventoryItem['stock']}, Ordered: {$item['quantity']}";
-                    break;
-                }
-                
-                $updateInventoryStmt = $pdo->prepare("
-                    UPDATE inventory 
-                    SET stock = ?, updated_at = NOW() 
-                    WHERE id = ?
-                ");
-                $updateInventoryStmt->execute([$newStock, $inventoryItem['id']]);
-                
-                error_log("Inventory updated for {$item['product_name']}: {$inventoryItem['stock']} → {$newStock}");
-            } else {
-                $inventoryUpdated = false;
-                $errorMessage = "Product '{$item['product_name']}' not found in inventory";
-                break;
-            }
-        }
-        
-        if (!$inventoryUpdated) {
-            $pdo->rollBack();
-            echo json_encode([
-                'success' => false, 
-                'error' => $errorMessage,
-                'requires_rollback' => true
-            ]);
-            exit();
-        }
-    }
+    // NOTE: Stock is already deducted at order placement (save_customer_order.php).
+    // Do NOT deduct again when marking as delivered.
     
     // If changing from delivered back to pending/shipped/processing (restore), add stock back
     if ($oldStatus === 'delivered' && ($newStatus === 'pending' || $newStatus === 'shipped' || $newStatus === 'processing')) {
@@ -134,8 +79,9 @@ try {
         }
     }
     
-    // If changing to cancelled and it was delivered, restore stock
-    if ($newStatus === 'cancelled' && $oldStatus === 'delivered') {
+    // If changing to cancelled from any active status, restore stock
+    // (stock was deducted at order placement, so we restore on any cancellation)
+    if ($newStatus === 'cancelled' && in_array($oldStatus, ['pending', 'processing', 'shipped', 'delivered'])) {
         $itemStmt = $pdo->prepare("SELECT * FROM customer_ordered_products WHERE order_id = ?");
         $itemStmt->execute([$input['order_id']]);
         $items = $itemStmt->fetchAll();

@@ -17,7 +17,7 @@ try {
     $pdo = getDB();
     
     $sql = "SELECT co.*, 
-            (SELECT COUNT(*) FROM customer_ordered_products WHERE order_id = co.id) as item_count
+            (SELECT COALESCE(SUM(quantity), 0) FROM customer_ordered_products WHERE order_id = co.id) as item_count
             FROM customer_details co WHERE 1=1";
     $params = [];
     
