@@ -401,15 +401,19 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Delivery Warehouse</label>
+                        <label
+                            class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface-variant">Delivery
+                            Warehouse</label>
                         <div class="relative">
-                            <select id="deliveryWarehouse" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm appearance-none">
+                            <select id="deliveryWarehouse"
+                                class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm appearance-none">
                                 <option value="1">Mariano's Delivery Hub - Bulakan, Bulacan</option>
                                 <option value="2">Hanubis Center - Mexico, Pampanga</option>
                                 <option value="3">Canto Warehouse Inc. - Chinatown, Manila</option>
                                 <option value="4">Gervas Logistics Facility - Negros Occidental</option>
                             </select>
-                            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
+                            <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
                         </div>
                     </div>
                 </div>
@@ -612,7 +616,7 @@
             document.getElementById('reviewRef').innerText = internalRefInput.value;
             document.getElementById('reviewSupplier').innerText = selectedSupplier?.name || '—';
             document.getElementById('reviewPriority').innerText = currentPriority;
-            
+
             const selectedWarehouseId = parseInt(deliveryWarehouse.value);  // Make sure this is parseInt
             let warehouseDisplay = "";
             if (selectedWarehouseId === "1") warehouseDisplay = "Mariano's Delivery Hub";
@@ -620,7 +624,7 @@
             else if (selectedWarehouseId === "3") warehouseDisplay = "Canto Warehouse Inc.";
             else if (selectedWarehouseId === "4") warehouseDisplay = "Gervas Logistics Facility";
             document.getElementById('reviewTerminal').innerText = warehouseDisplay;
-            
+
             document.getElementById('reviewItemCount').innerText = count;
             document.getElementById('reviewSubtotal').innerText = `₱${subtotal.toLocaleString()}`;
             document.getElementById('reviewPriorityFee').innerText = `₱${priorityFee.toLocaleString()}`;
@@ -820,7 +824,7 @@
 
             const orderReference = internalRefInput.value;
             const selectedWarehouseId = deliveryWarehouse.value;
-            
+
             let selectedWarehouseName = "";
             if (selectedWarehouseId === "1") selectedWarehouseName = "Mariano's Delivery Hub";
             else if (selectedWarehouseId === "2") selectedWarehouseName = "Hanubis Center";

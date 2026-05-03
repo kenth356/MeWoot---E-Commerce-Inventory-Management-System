@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeWoot</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#e7e8e9",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#243c88",
+                        "secondary": "#445aa7",
+                        "background": "#f8f9fa",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-primary-fixed": "#001551",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#434656",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#e3e6ff",
+                        "surface-bright": "#f8f9fa",
+                        "outline": "#737688",
+                        "on-background": "#191c1d",
+                        "primary": "#0041c8",
+                        "error": "#ba1a1a",
+                        "primary-container": "#0055ff",
+                        "surface-container": "#edeeef",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#b6c4ff",
+                        "surface-dim": "#d9dadb",
+                        "secondary-container": "#95aafd",
+                        "secondary-fixed": "#dce1ff",
+                        "inverse-surface": "#2e3132",
+                        "on-primary-fixed-variant": "#0039b3",
+                        "on-surface": "#191c1d",
+                        "surface-container-low": "#f3f4f5",
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4ff;
+        }
+
+        .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .blob-1 {
+            position: absolute;
+            top: -80px;
+            right: -60px;
+            width: 520px;
+            height: 520px;
+            background: linear-gradient(135deg, #0041c8 0%, #3b76f5 60%, #87b0ff 100%);
+            border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+            opacity: 0.18;
+        }
+
+        .blob-2 {
+            position: absolute;
+            bottom: -100px;
+            left: -80px;
+            width: 420px;
+            height: 420px;
+            background: linear-gradient(135deg, #0055ff 0%, #5c8fff 100%);
+            border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%;
+            opacity: 0.13;
+        }
+
+        .streak {
+            position: absolute;
+            top: 30%;
+            right: 0;
+            width: 160px;
+            height: 340px;
+            background: linear-gradient(180deg, #0041c8 0%, #5c8fff 100%);
+            border-radius: 80px 0 0 80px;
+            opacity: 0.12;
+            transform: translateY(-50%);
+        }
+
+        .streak-thin {
+            position: absolute;
+            top: 60%;
+            left: 0;
+            width: 90px;
+            height: 200px;
+            background: linear-gradient(180deg, #3b76f5 0%, #87b0ff 100%);
+            border-radius: 0 60px 60px 0;
+            opacity: 0.10;
+        }
+
+        .portal-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(.4, 0, .2, 1), box-shadow 0.25s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 64px rgba(0, 65, 200, 0.18), 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .portal-card:active {
+            transform: translateY(-2px) scale(0.99);
+        }
+
+        .portal-card .card-shine {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .portal-card .card-glow {
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            opacity: 0.2;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .portal-card:hover .card-glow {
+            opacity: 0.35;
+        }
+
+        .arrow-icon {
+            transition: transform 0.2s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .portal-card:hover .arrow-icon {
+            transform: translateX(5px);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp 0.6s cubic-bezier(.4, 0, .2, 1) both;
+        }
+
+        .fade-up-1 {
+            animation-delay: 0.1s;
+        }
+
+        .fade-up-2 {
+            animation-delay: 0.22s;
+        }
+
+        .fade-up-3 {
+            animation-delay: 0.34s;
+        }
+
+        .fade-up-4 {
+            animation-delay: 0.46s;
+        }
+    </style>
+</head>
+
+<body class="text-on-background min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Background -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div class="blob-1"></div>
+        <div class="blob-2"></div>
+        <div class="streak"></div>
+        <div class="streak-thin"></div>
+    </div>
+
+    <!-- Welcome Header -->
+    <header class="w-full z-50 flex flex-col items-center justify-center pt-14 pb-2 fade-up">
+        <span
+            class="font-headline text-5xl md:text-6xl font-extrabold text-primary tracking-tight leading-tight text-center">Welcome
+            to MeWoot!</span>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-grow flex flex-col items-center justify-center px-6 py-16">
+
+        <!-- Hero text -->
+        <div class="text-center mb-10 fade-up fade-up-1">
+            <h1
+                class="font-headline text-4xl md:text-3xl font-extrabold text-on-background tracking-tight leading-tight mb-4">
+                Where do you want to go today?
+            </h1>
+        </div>
+
+        <!-- Portal Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl fade-up fade-up-2">
+
+            <!-- Shopping Portal -->
+            <a href="login_shopping.html"
+                class="portal-card block rounded-2xl p-8 shadow-[0_4px_24px_rgba(0,65,200,0.10)] border border-outline/10"
+                style="background: linear-gradient(145deg, #0041c8 0%, #0055ff 100%);">
+                <div class="card-shine"></div>
+                <div class="card-glow" style="background: radial-gradient(circle, #87b0ff, transparent);"></div>
+                <div class="relative z-10 flex flex-col h-full gap-6">
+                    <div
+                        class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-white text-2xl"
+                            style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">shopping_bag</span>
+                    </div>
+                    <div>
+                        <h2 class="font-headline text-2xl font-extrabold text-white tracking-tight mb-1">MeWoot Shopping
+                        </h2>
+                        <p class="text-white/70 text-sm leading-relaxed">Browse and order from our curated product
+                            collection.</p>
+                    </div>
+                    <div
+                        class="flex items-center gap-2 text-white/90 text-sm font-semibold mt-auto pt-2 border-t border-white/15">
+                        <span>Go to our Shopping Page!</span>
+                        <span class="material-symbols-outlined text-lg arrow-icon">arrow_forward</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Inventory Portal -->
+            <a href="login_inventory.html"
+                class="portal-card block rounded-2xl p-8 bg-surface-container-lowest shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-outline/10">
+                <div class="card-shine"
+                    style="background: linear-gradient(135deg, rgba(0,65,200,0.06) 0%, transparent 60%);"></div>
+                <div class="card-glow" style="background: radial-gradient(circle, #b6c4ff, transparent);"></div>
+                <div class="relative z-10 flex flex-col h-full gap-6">
+                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-2xl"
+                            style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">inventory_2</span>
+                    </div>
+                    <div>
+                        <h2 class="font-headline text-2xl font-extrabold text-on-background tracking-tight mb-1">MeWoot
+                            Inventory</h2>
+                        <p class="text-on-surface-variant text-sm leading-relaxed">Manage stock, orders, suppliers, and
+                            analytics.</p>
+                    </div>
+                    <div
+                        class="flex items-center gap-2 text-primary text-sm font-semibold mt-auto pt-2 border-t border-outline/10">
+                        <span>Go to our Inventory Page!</span>
+                        <span class="material-symbols-outlined text-lg arrow-icon">arrow_forward</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Footnote -->
+        <p class="mt-10 text-xs text-on-surface-variant/60 tracking-wide fade-up fade-up-3">
+            MeWoot requires an account. Don't have one? <a href="register.html"
+                class="text-primary font-semibold hover:underline">Register here.</a>
+        </p>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-6 border-t border-surface-container-high bg-surface-container-low fade-up fade-up-4">
+        <div class="flex flex-col md:flex-row justify-between items-center px-8 md:px-12 gap-3">
+            <span class="font-headline text-sm font-bold text-on-surface-variant">MeWoot</span>
+            <span class="text-[0.6875rem] uppercase tracking-widest font-semibold text-on-surface-variant/50">© 2025
+                MeWoot. All rights reserved.</span>
+            <div class="flex gap-5">
+                <a href="#"
+                    class="text-[0.6875rem] uppercase tracking-widest font-semibold text-on-surface-variant/50 hover:text-primary transition-colors">Privacy</a>
+                <a href="#"
+                    class="text-[0.6875rem] uppercase tracking-widest font-semibold text-on-surface-variant/50 hover:text-primary transition-colors">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
