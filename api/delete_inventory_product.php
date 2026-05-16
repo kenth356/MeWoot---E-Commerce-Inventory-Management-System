@@ -25,7 +25,6 @@ try {
     $pdo = getDB();
     $pdo->beginTransaction();
     
-    // Get the image URL before deleting
     $stmt = $pdo->prepare("SELECT image_url FROM inventory WHERE id = ?");
     $stmt->execute([$productId]);
     $product = $stmt->fetch();
@@ -33,7 +32,6 @@ try {
         $imageUrl = $product['image_url'];
     }
     
-    // Delete from inventory
     $stmt = $pdo->prepare("DELETE FROM inventory WHERE id = ?");
     $stmt->execute([$productId]);
     
@@ -43,7 +41,6 @@ try {
         exit;
     }
     
-    // Also delete the image file if it exists
     if ($imageUrl) {
         $imagePath = __DIR__ . '/../' . $imageUrl;
         if (file_exists($imagePath)) {

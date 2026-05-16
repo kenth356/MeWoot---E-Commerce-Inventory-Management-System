@@ -40,7 +40,6 @@ try {
     $stmt->execute($params);
     $suppliers = $stmt->fetchAll();
     
-    // Get stats
     $statsStmt = $pdo->query("
         SELECT 
             COUNT(*) as total_suppliers,

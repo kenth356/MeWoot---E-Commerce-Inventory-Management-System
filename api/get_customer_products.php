@@ -19,8 +19,6 @@ $sort = $_GET['sort'] ?? 'name';
 try {
     $pdo = getDB();
     
-    // SIMPLE QUERY - NO GROUP BY to avoid SQL mode issues
-    // Get all products with stock > 0
     $sql = "SELECT 
                 id,
                 name,
@@ -59,34 +57,28 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $rawProducts = $stmt->fetchAll();
-    
-    // MERGE DUPLICATES IN PHP (by product name, ignoring case and extra spaces)
+
     $mergedProducts = [];
     foreach ($rawProducts as $product) {
-        // Create a normalized key from product name (lowercase, trimmed, remove special chars)
+
         $key = strtolower(trim($product['name']));
         $key = preg_replace('/[^a-z0-9]/', '', $key);
         
         if (isset($mergedProducts[$key])) {
-            // Merge: add stock, keep highest price, keep first image
             $mergedProducts[$key]['stock'] = (int)$mergedProducts[$key]['stock'] + (int)$product['stock'];
             
-            // Keep the higher price
             $currentPrice = (float)$mergedProducts[$key]['price'];
             $newPrice = (float)$product['price'];
             if ($newPrice > $currentPrice) {
                 $mergedProducts[$key]['price'] = $product['price'];
             }
-            
-            // Keep image if current doesn't have one
+    
             if (empty($mergedProducts[$key]['image_url']) && !empty($product['image_url'])) {
                 $mergedProducts[$key]['image_url'] = $product['image_url'];
             }
-            
-            // Keep the original name (use the first one we saw)
-            // Don't overwrite name
+
         } else {
-            // First time seeing this product
+
             $mergedProducts[$key] = [
                 'id' => $product['id'],
                 'name' => $product['name'],
@@ -101,15 +93,15 @@ try {
         }
     }
     
-    // Convert back to indexed array
+  
     $products = array_values($mergedProducts);
     
-    // Filter out products with zero stock after merging
+  
     $products = array_filter($products, function($p) {
         return $p['stock'] > 0;
     });
     
-    // Sort in PHP
+
     if ($sort === 'price_low') {
         usort($products, function($a, $b) {
             return $a['price'] - $b['price'];

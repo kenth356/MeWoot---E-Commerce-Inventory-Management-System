@@ -33,10 +33,9 @@ try {
         4 => "Gervas Logistics Facility"
     ];
     
-    // Get the price from input, default to 0 if not provided
+   
     $price = isset($input['price']) ? floatval($input['price']) : 0;
     
-    // Check if product already exists in this warehouse
     $checkSql = "SELECT id, stock FROM inventory WHERE name = :product_name AND warehouse_id = :warehouse_id";
     $checkStmt = $pdo->prepare($checkSql);
     $checkStmt->execute([
@@ -46,7 +45,7 @@ try {
     $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
     
     if ($existing) {
-        // Update existing product
+       
         $newQuantity = $existing['stock'] + $input['quantity'];
         $updateSql = "UPDATE inventory SET stock = :stock, price = :price, updated_at = NOW() WHERE id = :id";
         $updateStmt = $pdo->prepare($updateSql);
@@ -64,7 +63,6 @@ try {
             'message' => 'Inventory updated successfully'
         ]);
     } else {
-        // Create new inventory item
         $sql = "INSERT INTO inventory (sku, name, stock, price, warehouse_id, warehouse_name, category, created_at) 
                 VALUES (:sku, :name, :stock, :price, :warehouse_id, :warehouse_name, :category, NOW())";
         

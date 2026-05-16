@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Login | MeWoot Inventory</title>
+    <title>Login | MeWoo Inventory</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
@@ -127,7 +127,7 @@
                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary mb-4">
                     <span class="material-symbols-outlined text-white text-2xl">inventory_2</span>
                 </div>
-                <h1 class="text-3xl font-extrabold tracking-tighter text-primary font-headline mb-2">MeWoot Inventory
+                <h1 class="text-3xl font-extrabold tracking-tighter text-primary font-headline mb-2">MeWoo Inventory
                 </h1>
                 <p class="text-on-surface-variant font-medium text-sm">Sign in to manage the system</p>
             </div>
@@ -178,7 +178,7 @@
                 <div class="mt-8 pt-8 border-t border-surface-container-high">
                     <p class="text-center text-sm text-on-surface-variant">
                         Don't have an account?
-                        <a class="font-bold text-primary hover:underline ml-1" href="register.html">Register
+                        <a class="font-bold text-primary hover:underline ml-1" href="register_employee.html">Register
                             for an
                             account</a>
                     </p>
@@ -207,9 +207,9 @@
 
     <footer class="w-full py-8 border-t border-slate-200/50 bg-slate-50 mt-auto">
         <div class="flex flex-col md:flex-row justify-between items-center px-12 w-full gap-4">
-            <div class="text-lg font-bold text-slate-900 font-headline">MeWoot</div>
-            <div class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400">© 2024 Precision
-                Atelier Inventory. All rights reserved.</div>
+            <div class="text-lg font-bold text-slate-900 font-headline">MeWoo</div>
+            <div class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400">© 2026 Precision
+                Mewoo Inventory. All rights reserved.</div>
             <div class="flex gap-6">
                 <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-blue-700 transition-all"
                     href="#">Privacy Policy</a>
@@ -246,20 +246,28 @@
             loginBtn.textContent = "Logging in...";
 
             try {
-                const response = await fetch("api/login.php", {
+                const response = await fetch("/final%20project/api/login.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, password })
                 });
 
                 const result = await response.json();
+                console.log("Login response:", result);
 
                 if (result.success) {
+                    if (result.role !== 'admin') {
+                        showAlert("Access denied. This portal is for administrators only.", "error");
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = "Enter Inventory";
+                        return;
+                    }
+                    
                     showAlert("Login successful! Redirecting...", "success");
-                    // Store user info in localStorage
                     localStorage.setItem("user_id", result.user_id);
                     localStorage.setItem("user_name", result.full_name);
                     localStorage.setItem("user_email", result.email);
+                    localStorage.setItem("user_role", result.role);
 
                     setTimeout(() => {
                         window.location.href = "inventory.html";

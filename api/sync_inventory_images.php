@@ -7,7 +7,6 @@ require_once '../config/database.php';
 $pdo = getDB();
 
 try {
-    // Update inventory images from supplier products by matching product name
     $stmt = $pdo->prepare("
         UPDATE inventory i
         JOIN supplier_products sp ON sp.product_name = i.name

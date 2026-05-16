@@ -1,5 +1,4 @@
 <?php
-// api/get_customer_orders.php (UPDATED)
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -53,7 +52,6 @@ try {
     $stmt->execute($params);
     $orders = $stmt->fetchAll();
     
-    // Get items for each order
     foreach ($orders as &$order) {
         $itemStmt = $pdo->prepare("
             SELECT * FROM customer_ordered_products WHERE order_id = ?
@@ -61,16 +59,14 @@ try {
         $itemStmt->execute([$order['id']]);
         $order['items'] = $itemStmt->fetchAll();
         
-        // Calculate total items count
         $order['total_items'] = array_sum(array_column($order['items'], 'quantity'));
         $order['order_date_formatted'] = date('Y-m-d', strtotime($order['created_at']));
     }
     
-    // Get statistics by status
     $statsStmt = $pdo->query("
         SELECT 
             COUNT(*) as total_orders,
-            COALESCE(SUM(total_amount), 0) as total_revenue,
+            COALESCE(SUM(CASE WHEN status IN ('shipped', 'delivered') THEN total_amount ELSE 0 END), 0) as total_revenue,
             SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
             SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END) as processing,
             SUM(CASE WHEN status = 'shipped' THEN 1 ELSE 0 END) as shipped,
@@ -79,7 +75,7 @@ try {
             SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled,
             SUM(CASE WHEN status = 'archived' THEN 1 ELSE 0 END) as archived,
             COUNT(DISTINCT customer_name) as unique_customers,
-            SUM((SELECT COALESCE(SUM(quantity), 0) FROM customer_ordered_products WHERE order_id = customer_details.id)) as total_items_sold
+            SUM(CASE WHEN status IN ('shipped', 'delivered') THEN (SELECT COALESCE(SUM(quantity), 0) FROM customer_ordered_products WHERE order_id = customer_details.id) ELSE 0 END) as total_items_sold
         FROM customer_details
     ");
     $stats = $statsStmt->fetch();

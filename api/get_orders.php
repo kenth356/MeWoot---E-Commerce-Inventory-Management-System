@@ -17,7 +17,6 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 try {
     $pdo = getDB();
     
-    // Build the SQL query with search functionality
     $sql = "SELECT o.* FROM orders o WHERE 1=1";
     $params = [];
     
@@ -37,7 +36,6 @@ try {
     $stmt->execute($params);
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Fetch items for each order
     foreach ($orders as &$order) {
         $itemsSql = "SELECT 
                         item_name,
@@ -53,7 +51,6 @@ try {
         $order['items'] = $itemsStmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    // Get counts for all orders (not just filtered ones)
     $countSql = "SELECT 
                     COUNT(*) as total_orders,
                     SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,

@@ -1,5 +1,4 @@
 <?php
-// api/save_customer_order.php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -19,7 +18,6 @@ if (!$data) {
     exit;
 }
 
-// Validate required fields
 if (empty($data['customer_name']) || empty($data['customer_address']) || empty($data['items']) || count($data['items']) === 0) {
     echo json_encode(['success' => false, 'error' => 'Missing required fields: customer name, address, and at least one item']);
     exit;
@@ -28,18 +26,16 @@ if (empty($data['customer_name']) || empty($data['customer_address']) || empty($
 try {
     $pdo = getDB();
     $pdo->beginTransaction();
-    
-    // Generate unique order number
+
     $orderNumber = 'CUST-' . date('Ymd') . '-' . rand(1000, 9999);
-    
-    // Insert customer order into customer_details table
+
     $warehouseId = isset($data['warehouse_id']) ? intval($data['warehouse_id']) : null;
 
     $stmt = $pdo->prepare("
         INSERT INTO customer_details (order_number, customer_name, customer_email, customer_phone, customer_address, notes, total_amount, status, warehouse_id, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, NOW())
     ");
-    
+
     $stmt->execute([
         $orderNumber,
         $data['customer_name'],
@@ -50,17 +46,14 @@ try {
         $data['total_amount'],
         $warehouseId
     ]);
-    
+
     $orderId = $pdo->lastInsertId();
-    
-    // Insert order items
+
     $itemStmt = $pdo->prepare("
         INSERT INTO customer_ordered_products (order_id, product_id, product_name, product_sku, quantity, unit_price, subtotal, product_image)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
-    
-    $updateStockStmt = $pdo->prepare("UPDATE inventory SET stock = stock - ? WHERE id = ?");
-    
+
     foreach ($data['items'] as $item) {
         $itemStmt->execute([
             $orderId,
@@ -72,23 +65,17 @@ try {
             $item['subtotal'],
             $item['product_image'] ?? null
         ]);
-        
-        // Update inventory stock
-        $updateStockStmt->execute([$item['quantity'], $item['product_id']]);
     }
-    
+
     $pdo->commit();
-    
-    // Also save to warehouse_orders in localStorage via JavaScript trigger
-    // But the orders.html will fetch from the database
-    
+
     echo json_encode([
         'success' => true,
         'message' => 'Order placed successfully!',
         'order_number' => $orderNumber,
         'order_id' => $orderId
     ]);
-    
+
 } catch(PDOException $e) {
     if (isset($pdo)) $pdo->rollBack();
     echo json_encode(['success' => false, 'error' => 'Database error: ' . $e->getMessage()]);

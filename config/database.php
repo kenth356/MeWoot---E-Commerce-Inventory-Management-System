@@ -28,7 +28,6 @@ function saveOrder($orderData, $pdo) {
     try {
         $pdo->beginTransaction();
         
-        // Updated INSERT statement with warehouse columns
         $stmt = $pdo->prepare("
             INSERT INTO orders (
                 order_reference, supplier_name, supplier_category, priority, 
@@ -37,11 +36,9 @@ function saveOrder($orderData, $pdo) {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'pending', NOW())
         ");
         
-        // Extract warehouse ID from name (optional, but helpful)
         $warehouseId = null;
         $warehouseName = $orderData['deliveryWarehouse'] ?? $orderData['warehouseName'] ?? null;
         
-        // Simple mapping of warehouse name to ID
         $warehouseMap = [
             "Mariano's Delivery Hub" => 1,
             "Hanubis Center" => 2,
@@ -163,7 +160,6 @@ function getOrderItems($pdo, $orderId) {
 
 function updateOrderStatus($pdo, $orderId, $status) {
     try {
-        // Validate status
         $allowedStatuses = ['pending', 'delivered', 'archived', 'cancelled'];
         if (!in_array($status, $allowedStatuses)) {
             return ['success' => false, 'error' => 'Invalid status'];
@@ -206,10 +202,8 @@ function deleteOrder($pdo, $orderId) {
     }
 }
 
-// FIXED: This function now correctly handles warehouse-specific inventory
 function updateInventoryStock($pdo, $items, $warehouseId = null, $warehouseName = null) {
     try {
-        // If no warehouse ID is provided, we cannot proceed
         if (!$warehouseId) {
             error_log("updateInventoryStock called without warehouse_id!");
             return ['success' => false, 'error' => 'Warehouse ID is required to update inventory'];
@@ -236,7 +230,6 @@ function updateInventoryStock($pdo, $items, $warehouseId = null, $warehouseName 
                 continue;
             }
 
-            // Get category from supplier_products
             $categoryStmt = $pdo->prepare("
                 SELECT s.category FROM supplier_products sp
                 JOIN suppliers s ON s.id = sp.supplier_id
@@ -247,17 +240,15 @@ function updateInventoryStock($pdo, $items, $warehouseId = null, $warehouseName 
             $categoryResult = $categoryStmt->fetch(PDO::FETCH_ASSOC);
             $category = $categoryResult ? $categoryResult['category'] : 'Uncategorized';
 
-            // CRITICAL FIX: Check if product exists in THIS SPECIFIC warehouse
             $checkStmt = $pdo->prepare("
-                SELECT id, stock, price FROM inventory 
-                WHERE sku = ? AND warehouse_id = ?
+                SELECT id, stock, price, sku FROM inventory 
+                WHERE warehouse_id = ? AND (sku = ? OR name = ?)
                 LIMIT 1
             ");
-            $checkStmt->execute([$sku, $warehouseId]);
+            $checkStmt->execute([$warehouseId, $sku, $name]);
             $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
             if ($existing) {
-                // Product exists in this warehouse - update stock and price
                 $newStock = $existing['stock'] + $quantity;
                 $newPrice = ($price > 0) ? $price : $existing['price'];
                 
@@ -272,20 +263,18 @@ function updateInventoryStock($pdo, $items, $warehouseId = null, $warehouseName 
                             ELSE category 
                         END,
                         updated_at = NOW()
-                    WHERE sku = ? AND warehouse_id = ?
+                    WHERE id = ?
                 ");
                 $updateStmt->execute([
                     $newStock, 
                     $newPrice, 
                     $image,
                     $category, $category,
-                    $sku, 
-                    $warehouseId
+                    $existing['id']
                 ]);
                 
                 error_log("Updated inventory for {$name} in warehouse {$warehouseId}: stock {$existing['stock']} → {$newStock}");
             } else {
-                // Product does NOT exist in this warehouse - create new entry for this warehouse only
                 $insertStmt = $pdo->prepare("
                     INSERT INTO inventory (name, sku, category, stock, price, image_url, warehouse_id, warehouse_name, created_at, updated_at) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
@@ -315,7 +304,6 @@ function updateInventoryStock($pdo, $items, $warehouseId = null, $warehouseName 
 
 function addInventoryItem($pdo, $itemData) {
     try {
-        // If category is missing or Uncategorized, try to find it from supplier_products
         $category = $itemData['category'];
         if (empty($category) || $category === 'Uncategorized') {
             $categoryStmt = $pdo->prepare("

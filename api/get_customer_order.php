@@ -38,14 +38,12 @@ try {
     $stmt->execute($params);
     $orders = $stmt->fetchAll();
     
-    // Get order items for each order
     foreach ($orders as &$order) {
         $itemStmt = $pdo->prepare("SELECT * FROM customer_ordered_products WHERE order_id = ?");
         $itemStmt->execute([$order['id']]);
         $order['items'] = $itemStmt->fetchAll();
     }
     
-    // Get stats
     $statsStmt = $pdo->query("
         SELECT 
             COUNT(*) as total_orders,

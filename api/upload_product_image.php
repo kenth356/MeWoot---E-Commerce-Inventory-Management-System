@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Get the old image URL if provided
 $oldImage = isset($_POST['old_image']) ? $_POST['old_image'] : null;
 
 $uploadDir = __DIR__ . '/../uploads/products/';
@@ -39,7 +38,6 @@ if ($file['size'] > $maxSize) {
     exit;
 }
 
-// Delete old image if it exists and is different from the new one
 if ($oldImage && !empty($oldImage)) {
     $oldImagePath = __DIR__ . '/../' . $oldImage;
     if (file_exists($oldImagePath)) {

@@ -29,7 +29,7 @@ $full_name = isset($input['full_name']) ? trim($input['full_name']) : '';
 $email = isset($input['email']) ? strtolower(trim($input['email'])) : '';
 $password = isset($input['password']) ? $input['password'] : '';
 $confirm = isset($input['confirm_password']) ? $input['confirm_password'] : '';
-$role = isset($input['role']) ? $input['role'] : 'customer'; 
+$role = isset($input['role']) ? $input['role'] : 'admin';
 
 if (empty($full_name) || empty($email) || empty($password)) {
     http_response_code(400);
@@ -67,10 +67,10 @@ try {
     $stmt->execute([$full_name, $email, $password_hash, $role]);
     
     http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Account created successfully!']);
+    echo json_encode(['success' => true, 'message' => 'Employee account created successfully!']);
     
 } catch(PDOException $e) {
-    error_log("Registration error: " . $e->getMessage());
+    error_log("Employee registration error: " . $e->getMessage());
     
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again.']);

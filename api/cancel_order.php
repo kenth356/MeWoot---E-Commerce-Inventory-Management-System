@@ -4,7 +4,6 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: PUT, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit;
@@ -27,7 +26,6 @@ if ($orderId <= 0) {
 
 $pdo = getDB();
 
-// Only pending orders can be cancelled
 $stmt = $pdo->prepare("SELECT status FROM orders WHERE id = ?");
 $stmt->execute([$orderId]);
 $order = $stmt->fetch();
@@ -42,7 +40,6 @@ if ($order['status'] !== 'pending') {
     exit;
 }
 
-// Update the status to 'cancelled'
 try {
     $stmt = $pdo->prepare("UPDATE orders SET status = 'cancelled' WHERE id = ?");
     $stmt->execute([$orderId]);

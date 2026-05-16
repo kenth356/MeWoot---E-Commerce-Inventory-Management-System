@@ -21,7 +21,6 @@ if (!$input || !isset($input['orderRef']) || !isset($input['status'])) {
 try {
     $pdo = getDB();
     
-    // First, check if order exists and get current status
     $checkSql = "SELECT id, status, warehouse_id FROM orders WHERE order_reference = :orderRef";
     $checkStmt = $pdo->prepare($checkSql);
     $checkStmt->execute([':orderRef' => $input['orderRef']]);
@@ -32,7 +31,6 @@ try {
         exit();
     }
     
-    // Update the order status
     $sql = "UPDATE orders SET status = :status WHERE order_reference = :orderRef";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -40,7 +38,6 @@ try {
         ':orderRef' => $input['orderRef']
     ]);
     
-    // Log the change
     error_log("Order {$input['orderRef']} status changed from {$order['status']} to {$input['status']}");
     
     echo json_encode([

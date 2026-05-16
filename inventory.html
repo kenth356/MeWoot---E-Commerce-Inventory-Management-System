@@ -758,7 +758,6 @@
             }
         });
 
-        // ===== FILTER POPUP FUNCTIONALITY =====
         const filterButton = document.getElementById('filterButton');
         const filterPopup = document.getElementById('filterPopup');
         const filterOverlay = document.getElementById('filterOverlay');
@@ -903,14 +902,12 @@
                         rawData = result.data;
                     }
 
-                    // Merge items with the same name across warehouses
                     const mergedMap = {};
                     rawData.forEach(item => {
                         const key = item.name.toLowerCase().trim();
                         if (mergedMap[key]) {
                             mergedMap[key].stock += parseInt(item.stock) || 0;
                             mergedMap[key].price = Math.max(mergedMap[key].price, parseFloat(item.price) || 0);
-                            // If this item has an image and the current merged one doesn't, use this one's image
                             if (item.image_url && !mergedMap[key].image_url) {
                                 mergedMap[key].image_url = item.image_url;
                             }

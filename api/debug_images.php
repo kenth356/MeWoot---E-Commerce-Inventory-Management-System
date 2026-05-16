@@ -7,7 +7,6 @@ $pdo = getDB();
 
 echo "<h1>Image Debugging</h1>";
 
-// Check supplier_products table
 echo "<h2>Supplier Products with Images:</h2>";
 $stmt = $pdo->query("
     SELECT id, product_name, product_sku, product_image 
@@ -32,7 +31,6 @@ if (count($products) > 0) {
     echo "<p style='color:red'>No supplier products with images found!</p>";
 }
 
-// Check inventory table
 echo "<h2>Inventory Items:</h2>";
 $stmt2 = $pdo->query("
     SELECT id, name, sku, image_url 
@@ -62,7 +60,6 @@ if (count($inventory) > 0) {
     echo "<p>No inventory items found</p>";
 }
 
-// Check for matching SKUs
 echo "<h2>Matching SKUs between tables:</h2>";
 $stmt3 = $pdo->query("
     SELECT i.id as inventory_id, i.name, i.sku, i.image_url as inventory_image,

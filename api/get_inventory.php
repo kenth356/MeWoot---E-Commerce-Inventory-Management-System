@@ -16,7 +16,6 @@ try {
     $pdo = getDB();
 
     if ($warehouseId && $warehouseId > 0) {
-        // warehouse.html view — show per-warehouse stock
         $sql = "SELECT *, (stock * price) as total_value 
                 FROM inventory 
                 WHERE warehouse_id = ?";
@@ -38,7 +37,6 @@ try {
         $inventory = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     } else {
-        // inventory.html view — show one row per product, stock summed across all warehouses
         $sql = "SELECT 
                     MIN(id) as id,
                     name,

@@ -33,19 +33,16 @@ if (!$warehouseId || !$productSku) {
 try {
     $pdo = getDB();
     
-    // Check if product exists in this warehouse
     $stmt = $pdo->prepare("SELECT * FROM inventory WHERE sku = ? AND warehouse_id = ?");
     $stmt->execute([$productSku, $warehouseId]);
     $existing = $stmt->fetch();
     
     if ($existing) {
-        // Update existing product - increase stock
         $newStock = $existing['stock'] + $quantity;
         $updateStmt = $pdo->prepare("UPDATE inventory SET stock = ?, updated_at = NOW() WHERE sku = ? AND warehouse_id = ?");
         $updateStmt->execute([$newStock, $productSku, $warehouseId]);
         echo json_encode(['success' => true, 'message' => "Added {$quantity} units to warehouse {$warehouseId}"]);
     } else {
-        // Insert new product for this warehouse
         $insertStmt = $pdo->prepare("
             INSERT INTO inventory (sku, name, category, stock, price, warehouse_id, created_at, updated_at) 
             VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())

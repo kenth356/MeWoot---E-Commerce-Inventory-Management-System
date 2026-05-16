@@ -243,7 +243,7 @@
 
       <div class="mt-6 pt-5 border-t border-slate-100 text-center text-[0.85rem] text-slate-500">
         Already have an account?
-        <a href="homepage.html" class="text-primary font-bold no-underline hover:underline">Log in at homepage</a>
+        <a href="login_shopping.html" class="text-primary font-bold no-underline hover:underline">Log in at homepage</a>
       </div>
 
     </div>
@@ -286,7 +286,7 @@
         if (result.success) {
           showAlert("Account created successfully! Redirecting to login...", "success");
           form.reset();
-          setTimeout(() => { window.location.href = "login_inventory.html"; }, 2000);
+          setTimeout(() => { window.location.href = "login_shopping.html"; }, 2000);
         } else {
           showAlert(result.message, "error");
         }

@@ -583,17 +583,14 @@
             const file = fileInput.files[0];
             if (!file) return null;
 
-            // Get the row and hidden input
             const row = imgContainer.closest('.product-row');
             const hiddenInput = row.querySelector('.product-image-url');
             const oldImageUrl = hiddenInput ? hiddenInput.value : null;
 
-            // Show loading state - replace whatever is in the container with loading spinner
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'w-12 h-12 bg-slate-200 rounded-lg flex items-center justify-center';
             loadingDiv.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
 
-            // Clear container and show loading
             imgContainer.innerHTML = '';
             imgContainer.appendChild(loadingDiv);
 
@@ -612,30 +609,30 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Create new image element - THIS IS THE KEY FIX
+
                     const newImg = document.createElement('img');
                     newImg.src = data.image_url + '?t=' + Date.now();
                     newImg.className = 'product-image-preview';
                     newImg.style.cssText = 'width:50px; height:50px; object-fit:cover; border-radius:8px; cursor:pointer';
                     newImg.onclick = () => fileInput.click();
 
-                    // Replace loading div with new image
+
                     imgContainer.innerHTML = '';
                     imgContainer.appendChild(newImg);
 
-                    // Update hidden input with new image URL
+
                     if (hiddenInput) {
                         hiddenInput.value = data.image_url;
                         console.log('Image URL updated to:', data.image_url);
                     }
 
-                    // Also update the product_image_url in the row for tracking
+
                     row.setAttribute('data-has-image', 'true');
 
                     showToast('Success', 'Image uploaded successfully');
                     return data.image_url;
                 } else {
-                    // Restore original content on error
+
                     if (oldImageUrl && oldImageUrl !== '') {
                         const oldImg = document.createElement('img');
                         oldImg.src = oldImageUrl;
@@ -658,7 +655,7 @@
                 }
             } catch (error) {
                 console.error('Upload error:', error);
-                // Restore original content
+
                 if (oldImageUrl && oldImageUrl !== '') {
                     const oldImg = document.createElement('img');
                     oldImg.src = oldImageUrl;
@@ -689,7 +686,6 @@
             row.id = `product-row-${id}`;
             row.dataset.productId = id;
 
-            // Create the image container content based on whether there's an image
             let imageContent = '';
             if (imageUrl && imageUrl !== '') {
                 imageContent = `<img src="${imageUrl}" class="product-image-preview" style="cursor:pointer; width:50px; height:50px; object-fit:cover; border-radius:8px;">`;
@@ -715,11 +711,10 @@
             </button>
         `;
 
-            // Connect the file input to the click handler
             const imgContainer = row.querySelector('.image-container');
             const fileInput = row.querySelector('.product-image-input');
             if (imgContainer && fileInput) {
-                // Make the entire image container clickable
+
                 imgContainer.style.cursor = 'pointer';
                 imgContainer.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -805,7 +800,6 @@
 
             if (editSupplierId) payload.id = editSupplierId;
 
-            // CORRECTED PATH for "final project" folder
             const baseUrl = '/final%20project';
             const endpoint = editSupplierId ? `${baseUrl}/api/update_supplier.php` : `${baseUrl}/api/save_supplier.php`;
             const method = editSupplierId ? 'PUT' : 'POST';

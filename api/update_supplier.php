@@ -23,7 +23,6 @@ try {
     $pdo = getDB();
     $pdo->beginTransaction();
     
-    // Update supplier
     $stmt = $pdo->prepare("UPDATE suppliers SET name=?, category=?, status=?, address=?, lead_time=?, contact_person=?, phone=?, email=?, updated_at=NOW() WHERE id=?");
     $stmt->execute([
         $data['name'],
@@ -37,11 +36,9 @@ try {
         $data['id']
     ]);
     
-    // Delete existing products
     $deleteStmt = $pdo->prepare("DELETE FROM supplier_products WHERE supplier_id = ?");
     $deleteStmt->execute([$data['id']]);
     
-    // Insert updated products
     if (!empty($data['products'])) {
         $productStmt = $pdo->prepare("INSERT INTO supplier_products (supplier_id, product_name, product_sku, price, product_image) VALUES (?, ?, ?, ?, ?)");
         foreach ($data['products'] as $product) {
@@ -56,7 +53,6 @@ try {
             }
         }
         
-        // SYNC INVENTORY IMAGES - This is the key fix!
         $syncStmt = $pdo->prepare("
             UPDATE inventory i
             JOIN supplier_products sp ON (sp.product_name = i.name OR sp.product_sku = i.sku)

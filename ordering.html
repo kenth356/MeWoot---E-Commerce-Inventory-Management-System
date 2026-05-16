@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Create New Order | Precision Inventory</title>
+    <title>Create New Order | Mewoo Inventory</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
@@ -453,7 +453,6 @@
     </div>
 
     <script>
-        // ========== STATE VARIABLES ==========
         let selectedSupplier = null;
         let cart = [];
         let currentPriority = "NORMAL";
@@ -464,7 +463,6 @@
         const priorityFees = { "NORMAL": 0, "URGENT": 3000, "CRITICAL": 5000 };
         const priorityDays = { "NORMAL": 0, "URGENT": 2, "CRITICAL": 4 };
 
-        // DOM Elements
         const step1Content = document.getElementById('step1Content');
         const step2Content = document.getElementById('step2Content');
         const step3Content = document.getElementById('step3Content');
@@ -617,7 +615,7 @@
             document.getElementById('reviewSupplier').innerText = selectedSupplier?.name || '—';
             document.getElementById('reviewPriority').innerText = currentPriority;
 
-            const selectedWarehouseId = parseInt(deliveryWarehouse.value);  // Make sure this is parseInt
+            const selectedWarehouseId = parseInt(deliveryWarehouse.value); 
             let warehouseDisplay = "";
             if (selectedWarehouseId === "1") warehouseDisplay = "Mariano's Delivery Hub";
             else if (selectedWarehouseId === "2") warehouseDisplay = "Hanubis Center";

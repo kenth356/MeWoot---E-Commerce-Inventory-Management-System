@@ -9,7 +9,6 @@ $uploadDir = __DIR__ . '/../uploads/products/';
 $deleted = 0;
 $kept = 0;
 
-// Get all images currently referenced in the database
 $stmt = $pdo->query("
     SELECT DISTINCT product_image FROM supplier_products WHERE product_image IS NOT NULL AND product_image != ''
     UNION
@@ -20,7 +19,6 @@ $stmt = $pdo->query("
 $usedImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
 $usedImages = array_unique($usedImages);
 
-// Scan the uploads folder
 if (file_exists($uploadDir)) {
     $files = scandir($uploadDir);
     foreach ($files as $file) {

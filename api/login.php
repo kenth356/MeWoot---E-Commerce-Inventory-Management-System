@@ -1,30 +1,24 @@
 <?php
-// api/login.php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed. Use POST.']);
     exit();
 }
 
-// Include database configuration
 require_once '../config/database.php';
 
-// Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
-// Validate input
 if (!$input) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Invalid JSON input']);
@@ -34,7 +28,6 @@ if (!$input) {
 $email = isset($input['email']) ? strtolower(trim($input['email'])) : '';
 $password = isset($input['password']) ? $input['password'] : '';
 
-// Validation
 if (empty($email) || empty($password)) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Email and password are required.']);
@@ -44,8 +37,7 @@ if (empty($email) || empty($password)) {
 try {
     $pdo = getDB();
     
-    // Get user by email
-    $stmt = $pdo->prepare("SELECT id, full_name, email, password_hash FROM users WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT id, full_name, email, password_hash, role FROM users WHERE email = ?");
     $stmt->execute([$email]);
     
     if ($stmt->rowCount() === 0) {
@@ -54,17 +46,19 @@ try {
         exit();
     }
     
-    $user = $stmt->fetch();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    // Verify password
+    error_log("Login attempt - Email: " . $email);
+    error_log("User found - Role: " . ($user['role'] ?? 'none'));
+    
     if (password_verify($password, $user['password_hash'])) {
-        // Login successful
         echo json_encode([
             'success' => true, 
             'message' => 'Login successful!',
             'user_id' => $user['id'],
             'full_name' => $user['full_name'],
-            'email' => $user['email']
+            'email' => $user['email'],
+            'role' => $user['role'] ?? 'customer'
         ]);
     } else {
         http_response_code(401);

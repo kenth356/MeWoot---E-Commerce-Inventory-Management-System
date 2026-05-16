@@ -280,7 +280,6 @@
             opacity: 0.7;
         }
 
-        /* Image error fallback */
         .product-image-thumb.error-fallback {
             background: linear-gradient(135deg, #c7d2fe 0%, #a78bfa 100%);
         }
@@ -501,20 +500,16 @@
         let ordersData = [];
         let updatingOrderId = null;
 
-        // Helper function to get correct image URL
         function getImageUrl(imagePath) {
             if (!imagePath || imagePath === '') {
                 return null;
             }
-            // If it already starts with /final%20project/, don't add it again
             if (imagePath.startsWith('/final%20project/') || imagePath.startsWith('http')) {
                 return imagePath;
             }
-            // If it starts with uploads/, add the prefix
             if (imagePath.startsWith('uploads/')) {
                 return `/final%20project/${imagePath}`;
             }
-            // Otherwise, assume it's just the filename
             return `/final%20project/uploads/products/${imagePath}`;
         }
 
@@ -698,7 +693,6 @@
                 if (items && items.length) {
                     let itemsHtml = '';
                     for (const item of items) {
-                        // Get the correct image URL
                         let imageUrl = getImageUrl(item.product_image);
                         let initial = escapeHtml(item.product_name?.charAt(0) || 'P');
 

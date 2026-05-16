@@ -18,7 +18,6 @@ if (!$input) {
     exit();
 }
 
-// Log received data for debugging
 error_log("Save order received: " . print_r($input, true));
 
 try {
@@ -32,16 +31,14 @@ try {
     $priorityFee = $input['priorityFee'];
     $total = $input['total'];
     $priority = $input['priority'];
-    $warehouseId = $input['warehouseId'] ?? null;  // Make sure this is captured
+    $warehouseId = $input['warehouseId'] ?? null;  
     $leadTimeMin = $input['leadTimeMin'];
     $leadTimeMax = $input['leadTimeMax'];
     $status = 'pending';
     
-    // Fix the datetime format
     $orderDate = $input['orderDate'];
     $orderDateMySQL = date('Y-m-d H:i:s', strtotime($orderDate));
     
-    // Get warehouse name based on warehouse_id
     $warehouseName = "";
     $deliveryTerminal = "";
     
@@ -59,12 +56,10 @@ try {
         $deliveryTerminal = "Gervas Logistics Facility - Negros Occidental";
     }
     
-    // Calculate items count as total quantity across all line items
     $itemsCount = array_sum(array_column($input['items'], 'quantity'));
     
     error_log("Saving order: $orderRef, warehouse_id: $warehouseId, warehouse_name: $warehouseName");
     
-    // Insert into orders table
     $sql = "INSERT INTO orders (
         order_reference, 
         supplier_name, 
@@ -125,7 +120,6 @@ try {
     
     $orderId = $pdo->lastInsertId();
     
-    // Insert order items
     $items = $input['items'];
     $itemsSql = "INSERT INTO order_items (
         order_id,

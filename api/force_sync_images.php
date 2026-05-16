@@ -9,7 +9,6 @@ $pdo = getDB();
 try {
     $results = [];
     
-    // 1. Sync inventory images (force update all)
     $stmt1 = $pdo->prepare("
         UPDATE inventory i
         JOIN supplier_products sp ON sp.product_name = i.name
@@ -19,7 +18,6 @@ try {
     $stmt1->execute();
     $results['inventory_updated'] = $stmt1->rowCount();
     
-    // 2. Sync order items images (force update all)
     $stmt2 = $pdo->prepare("
         UPDATE order_items oi
         JOIN supplier_products sp ON sp.product_name = oi.item_name
@@ -29,7 +27,6 @@ try {
     $stmt2->execute();
     $results['order_items_updated'] = $stmt2->rowCount();
     
-    // 3. Also update by SKU if name doesn't match
     $stmt3 = $pdo->prepare("
         UPDATE inventory i
         JOIN supplier_products sp ON sp.product_sku = i.sku

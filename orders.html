@@ -977,7 +977,6 @@
 
             console.log('Loading orders with status:', status, 'search:', search);
 
-            // Build URL with both status and search parameters
             let url = `api/get_orders.php?`;
             if (status && status !== '') {
                 url += `status=${encodeURIComponent(status)}&`;

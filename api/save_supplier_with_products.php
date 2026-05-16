@@ -20,7 +20,6 @@ try {
     $pdo->beginTransaction();
     
     if (isset($supplier['id']) && $supplier['id']) {
-        // UPDATE existing supplier
         $stmt = $pdo->prepare("
             UPDATE suppliers SET 
                 name = ?, category = ?, contact_person = ?, email = ?, 
@@ -44,12 +43,10 @@ try {
         ]);
         $supplierId = $supplier['id'];
         
-        // Delete old products and insert new ones
         $deleteStmt = $pdo->prepare("DELETE FROM supplier_products WHERE supplier_id = ?");
         $deleteStmt->execute([$supplierId]);
         
     } else {
-        // INSERT new supplier
         $stmt = $pdo->prepare("
             INSERT INTO suppliers (name, category, contact_person, email, phone, address, lead_time, min_order_qty, payment_terms, status, notes)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -70,7 +67,6 @@ try {
         $supplierId = $pdo->lastInsertId();
     }
     
-    // Insert products
     if (!empty($products)) {
         $productStmt = $pdo->prepare("
             INSERT INTO supplier_products (supplier_id, product_name, product_sku, price, min_order_qty)

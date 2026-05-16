@@ -117,17 +117,6 @@
       opacity: 1;
     }
 
-    .refresh-indicator {
-      animation: spin 0.6s linear infinite;
-      display: inline-block;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
     .toast-notification {
       position: fixed;
       top: 24px;
@@ -143,7 +132,6 @@
       gap: 0.6rem;
       z-index: 2000;
       transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      font-family: 'Inter', sans-serif;
     }
 
     .toast-notification.show {
@@ -162,7 +150,6 @@
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease;
-      cursor: pointer;
     }
 
     .chart-modal.active {
@@ -180,7 +167,6 @@
       padding: 2rem;
       transform: scale(0.95);
       transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      cursor: default;
     }
 
     .chart-modal.active .modal-card {
@@ -194,6 +180,8 @@
       margin-bottom: 1.5rem;
       padding-bottom: 1rem;
       border-bottom: 2px solid #eef2f6;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .modal-header h2 {
@@ -218,47 +206,6 @@
       transform: scale(1.05);
     }
 
-    .modal-chart-canvas {
-      max-height: 50vh;
-      margin-bottom: 1.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-stats {
-      background: #f8fafc;
-      border-radius: 1rem;
-      padding: 1.25rem;
-      margin-top: 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-    }
-
-    .modal-stat-item {
-      text-align: center;
-      padding: 0.5rem;
-      background: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-
-    .modal-stat-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: #64748b;
-      letter-spacing: 0.05em;
-    }
-
-    .modal-stat-value {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin-top: 0.25rem;
-    }
-
     .btn-export {
       background: #0041c8;
       color: white;
@@ -276,7 +223,6 @@
 
     .btn-export:hover {
       background: #0035a3;
-      transform: scale(0.97);
     }
 
     .detail-table {
@@ -287,7 +233,7 @@
 
     .detail-table th,
     .detail-table td {
-      padding: 0.5rem;
+      padding: 0.75rem;
       text-align: left;
       border-bottom: 1px solid #e2e8f0;
     }
@@ -327,84 +273,57 @@
       color: #1e40af;
     }
 
-    .inline-details {
-      margin-top: 1rem;
-      background: #f8fafc;
-      border-radius: 1rem;
-      padding: 0.75rem;
-      max-height: 280px;
-      overflow-y: auto;
-    }
-
-    .supplier-lead-item,
-    .stock-alert-item {
-      background: white;
-      border-radius: 0.75rem;
-      padding: 0.5rem 0.75rem;
-      margin-bottom: 0.5rem;
-      border-left: 4px solid #8b5cf6;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    }
-
     .stock-alert-card {
-      background: white;
-      border-radius: 1rem;
-      padding: 0.75rem 1rem;
-      margin-bottom: 0.75rem;
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      border-left: 3px solid;
       flex-wrap: wrap;
       gap: 0.5rem;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-      border: 1px solid #f1f5f9;
-    }
-
-    .stock-alert-card:hover {
-      transform: translateX(2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     }
 
     .stock-alert-critical {
-      border-left: 4px solid #ef4444;
-      background: #fff;
+      border-left-color: #ef4444;
     }
 
     .stock-alert-low {
-      border-left: 4px solid #f97316;
-      background: #fff;
+      border-left-color: #f97316;
     }
 
-    .stock-product-name {
-      font-weight: 700;
-      color: #0f172a;
-      font-size: 0.85rem;
+    .product-name-truncate {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .stock-meta {
-      display: flex;
+    .text-truncate {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .kpi-value {
+      font-size: 1.875rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    @media (max-width: 1024px) {
+      .main-content {
+        margin-left: 0;
+        padding: 1rem;
+      }
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
-      align-items: center;
-      font-size: 0.7rem;
-      color: #475569;
-    }
-
-    .stock-badge {
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 0.65rem;
-    }
-
-    .badge-out {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    .badge-low {
-      background: #ffedd5;
-      color: #9a3412;
     }
   </style>
 </head>
@@ -418,8 +337,7 @@
       <div class="flex items-center gap-3">
         <div
           class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md">
-          <span class="material-symbols-outlined text-white text-2xl"
-            style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+          <span class="material-symbols-outlined text-white text-2xl">inventory_2</span>
         </div>
         <div>
           <h1 class="font-manrope font-extrabold text-2xl tracking-tight text-slate-800">MeWoo<span
@@ -439,8 +357,8 @@
           class="material-symbols-outlined text-sm">shopping_cart</span><span>Orders</span></a>
       <a href="suppliers.html" class="nav-link"><span
           class="material-symbols-outlined text-sm">local_shipping</span><span>Suppliers</span></a>
-      <a href="analytics.html" class="nav-link nav-link-active"><span class="material-symbols-outlined text-sm"
-          style="font-variation-settings: 'FILL' 1;">analytics</span><span>Analytics</span></a>
+      <a href="analytics.html" class="nav-link nav-link-active"><span
+          class="material-symbols-outlined text-sm">analytics</span><span>Analytics</span></a>
     </nav>
     <div class="px-4 pb-8 pt-4 border-t border-slate-100">
       <div class="mt-4 space-y-1"><a href="login_inventory.html" class="nav-link text-xs"><span
@@ -453,44 +371,33 @@
     <div style="max-width: 1600px; margin: 0 auto;">
       <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
         <div>
-          <div class="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1"><span
-              class="material-symbols-outlined text-sm">analytics</span><span>Real-time Visualization of Data
-              Analyzed</span></div>
+          <div class="flex items-center gap-2 text-blue-700 text-xs font-bold uppercase tracking-wider mb-1">
+            <span class="material-symbols-outlined text-sm">analytics</span>
+            <span>Real-time Visualization of Data Analyzed</span>
+          </div>
           <h1 class="text-4xl font-manrope font-extrabold text-slate-800 tracking-tight">Live Analytics</h1>
           <p class="text-slate-500 text-sm mt-1">Click any chart or table to expand into detailed analytics view</p>
         </div>
         <button id="refreshAnalyticsBtn"
-          class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-all"><span
-            class="material-symbols-outlined text-base">refresh</span> Refresh Data</button>
+          class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-all">
+          <span class="material-symbols-outlined text-base">refresh</span> Refresh Data
+        </button>
       </div>
 
       <!-- KPI Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8" id="kpiGrid">
         <div class="stat-card animate-pulse">Loading metrics...</div>
-        <div class="stat-card animate-pulse">Loading...</div>
-        <div class="stat-card animate-pulse">Loading...</div>
-        <div class="stat-card animate-pulse">Loading...</div>
       </div>
 
-      <!-- Charts Row -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="chart-container" data-chart-id="valueTrend">
-          <div class="flex justify-between items-center mb-4">
-            <div>
-              <h3 class="text-lg font-bold text-slate-800">Inventory Value Trend</h3>
-              <p class="text-xs text-slate-400">Last 7 days (dynamic)</p>
-            </div><span class="material-symbols-outlined text-blue-500">show_chart</span>
-          </div>
-          <canvas id="valueTrendChart" height="200" style="max-height: 220px;"></canvas>
-          <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
-          </div>
-        </div>
+      <!-- Order Status Chart (full width now) -->
+      <div class="mb-8">
         <div class="chart-container" data-chart-id="orderStatus">
           <div class="flex justify-between items-center mb-4">
             <div>
               <h3 class="text-lg font-bold text-slate-800">Order Status Breakdown</h3>
               <p class="text-xs text-slate-400">Current live orders</p>
-            </div><span class="material-symbols-outlined text-indigo-500">pie_chart</span>
+            </div>
+            <span class="material-symbols-outlined text-indigo-500">pie_chart</span>
           </div>
           <canvas id="orderStatusChart" height="200" style="max-height: 220px;"></canvas>
           <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
@@ -502,12 +409,12 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div class="chart-container" data-chart-id="topSuppliers">
           <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-slate-800">Top Suppliers (by order count)</h3><span
-              class="material-symbols-outlined text-emerald-500">local_shipping</span>
+            <h3 class="text-lg font-bold text-slate-800">Top Suppliers (by order count)</h3>
+            <span class="material-symbols-outlined text-emerald-500">local_shipping</span>
           </div>
-          <div class="overflow-y-auto max-h-72 pr-5">
+          <div class="overflow-y-auto max-h-72">
             <table class="w-full text-sm">
-              <thead class="border-b border-slate-100">
+              <thead class="border-b border-slate-100 sticky top-0 bg-white">
                 <tr>
                   <th class="text-left py-2 font-semibold text-slate-500">Supplier</th>
                   <th class="text-right font-semibold text-slate-500">Orders</th>
@@ -522,12 +429,12 @@
         </div>
         <div class="chart-container" data-chart-id="topProducts">
           <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-slate-800">Top Moving Products</h3><span
-              class="material-symbols-outlined text-amber-500">inventory_2</span>
+            <h3 class="text-lg font-bold text-slate-800">Top Moving Products</h3>
+            <span class="material-symbols-outlined text-amber-500">inventory_2</span>
           </div>
-          <div class="overflow-y-auto max-h-72 pr-5">
+          <div class="overflow-y-auto max-h-72">
             <table class="w-full text-sm">
-              <thead class="border-b border-slate-100">
+              <thead class="border-b border-slate-100 sticky top-0 bg-white">
                 <tr>
                   <th class="text-left py-2 font-semibold text-slate-500">Product</th>
                   <th class="text-right font-semibold text-slate-500">Qty Ordered</th>
@@ -547,8 +454,9 @@
         <div class="flex justify-between items-center mb-6">
           <div>
             <h3 class="text-lg font-bold text-slate-800">Inventory Value by Category</h3>
-            <p class="text-xs text-slate-400">Based on current stock × price</p>
-          </div><span class="material-symbols-outlined text-purple-500">category</span>
+            <p class="text-xs text-slate-400">Based on current stock × price (summed across all warehouses)</p>
+          </div>
+          <span class="material-symbols-outlined text-purple-500">category</span>
         </div>
         <canvas id="categoryBarChart" height="280" style="max-height: 300px;"></canvas>
         <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand</div>
@@ -557,11 +465,11 @@
       <!-- Lead Time & Stock Health -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="chart-container" data-chart-id="leadTime">
-          <h3 class="text-lg font-bold text-slate-800 mb-3">Active Suppliers || Lead Time</h3>
+          <h3 class="text-lg font-bold text-slate-800 mb-3">Lead Time Distribution (Active Suppliers)</h3>
           <canvas id="leadTimeChart" height="160"></canvas>
-          <div class="inline-details mt-10" id="leadTimeSupplierDetails">
-            <div class="text-xs font-semibold text-slate-500 mb-2">📋 ACTIVE SUPPLIERS BREAKDOWN</div>
-            <div id="leadTimeDetailsList" class="space-y-1 text-xs">Loading supplier details...</div>
+          <div class="mt-4 pt-3 border-t border-slate-100">
+            <div class="text-xs font-semibold text-slate-500 mb-2">📋 Active Suppliers by Lead Time</div>
+            <div id="leadTimeDetailsList" class="space-y-1 text-xs max-h-48 overflow-y-auto"></div>
           </div>
           <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
           </div>
@@ -569,9 +477,9 @@
         <div class="chart-container" data-chart-id="stockHealth">
           <h3 class="text-lg font-bold text-slate-800 mb-3">Stock Health Overview</h3>
           <canvas id="stockHealthChart" height="160"></canvas>
-          <div class="inline-details mt-3" id="stockHealthDetails">
-            <div class="text-xs font-semibold text-slate-500 mb-2">⚠️ AT-RISK INVENTORY (Low/Out of Stock)</div>
-            <div id="stockAlertList" class="space-y-1 text-xs">Loading inventory alerts...</div>
+          <div class="mt-4 pt-3 border-t border-slate-100">
+            <div class="text-xs font-semibold text-slate-500 mb-2">⚠️ At-Risk Inventory (Unique Products)</div>
+            <div id="stockAlertList" class="space-y-1 text-xs max-h-48 overflow-y-auto"></div>
           </div>
           <div class="expand-hint"><span class="material-symbols-outlined text-xs">fullscreen</span> Click to expand
           </div>
@@ -581,11 +489,9 @@
   </div>
 
   <!-- Toast -->
-  <div id="analyticsToast" class="toast-notification"><span class="material-symbols-outlined text-sm"
-      id="toastIcon">check_circle</span>
-    <div>
-      <div class="font-semibold text-sm" id="toastTitle">Analytics Updated</div>
-    </div>
+  <div id="analyticsToast" class="toast-notification">
+    <span class="material-symbols-outlined text-sm" id="toastIcon">check_circle</span>
+    <div id="toastTitle" class="font-semibold text-sm">Analytics Updated</div>
   </div>
 
   <!-- Fullscreen Modal -->
@@ -593,21 +499,43 @@
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="modalTitle">Chart Details</h2>
-        <div class="flex gap-3"><button id="exportModalChartBtn" class="btn-export"><span
+        <div class="flex gap-3">
+          <button id="exportModalChartBtn" class="btn-export"><span
               class="material-symbols-outlined text-sm">download</span> Export as PNG</button>
           <div class="modal-close" id="closeModalBtn"><span class="material-symbols-outlined">close</span></div>
         </div>
       </div>
       <div class="modal-chart-canvas"><canvas id="modalCanvas" style="width: 100%; max-height: 450px;"></canvas></div>
-      <div id="modalStatsPanel" class="modal-stats"></div>
-      <div id="modalDetailTable" style="margin-top: 1rem;"></div>
+      <div id="modalStatsPanel" class="stat-grid mt-4"></div>
+      <div id="modalDetailTable" class="mt-4 overflow-x-auto"></div>
     </div>
   </div>
 
   <script>
-    let valueChart = null, orderPieChart = null, categoryChart = null, leadTimeChart = null, stockHealthChart = null;
+    let orderPieChart = null, categoryChart = null, leadTimeChart = null, stockHealthChart = null;
     let currentModalChartInstance = null;
-    let cachedOrders = [], cachedSuppliers = [], cachedInventory = [];
+
+    let cachedOrders = [];
+    let cachedSuppliers = [];
+    let cachedInventory = [];
+
+    function formatNumber(num) {
+      if (num === undefined || num === null) return '0';
+      if (typeof num === 'string' && num.length > 15 && !num.includes('.')) {
+        const parsed = parseInt(num);
+        if (!isNaN(parsed)) return parsed.toLocaleString('en-US');
+      }
+      const number = Number(num);
+      if (isNaN(number)) return '0';
+      return number.toLocaleString('en-US');
+    }
+
+    function formatCurrency(amount) {
+      if (amount === undefined || amount === null) return '₱0';
+      const number = Number(amount);
+      if (isNaN(number)) return '₱0';
+      return '₱' + number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
     function showToast(message, isError = false) {
       const toast = document.getElementById('analyticsToast');
@@ -615,90 +543,215 @@
       const title = document.getElementById('toastTitle');
       icon.innerText = isError ? 'error' : 'check_circle';
       icon.style.color = isError ? '#ef4444' : '#2563eb';
-      title.innerText = isError ? 'Something went wrong' : 'Analytics Updated';
+      title.innerText = isError ? (message || 'Something went wrong') : (message || 'Analytics Updated');
       title.style.color = isError ? '#ef4444' : '#1e293b';
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
+    function aggregateInventoryByProduct(inventory) {
+      const productMap = new Map();
+
+      inventory.forEach(item => {
+        const key = (item.name || '').toLowerCase().trim();
+        if (!key) return;
+
+        const stock = parseInt(item.stock) || 0;
+        const price = parseFloat(item.price) || 0;
+        const value = stock * price;
+
+        if (productMap.has(key)) {
+          const existing = productMap.get(key);
+          existing.stock += stock;
+          existing.price = Math.max(existing.price, price);
+          existing.totalValue = existing.stock * existing.price;
+          if (!existing.image_url && item.image_url) existing.image_url = item.image_url;
+        } else {
+          productMap.set(key, {
+            id: item.id,
+            name: item.name,
+            sku: item.sku,
+            category: item.category || 'Uncategorized',
+            stock: stock,
+            price: price,
+            totalValue: value,
+            image_url: item.image_url,
+            warehouse_id: item.warehouse_id
+          });
+        }
+      });
+
+      return Array.from(productMap.values());
+    }
+
     async function fetchAllAnalyticsData() {
       try {
-        const ordersRes = await fetch('/MeWoot/api/get_orders.php');
+        const [ordersRes, suppliersRes, inventoryRes] = await Promise.all([
+          fetch('/final%20project/api/get_orders.php'),
+          fetch('/final%20project/api/get_suppliers.php'),
+          fetch('/final%20project/api/get_inventory.php')
+        ]);
+
         const ordersData = await ordersRes.json();
-        const orders = ordersData.success ? ordersData.orders : [];
-        const suppliersRes = await fetch('/MeWoot/api/get_suppliers.php');
         const suppliersData = await suppliersRes.json();
-        const suppliers = suppliersData.success ? suppliersData.suppliers : [];
-        const inventoryRes = await fetch('/MeWoot/api/get_inventory.php');
         const inventoryData = await inventoryRes.json();
-        const inventory = inventoryData.success ? inventoryData.data : [];
-        cachedOrders = orders; cachedSuppliers = suppliers; cachedInventory = inventory;
+
+        const orders = ordersData.success ? ordersData.orders : [];
+        const suppliers = suppliersData.success ? suppliersData.suppliers : [];
+        const rawInventory = inventoryData.success ? inventoryData.data : [];
+
+        const inventory = aggregateInventoryByProduct(rawInventory);
+
+        cachedOrders = orders;
+        cachedSuppliers = suppliers;
+        cachedInventory = inventory;
+
         return { orders, suppliers, inventory, stats: ordersData.counts || {} };
-      } catch (err) { console.error(err); showToast('Failed to load analytics data', true); return { orders: [], suppliers: [], inventory: [], stats: {} }; }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        showToast('Failed to load analytics data', true);
+        return { orders: [], suppliers: [], inventory: [], stats: {} };
+      }
     }
 
     function computeKPIs(orders, suppliers, inventory) {
-      const totalOrders = orders.length;
-      const pendingOrders = orders.filter(o => o.status === 'pending').length;
-      const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
-      const totalInventoryValue = inventory.reduce((sum, item) => sum + (item.stock * parseFloat(item.price)), 0);
+      const totalInventoryValue = inventory.reduce((sum, item) => sum + (item.stock * item.price), 0);
       const totalStockUnits = inventory.reduce((sum, item) => sum + item.stock, 0);
       const lowStockItems = inventory.filter(i => i.stock > 0 && i.stock <= 50).length;
       const outOfStock = inventory.filter(i => i.stock === 0).length;
+
+      const totalOrders = orders.length;
+      const pendingOrders = orders.filter(o => o.status === 'pending').length;
+      const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
+
       const activeSuppliers = suppliers.filter(s => s.status === 'active').length;
       const totalSupplierCount = suppliers.length;
-      let avgLead = 0;
+
       const activeWithLead = suppliers.filter(s => s.status === 'active' && s.lead_time);
-      if (activeWithLead.length) avgLead = Math.round(activeWithLead.reduce((acc, s) => acc + parseInt(s.lead_time), 0) / activeWithLead.length);
-      return { totalOrders, pendingOrders, deliveredOrders, totalInventoryValue, totalStockUnits, lowStockItems, outOfStock, activeSuppliers, totalSupplierCount, avgLeadTime: avgLead };
+      const avgLead = activeWithLead.length ? Math.round(activeWithLead.reduce((acc, s) => acc + parseInt(s.lead_time), 0) / activeWithLead.length) : 0;
+
+      return {
+        totalOrders, pendingOrders, deliveredOrders,
+        totalInventoryValue, totalStockUnits, lowStockItems, outOfStock,
+        activeSuppliers, totalSupplierCount, avgLeadTime: avgLead
+      };
     }
 
     function processOrderStatusDistribution(orders) {
-      return { pending: orders.filter(o => o.status === 'pending').length, delivered: orders.filter(o => o.status === 'delivered').length, archived: orders.filter(o => o.status === 'archived').length, cancelled: orders.filter(o => o.status === 'cancelled').length };
+      return {
+        pending: orders.filter(o => o.status === 'pending').length,
+        delivered: orders.filter(o => o.status === 'delivered').length,
+        archived: orders.filter(o => o.status === 'archived').length,
+        cancelled: orders.filter(o => o.status === 'cancelled').length
+      };
     }
 
     function getTopSuppliers(orders) {
       const map = new Map();
-      orders.forEach(order => { const name = order.supplier_name; if (!name) return; const totalAmount = parseFloat(order.total_amount) || 0; if (map.has(name)) { const entry = map.get(name); entry.count += 1; entry.total += totalAmount; } else map.set(name, { count: 1, total: totalAmount }); });
-      return Array.from(map.entries()).map(([name, data]) => ({ name, count: data.count, total: data.total })).sort((a, b) => b.count - a.count).slice(0, 10);
+      orders.forEach(order => {
+        const name = order.supplier_name;
+        if (!name) return;
+        const totalAmount = parseFloat(order.total_amount) || 0;
+        if (map.has(name)) {
+          const entry = map.get(name);
+          entry.count += 1;
+          entry.total += totalAmount;
+        } else {
+          map.set(name, { count: 1, total: totalAmount });
+        }
+      });
+      return Array.from(map.entries())
+        .map(([name, data]) => ({ name, count: data.count, total: data.total }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
     }
 
-    async function fetchAllProductsDetailed() {
+    async function getTopProducts() {
       try {
-        const ordersRes = await fetch('/MeWoot/api/get_orders.php');
+        const ordersRes = await fetch('/final%20project/api/get_orders.php');
         const ordersData = await ordersRes.json();
         if (!ordersData.success) return [];
+
         const orders = ordersData.orders;
         const productMap = new Map();
+
         for (let order of orders) {
-          const itemsRes = await fetch(`/MeWoot/api/get_order_items.php?order_id=${order.id}`);
+          const itemsRes = await fetch(`/final%20project/api/get_order_items.php?order_id=${order.id}`);
           const itemsData = await itemsRes.json();
           if (itemsData.success && itemsData.items) {
             itemsData.items.forEach(item => {
               const name = item.item_name;
               const qty = parseInt(item.quantity) || 0;
               const revenue = (parseFloat(item.price) || 0) * qty;
-              if (productMap.has(name)) { const existing = productMap.get(name); existing.qty += qty; existing.revenue += revenue; existing.orderCount += 1; }
-              else productMap.set(name, { qty, revenue, orderCount: 1 });
+
+              if (productMap.has(name)) {
+                const existing = productMap.get(name);
+                existing.qty += qty;
+                existing.revenue += revenue;
+                existing.orderCount += 1;
+              } else {
+                productMap.set(name, { qty, revenue, orderCount: 1 });
+              }
             });
           }
         }
-        return Array.from(productMap.entries()).map(([name, val]) => ({ name, qty: val.qty, revenue: val.revenue, orderCount: val.orderCount })).sort((a, b) => b.qty - a.qty).slice(0, 10);
-      } catch (e) { return []; }
+
+        return Array.from(productMap.entries())
+          .map(([name, val]) => ({ name, qty: val.qty, revenue: val.revenue, orderCount: val.orderCount }))
+          .sort((a, b) => b.qty - a.qty)
+          .slice(0, 10);
+      } catch (e) {
+        console.error('Error fetching top products:', e);
+        return [];
+      }
     }
 
     function getCategoryValue(inventory) {
       const catMap = new Map();
-      inventory.forEach(item => { const cat = item.category || 'Uncategorized'; const value = (item.stock || 0) * (parseFloat(item.price) || 0); const units = item.stock; catMap.set(cat, { value: (catMap.get(cat)?.value || 0) + value, units: (catMap.get(cat)?.units || 0) + units }); });
-      return Array.from(catMap.entries()).map(([cat, data]) => ({ category: cat, value: data.value, units: data.units })).sort((a, b) => b.value - a.value);
+      inventory.forEach(item => {
+        const cat = item.category || 'Uncategorized';
+        const value = (item.stock || 0) * (item.price || 0);
+        const units = item.stock || 0;
+
+        if (catMap.has(cat)) {
+          const existing = catMap.get(cat);
+          existing.value += value;
+          existing.units += units;
+        } else {
+          catMap.set(cat, { value, units });
+        }
+      });
+
+      return Array.from(catMap.entries())
+        .map(([category, data]) => ({ category, value: data.value, units: data.units }))
+        .sort((a, b) => b.value - a.value);
     }
 
     function getLeadTimeDistribution(suppliers) {
       const active = suppliers.filter(s => s.status === 'active' && s.lead_time);
-      const ranges = { '0-5 days': [], '6-10 days': [], '11-15 days': [], '15+ days': [] };
-      active.forEach(s => { const lt = parseInt(s.lead_time); if (lt <= 5) ranges['0-5 days'].push(s); else if (lt <= 10) ranges['6-10 days'].push(s); else if (lt <= 15) ranges['11-15 days'].push(s); else ranges['15+ days'].push(s); });
-      const counts = { '0-5 days': ranges['0-5 days'].length, '6-10 days': ranges['6-10 days'].length, '11-15 days': ranges['11-15 days'].length, '15+ days': ranges['15+ days'].length };
-      return { ranges: counts, details: ranges, total: active.length, avg: active.length ? Math.round(active.reduce((a, s) => a + parseInt(s.lead_time), 0) / active.length) : 0 };
+      const ranges = { '0-5 days': 0, '6-10 days': 0, '11-15 days': 0, '15+ days': 0 };
+      const details = { '0-5 days': [], '6-10 days': [], '11-15 days': [], '15+ days': [] };
+
+      active.forEach(s => {
+        const lt = parseInt(s.lead_time);
+        if (lt <= 5) {
+          ranges['0-5 days']++;
+          details['0-5 days'].push(s);
+        } else if (lt <= 10) {
+          ranges['6-10 days']++;
+          details['6-10 days'].push(s);
+        } else if (lt <= 15) {
+          ranges['11-15 days']++;
+          details['11-15 days'].push(s);
+        } else {
+          ranges['15+ days']++;
+          details['15+ days'].push(s);
+        }
+      });
+
+      const avg = active.length ? Math.round(active.reduce((a, s) => a + parseInt(s.lead_time), 0) / active.length) : 0;
+
+      return { ranges, details, total: active.length, avg };
     }
 
     function getStockHealth(inventory) {
@@ -706,32 +759,44 @@
       const zeroItems = inventory.filter(i => i.stock === 0);
       const normalItems = inventory.filter(i => i.stock > 50 && i.stock <= 500);
       const highItems = inventory.filter(i => i.stock > 500);
-      return { low: lowItems.length, normal: normalItems.length, high: highItems.length, zero: zeroItems.length, total: inventory.length, lowDetails: lowItems, zeroDetails: zeroItems };
+
+      return {
+        low: lowItems.length,
+        normal: normalItems.length,
+        high: highItems.length,
+        zero: zeroItems.length,
+        total: inventory.length,
+        lowDetails: lowItems,
+        zeroDetails: zeroItems
+      };
     }
 
-    async function generateTrendData(inventory, orders) {
-      const today = new Date(); const last7 = []; for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(today.getDate() - i); last7.push(d.toISOString().split('T')[0]); }
-      const currentTotalValue = inventory.reduce((s, i) => s + (i.stock * parseFloat(i.price)), 0);
-      const deliveredOrders = orders.filter(o => o.status === 'delivered' && o.order_date);
-      const dailyAddedValue = {};
-      deliveredOrders.forEach(order => { const dateStr = order.order_date.split(' ')[0]; if (last7.includes(dateStr)) dailyAddedValue[dateStr] = (dailyAddedValue[dateStr] || 0) + (parseFloat(order.total_amount) || 0); });
-      let running = currentTotalValue; const values = [];
-      for (let i = last7.length - 1; i >= 0; i--) { const day = last7[i]; const added = dailyAddedValue[day] || 0; if (i === last7.length - 1) values.unshift(running); else { running = running - added; values.unshift(Math.max(0, running)); } }
-      return { labels: last7, values, startValue: values[0], endValue: values[values.length - 1], changePercent: ((values[values.length - 1] - values[0]) / values[0] * 100).toFixed(1) };
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
     }
 
     function updateLeadTimeDetails(suppliers) {
       const leadDist = getLeadTimeDistribution(suppliers);
       const container = document.getElementById('leadTimeDetailsList');
       if (!container) return;
+
       let html = '';
       for (const [range, supplierList] of Object.entries(leadDist.details)) {
         if (supplierList.length === 0) continue;
-        html += `<div class="mt-2"><div class="font-bold text-slate-700 text-xs">📌 ${range} (${supplierList.length} suppliers)</div>`;
-        supplierList.forEach(sup => { html += `<div class="supplier-lead-item border-l-purple-500 pl-2 py-1"><span class="font-medium">${escapeHtml(sup.name)}</span> — Lead time: <span class="font-semibold">${sup.lead_time} days</span> | Status: ${sup.status}</div>`; });
+        html += `<div class="mb-3">
+          <div class="font-bold text-slate-700 text-xs mb-1">📌 ${range} (${supplierList.length})</div>`;
+        supplierList.slice(0, 5).forEach(sup => {
+          html += `<div class="pl-2 py-1 text-slate-600 border-l-2 border-purple-300 mb-1">
+            <span class="font-medium">${escapeHtml(sup.name)}</span> — ${sup.lead_time} days
+          </div>`;
+        });
+        if (supplierList.length > 5) {
+          html += `<div class="pl-2 text-slate-400 text-xs">+${supplierList.length - 5} more</div>`;
+        }
         html += `</div>`;
       }
-      if (!html) html = '<div class="text-slate-400">No active suppliers with lead time data</div>';
+      if (!html) html = '<div class="text-slate-400 text-center py-2">No active suppliers with lead time data</div>';
       container.innerHTML = html;
     }
 
@@ -739,67 +804,204 @@
       const health = getStockHealth(inventory);
       const container = document.getElementById('stockAlertList');
       if (!container) return;
+
       let html = '';
+
       if (health.zeroDetails.length > 0) {
-        html += `<div class="text-xs font-bold text-red-600 mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">error</span> Out of Stock (${health.zeroDetails.length})</div>`;
-        health.zeroDetails.forEach(prod => {
-          html += `<div class="stock-alert-card stock-alert-critical"><div class="flex flex-col"><span class="stock-product-name">${escapeHtml(prod.name)}</span><div class="stock-meta"><span>ID: ${prod.id || '-'}</span><span>Category: ${prod.category || '-'}</span><span>Price: ₱${parseFloat(prod.price).toLocaleString()}</span></div></div><span class="stock-badge badge-out">0 units</span></div>`;
+        html += `<div class="text-xs font-bold text-red-600 mb-2 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">error</span> Out of Stock (${health.zeroDetails.length})
+        </div>`;
+        health.zeroDetails.slice(0, 10).forEach(prod => {
+          html += `<div class="stock-alert-card stock-alert-critical">
+            <div class="flex-1">
+              <div class="font-medium text-sm">${escapeHtml(prod.name)}</div>
+              <div class="text-xs text-slate-500">${escapeHtml(prod.category)} | SKU: ${escapeHtml(prod.sku || 'N/A')}</div>
+            </div>
+            <span class="badge badge-danger">0 units</span>
+          </div>`;
         });
       }
+
       if (health.lowDetails.length > 0) {
-        html += `<div class="text-xs font-bold text-orange-600 mb-2 mt-3 flex items-center gap-1"><span class="material-symbols-outlined text-sm">warning</span> Low Stock (less than 50 units) — ${health.lowDetails.length} products</div>`;
-        health.lowDetails.forEach(prod => {
-          html += `<div class="stock-alert-card stock-alert-low"><div class="flex flex-col"><span class="stock-product-name">${escapeHtml(prod.name)}</span><div class="stock-meta"><span>ID: ${prod.id || '-'}</span><span>Category: ${prod.category || '-'}</span><span>Price: ₱${parseFloat(prod.price).toLocaleString()}</span></div></div><span class="stock-badge badge-low">${prod.stock} units left</span></div>`;
+        html += `<div class="text-xs font-bold text-orange-600 mb-2 mt-3 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">warning</span> Low Stock (${health.lowDetails.length} products)
+        </div>`;
+        health.lowDetails.slice(0, 10).forEach(prod => {
+          html += `<div class="stock-alert-card stock-alert-low">
+            <div class="flex-1">
+              <div class="font-medium text-sm">${escapeHtml(prod.name)}</div>
+              <div class="text-xs text-slate-500">${escapeHtml(prod.category)} | SKU: ${escapeHtml(prod.sku || 'N/A')}</div>
+            </div>
+            <span class="badge badge-warning">${formatNumber(prod.stock)} units</span>
+          </div>`;
         });
       }
-      if (health.zeroDetails.length === 0 && health.lowDetails.length === 0) html = '<div class="text-slate-400 text-center py-4">✅ All inventory levels are healthy</div>';
+
+      if (health.zeroDetails.length === 0 && health.lowDetails.length === 0) {
+        html = '<div class="text-slate-400 text-center py-4">✅ All inventory levels are healthy</div>';
+      }
+
       container.innerHTML = html;
     }
 
     async function refreshAnalytics() {
       const refreshBtn = document.getElementById('refreshAnalyticsBtn');
       const originalText = refreshBtn.innerHTML;
-      refreshBtn.innerHTML = '<span class="material-symbols-outlined text-base refresh-indicator">progress_activity</span> Syncing...';
+      refreshBtn.innerHTML = '<span class="material-symbols-outlined text-base animate-spin">progress_activity</span> Syncing...';
       refreshBtn.disabled = true;
+
       try {
         const { orders, suppliers, inventory } = await fetchAllAnalyticsData();
         const kpis = computeKPIs(orders, suppliers, inventory);
-        document.getElementById('kpiGrid').innerHTML = `<div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Total Orders</span><span class="material-symbols-outlined text-blue-300">shopping_cart</span></div><div class="text-3xl font-black mt-2">${kpis.totalOrders}</div><div class="text-xs text-slate-400 mt-1">${kpis.pendingOrders} pending · ${kpis.deliveredOrders} delivered</div></div><div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Inventory Value</span><span class="material-symbols-outlined text-emerald-300">payments</span></div><div class="text-2xl font-black mt-2">₱${kpis.totalInventoryValue.toLocaleString()}</div><div class="text-xs text-slate-400 mt-1">${kpis.totalStockUnits.toLocaleString()} units total</div></div><div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Stock Alerts</span><span class="material-symbols-outlined text-amber-300">warning</span></div><div class="text-2xl font-black mt-2"><span class="text-red-600">${kpis.lowStockItems}</span> Low · <span class="text-red-600">${kpis.outOfStock}</span> Out of Stock</div><div class="text-xs text-slate-400 mt-1">Needs attention</div></div><div class="stat-card"><div class="flex justify-between"><span class="text-slate-500 text-xs uppercase font-bold">Active Suppliers</span><span class="material-symbols-outlined text-indigo-300">local_shipping</span></div><div class="text-2xl font-black mt-2">${kpis.activeSuppliers}/${kpis.totalSupplierCount}</div><div class="text-xs text-slate-400 mt-1">Avg lead time: ${kpis.avgLeadTime} days</div></div>`;
+
+        document.getElementById('kpiGrid').innerHTML = `
+          <div class="stat-card">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-slate-500 text-xs uppercase font-bold">Total Orders</span>
+                <div class="kpi-value mt-1">${formatNumber(kpis.totalOrders)}</div>
+                <div class="text-xs text-slate-400 mt-1">${kpis.pendingOrders} pending · ${kpis.deliveredOrders} delivered</div>
+              </div>
+              <span class="material-symbols-outlined text-blue-300 text-2xl">shopping_cart</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-slate-500 text-xs uppercase font-bold">Inventory Value</span>
+                <div class="kpi-value mt-1">${formatCurrency(kpis.totalInventoryValue)}</div>
+                <div class="text-xs text-slate-400 mt-1">${formatNumber(kpis.totalStockUnits)} units total</div>
+              </div>
+              <span class="material-symbols-outlined text-emerald-300 text-2xl">payments</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-slate-500 text-xs uppercase font-bold">Stock Alerts</span>
+                <div class="kpi-value mt-1"><span class="text-orange-600">${kpis.lowStockItems}</span> Low · <span class="text-red-600">${kpis.outOfStock}</span> Out</div>
+                <div class="text-xs text-slate-400 mt-1">Needs attention</div>
+              </div>
+              <span class="material-symbols-outlined text-amber-300 text-2xl">warning</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-slate-500 text-xs uppercase font-bold">Active Suppliers</span>
+                <div class="kpi-value mt-1">${kpis.activeSuppliers}/${kpis.totalSupplierCount}</div>
+                <div class="text-xs text-slate-400 mt-1">Avg lead time: ${kpis.avgLeadTime} days</div>
+              </div>
+              <span class="material-symbols-outlined text-indigo-300 text-2xl">local_shipping</span>
+            </div>
+          </div>
+        `;
 
         const statusDist = processOrderStatusDistribution(orders);
         if (orderPieChart) orderPieChart.destroy();
-        orderPieChart = new Chart(document.getElementById('orderStatusChart'), { type: 'doughnut', data: { labels: ['Pending', 'Delivered', 'Archived', 'Cancelled'], datasets: [{ data: [statusDist.pending, statusDist.delivered, statusDist.archived, statusDist.cancelled], backgroundColor: ['#f97316', '#10b981', '#64748b', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } });
-
-        const trend = await generateTrendData(inventory, orders);
-        if (valueChart) valueChart.destroy();
-        valueChart = new Chart(document.getElementById('valueTrendChart'), { type: 'line', data: { labels: trend.labels, datasets: [{ label: 'Total Inventory Value (₱)', data: trend.values, borderColor: '#0041c8', backgroundColor: 'rgba(0,65,200,0.05)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
+        orderPieChart = new Chart(document.getElementById('orderStatusChart'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Pending', 'Delivered', 'Archived', 'Cancelled'],
+            datasets: [{
+              data: [statusDist.pending, statusDist.delivered, statusDist.archived, statusDist.cancelled],
+              backgroundColor: ['#f97316', '#10b981', '#64748b', '#ef4444'],
+              borderWidth: 0
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
 
         const topSuppliers = getTopSuppliers(orders);
-        document.getElementById('topSuppliersTable').innerHTML = topSuppliers.map(s => `<tr class="border-b border-slate-50"><td class="py-2 font-medium">${escapeHtml(s.name)}</td><td class="text-right">${s.count}</td><td class="text-right">₱${s.total.toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="3" class="py-3 text-slate-400 text-center">No orders yet</td></tr>';
-        const topProducts = await fetchAllProductsDetailed();
-        document.getElementById('topProductsTable').innerHTML = topProducts.map(p => `<tr class="border-b border-slate-50"><td class="py-2 font-medium">${escapeHtml(p.name)}</td><td class="text-right">${p.qty}</td><td class="text-right">₱${p.revenue.toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="3" class="py-3 text-slate-400 text-center">No product data</td></tr>';
+        document.getElementById('topSuppliersTable').innerHTML = topSuppliers.map(s => `
+          <tr class="border-b border-slate-50">
+            <td class="py-2 font-medium product-name-truncate">${escapeHtml(s.name)}</td>
+            <td class="text-right">${formatNumber(s.count)}</td>
+            <td class="text-right">${formatCurrency(s.total)}</td>
+           </tr>
+        `).join('') || '<tr><td colspan="3" class="py-3 text-slate-400 text-center">No orders yet</td></tr>';
+
+        const topProducts = await getTopProducts();
+        document.getElementById('topProductsTable').innerHTML = topProducts.map(p => `
+          <tr class="border-b border-slate-50">
+            <td class="py-2 font-medium product-name-truncate">${escapeHtml(p.name)}</td>
+            <td class="text-right">${formatNumber(p.qty)}</td>
+            <td class="text-right">${formatCurrency(p.revenue)}</td>
+           </tr>
+        `).join('') || '<tr><td colspan="3" class="py-3 text-slate-400 text-center">No product data</td></tr>';
 
         const categoryData = getCategoryValue(inventory);
         if (categoryChart) categoryChart.destroy();
-        categoryChart = new Chart(document.getElementById('categoryBarChart'), { type: 'bar', data: { labels: categoryData.map(c => c.category), datasets: [{ label: 'Total Value (₱)', data: categoryData.map(c => c.value), backgroundColor: '#3b82f6', borderRadius: 8 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
+        categoryChart = new Chart(document.getElementById('categoryBarChart'), {
+          type: 'bar',
+          data: {
+            labels: categoryData.map(c => c.category.length > 25 ? c.category.substring(0, 22) + '...' : c.category),
+            datasets: [{
+              label: 'Total Value (₱)',
+              data: categoryData.map(c => c.value),
+              backgroundColor: '#3b82f6',
+              borderRadius: 8
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              tooltip: { callbacks: { label: (ctx) => formatCurrency(ctx.raw) } }
+            },
+            scales: {
+              x: {
+                ticks: {
+                  callback: (value) => formatCurrency(value)
+                }
+              }
+            }
+          }
+        });
 
         const leadDist = getLeadTimeDistribution(suppliers);
         if (leadTimeChart) leadTimeChart.destroy();
-        leadTimeChart = new Chart(document.getElementById('leadTimeChart'), { type: 'bar', data: { labels: Object.keys(leadDist.ranges), datasets: [{ label: '# Suppliers', data: Object.values(leadDist.ranges), backgroundColor: '#8b5cf6' }] }, options: { responsive: true } });
+        leadTimeChart = new Chart(document.getElementById('leadTimeChart'), {
+          type: 'bar',
+          data: {
+            labels: Object.keys(leadDist.ranges),
+            datasets: [{
+              label: '# Suppliers',
+              data: Object.values(leadDist.ranges),
+              backgroundColor: '#8b5cf6',
+              borderRadius: 6
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true }
+        });
         updateLeadTimeDetails(suppliers);
 
         const stockHealth = getStockHealth(inventory);
         if (stockHealthChart) stockHealthChart.destroy();
-        stockHealthChart = new Chart(document.getElementById('stockHealthChart'), { type: 'pie', data: { labels: ['Low Stock (≤50)', 'Normal (51-500)', 'High (500+)', 'Out of Stock'], datasets: [{ data: [stockHealth.low, stockHealth.normal, stockHealth.high, stockHealth.zero], backgroundColor: ['#f97316', '#3b82f6', '#10b981', '#ef4444'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
+        stockHealthChart = new Chart(document.getElementById('stockHealthChart'), {
+          type: 'pie',
+          data: {
+            labels: ['Low Stock (≤50)', 'Normal (51-500)', 'High (500+)', 'Out of Stock'],
+            datasets: [{
+              data: [stockHealth.low, stockHealth.normal, stockHealth.high, stockHealth.zero],
+              backgroundColor: ['#f97316', '#3b82f6', '#10b981', '#ef4444']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
         updateStockHealthDetails(inventory);
 
-        showToast('');
-      } catch (err) { console.error(err); showToast('Error updating analytics', true); } finally { refreshBtn.innerHTML = originalText; refreshBtn.disabled = false; }
+        showToast('Analytics updated successfully');
+      } catch (err) {
+        console.error('Refresh error:', err);
+        showToast('Error updating analytics', true);
+      } finally {
+        refreshBtn.innerHTML = originalText;
+        refreshBtn.disabled = false;
+      }
     }
 
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
-
-    // COMPLETE MODAL HANDLER - ALL CHARTS WITH FULL DETAILS
     async function openChartModal(chartId) {
       const modal = document.getElementById('chartModal');
       const modalCanvas = document.getElementById('modalCanvas');
@@ -810,119 +1012,255 @@
       modalStats.innerHTML = '';
       modalDetail.innerHTML = '';
       modalCanvas.style.display = 'block';
-      modalCanvas.style.width = '100%';
-      if (currentModalChartInstance) { currentModalChartInstance.destroy(); currentModalChartInstance = null; }
 
-      // INVENTORY VALUE TREND
-      if (chartId === 'valueTrend' && valueChart) {
-        const trend = await generateTrendData(cachedInventory, cachedOrders);
-        modalTitle.innerText = 'Inventory Value Trend Analysis (Last 7 Days)';
-        modalStats.innerHTML = `
-          <div class="modal-stat-item"><div class="modal-stat-label">Start Value</div><div class="modal-stat-value">₱${trend.startValue.toLocaleString()}</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">End Value</div><div class="modal-stat-value">₱${trend.endValue.toLocaleString()}</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">Change</div><div class="modal-stat-value ${trend.changePercent >= 0 ? 'text-green-600' : 'text-red-600'}">${trend.changePercent}%</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">Total Units</div><div class="modal-stat-value">${cachedInventory.reduce((a, i) => a + i.stock, 0).toLocaleString()}</div></div>
-        `;
-        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'line', data: valueChart.data, options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
-        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Date</th><th>Inventory Value (₱)</th><th>Daily Change</th></tr></thead><tbody>${trend.labels.map((label, idx) => {
-          const prev = idx > 0 ? trend.values[idx - 1] : trend.values[idx];
-          const change = trend.values[idx] - prev;
-          return `<tr><td>${label}</td><td>₱${trend.values[idx].toLocaleString()}</td><td class="${change >= 0 ? 'text-green-600' : 'text-red-600'}">${change >= 0 ? '+' : ''}₱${change.toLocaleString()}</td></tr>`;
-        }).join('')}</tbody></table>`;
+      if (currentModalChartInstance) {
+        currentModalChartInstance.destroy();
+        currentModalChartInstance = null;
       }
-      // ORDER STATUS BREAKDOWN
-      else if (chartId === 'orderStatus' && orderPieChart) {
+
+      if (chartId === 'orderStatus' && orderPieChart) {
         const total = cachedOrders.length;
         const statusCounts = processOrderStatusDistribution(cachedOrders);
         modalTitle.innerText = 'Order Status Analytics';
         modalStats.innerHTML = `
-          <div class="modal-stat-item"><div class="modal-stat-label">Total Orders</div><div class="modal-stat-value">${total}</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">Completion Rate</div><div class="modal-stat-value">${((statusCounts.delivered / total) * 100).toFixed(1)}%</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">Cancellation Rate</div><div class="modal-stat-value">${((statusCounts.cancelled / total) * 100).toFixed(1)}%</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">Pending</div><div class="modal-stat-value text-orange-600">${statusCounts.pending}</div></div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Orders</div>
+            <div class="font-bold text-lg">${formatNumber(total)}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Completion Rate</div>
+            <div class="font-bold text-lg">${total ? ((statusCounts.delivered / total) * 100).toFixed(1) : 0}%</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Pending</div>
+            <div class="font-bold text-lg text-orange-600">${formatNumber(statusCounts.pending)}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Cancelled</div>
+            <div class="font-bold text-lg text-red-600">${formatNumber(statusCounts.cancelled)}</div>
+          </div>
         `;
-        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'doughnut', data: orderPieChart.data, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
-        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Status</th><th>Count</th><th>Percentage</th><th>Action Needed</th></tr></thead><tbody>
-          <tr><td><span class="badge badge-warning">Pending</span></td><td>${statusCounts.pending}</td><td>${((statusCounts.pending / total) * 100).toFixed(1)}%</td><td>Process shipments</td></tr>
-          <tr><td><span class="badge badge-success">Delivered</span></td><td>${statusCounts.delivered}</td><td>${((statusCounts.delivered / total) * 100).toFixed(1)}%</td><td>Completed</td></tr>
-          <tr><td><span class="badge badge-info">Archived</span></td><td>${statusCounts.archived}</td><td>${((statusCounts.archived / total) * 100).toFixed(1)}%</td><td>Historical data</td></tr>
-          <tr><td><span class="badge badge-danger">Cancelled</span></td><td>${statusCounts.cancelled}</td><td>${((statusCounts.cancelled / total) * 100).toFixed(1)}%</td><td>Review reasons</td></tr>
-        </tbody></table>`;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+          type: 'doughnut',
+          data: orderPieChart.data,
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        modalDetail.innerHTML = `
+          <table class="detail-table">
+            <thead><tr><th>Status</th><th>Count</th><th>Percentage</th><th>Action Needed</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-warning">Pending</span></td><td>${statusCounts.pending}</td><td>${total ? ((statusCounts.pending / total) * 100).toFixed(1) : 0}%</td><td>Process shipments</td></tr>
+              <tr><td><span class="badge badge-success">Delivered</span></td><td>${statusCounts.delivered}</td><td>${total ? ((statusCounts.delivered / total) * 100).toFixed(1) : 0}%</td><td>Completed</td></tr>
+              <tr><td><span class="badge badge-info">Archived</span></td><td>${statusCounts.archived}</td><td>${total ? ((statusCounts.archived / total) * 100).toFixed(1) : 0}%</td><td>Historical data</td></tr>
+              <tr><td><span class="badge badge-danger">Cancelled</span></td><td>${statusCounts.cancelled}</td><td>${total ? ((statusCounts.cancelled / total) * 100).toFixed(1) : 0}%</td><td>Review reasons</td></tr>
+            </tbody>
+          </table>
+        `;
       }
-      // CATEGORY BAR CHART
       else if (chartId === 'categoryBar' && categoryChart) {
         const catData = getCategoryValue(cachedInventory);
         const totalValue = catData.reduce((a, c) => a + c.value, 0);
-        modalTitle.innerText = 'Inventory Value by Category - Detailed Breakdown';
+        modalTitle.innerText = 'Inventory Value by Category';
         modalStats.innerHTML = `
-          <div class="modal-stat-item"><div class="modal-stat-label">Total Categories</div><div class="modal-stat-value">${catData.length}</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">Total Value</div><div class="modal-stat-value">₱${totalValue.toLocaleString()}</div></div>
-          <div class="modal-stat-item"><div class="modal-stat-label">Top Category</div><div class="modal-stat-value">${catData[0]?.category || 'N/A'}</div></div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Categories</div>
+            <div class="font-bold text-lg">${catData.length}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Value</div>
+            <div class="font-bold text-lg">${formatCurrency(totalValue)}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Top Category</div>
+            <div class="font-bold text-lg text-truncate">${escapeHtml(catData[0]?.category || 'N/A')}</div>
+          </div>
         `;
-        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'bar', data: categoryChart.data, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `₱${ctx.raw.toLocaleString()}` } } } } });
-        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Category</th><th>Total Value (₱)</th><th>Stock Units</th><th>% of Total</th></tr></thead><tbody>${catData.map(c => `<tr><td class="font-medium">${escapeHtml(c.category)}</td><td>₱${c.value.toLocaleString()}</td><td>${c.units.toLocaleString()}</td><td>${((c.value / totalValue) * 100).toFixed(1)}%</td></tr>`).join('')}</tbody></table>`;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+          type: 'bar',
+          data: categoryChart.data,
+          options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => formatCurrency(ctx.raw) } } } }
+        });
+        modalDetail.innerHTML = `
+          <table class="detail-table">
+            <thead><tr><th>Category</th><th>Total Value (₱)</th><th>Stock Units</th><th>% of Total</th></tr></thead>
+            <tbody>${catData.map(c => `<tr>
+              <td class="font-medium">${escapeHtml(c.category)}</td>
+              <td>${formatCurrency(c.value)}</td>
+              <td>${formatNumber(c.units)}</td>
+              <td>${totalValue ? ((c.value / totalValue) * 100).toFixed(1) : 0}%</td>
+            </tr>`).join('')}</tbody>
+          </table>
+        `;
       }
-      // TOP SUPPLIERS
       else if (chartId === 'topSuppliers') {
         const suppliers = getTopSuppliers(cachedOrders);
         modalCanvas.style.display = 'none';
-        modalTitle.innerText = 'Top Suppliers Performance Analytics';
-        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Total Suppliers Tracked</div><div class="modal-stat-value">${suppliers.length}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Total Order Value</div><div class="modal-stat-value">₱${suppliers.reduce((a, s) => a + s.total, 0).toLocaleString()}</div></div>`;
-        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Rank</th><th>Supplier Name</th><th>Order Count</th><th>Total Value (₱)</th><th>Avg Order Value</th></tr></thead><tbody>${suppliers.map((s, i) => `<tr><td>#${i + 1}</td><td class="font-medium">${escapeHtml(s.name)}</td><td>${s.count}</td><td>₱${s.total.toLocaleString()}</td><td>₱${Math.round(s.total / s.count).toLocaleString()}</td></tr>`).join('')}</tbody></table>`;
+        modalTitle.innerText = 'Top Suppliers Performance';
+        modalStats.innerHTML = `
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Suppliers</div>
+            <div class="font-bold text-lg">${suppliers.length}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Order Value</div>
+            <div class="font-bold text-lg">${formatCurrency(suppliers.reduce((a, s) => a + s.total, 0))}</div>
+          </div>
+        `;
+        modalDetail.innerHTML = `
+          <table class="detail-table">
+            <thead><tr><th>Rank</th><th>Supplier Name</th><th>Order Count</th><th>Total Value (₱)</th><th>Avg Order Value</th></tr></thead>
+            <tbody>${suppliers.map((s, i) => `<tr>
+              <td>#${i + 1}</td>
+              <td class="font-medium">${escapeHtml(s.name)}</td>
+              <td>${formatNumber(s.count)}</td>
+              <td>${formatCurrency(s.total)}</td>
+              <td>${formatCurrency(Math.round(s.total / s.count))}</td>
+            </tr>`).join('')}</tbody>
+          </table>
+        `;
         currentModalChartInstance = null;
       }
-      // TOP PRODUCTS
       else if (chartId === 'topProducts') {
-        const products = await fetchAllProductsDetailed();
+        const products = await getTopProducts();
         modalCanvas.style.display = 'none';
-        modalTitle.innerText = 'Top Moving Products Analytics';
-        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Total Products</div><div class="modal-stat-value">${products.length}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Total Units Sold</div><div class="modal-stat-value">${products.reduce((a, p) => a + p.qty, 0).toLocaleString()}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Total Revenue</div><div class="modal-stat-value">₱${products.reduce((a, p) => a + p.revenue, 0).toLocaleString()}</div></div>`;
-        modalDetail.innerHTML = `<table class="detail-table"><thead><tr><th>Rank</th><th>Product Name</th><th>Units Sold</th><th>Revenue (₱)</th><th>Order Frequency</th></tr></thead><tbody>${products.map((p, i) => `<tr><td>#${i + 1}</td><td class="font-medium">${escapeHtml(p.name)}</td><td>${p.qty.toLocaleString()}</td><td>₱${p.revenue.toLocaleString()}</td><td>${p.orderCount} orders</td></tr>`).join('')}</tbody></table>`;
+        modalTitle.innerText = 'Top Moving Products';
+        modalStats.innerHTML = `
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Products</div>
+            <div class="font-bold text-lg">${products.length}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Units Sold</div>
+            <div class="font-bold text-lg">${formatNumber(products.reduce((a, p) => a + p.qty, 0))}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Total Revenue</div>
+            <div class="font-bold text-lg">${formatCurrency(products.reduce((a, p) => a + p.revenue, 0))}</div>
+          </div>
+        `;
+        modalDetail.innerHTML = `
+          <table class="detail-table">
+            <thead><tr><th>Rank</th><th>Product Name</th><th>Units Sold</th><th>Revenue (₱)</th><th>Order Frequency</th></tr></thead>
+            <tbody>${products.map((p, i) => `<tr>
+              <td>#${i + 1}</td>
+              <td class="font-medium">${escapeHtml(p.name)}</td>
+              <td>${formatNumber(p.qty)}</td>
+              <td>${formatCurrency(p.revenue)}</td>
+              <td>${p.orderCount} orders</td>
+            </tr>`).join('')}</tbody>
+          </table>
+        `;
         currentModalChartInstance = null;
       }
-      // LEAD TIME
       else if (chartId === 'leadTime' && leadTimeChart) {
         const leadDist = getLeadTimeDistribution(cachedSuppliers);
-        modalTitle.innerText = 'Active Supplier and Lead Time Distribution';
-        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Active Suppliers</div><div class="modal-stat-value">${leadDist.total}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Avg Lead Time</div><div class="modal-stat-value">${leadDist.avg} days</div></div>`;
-        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'bar', data: leadTimeChart.data, options: { responsive: true, maintainAspectRatio: true } });
-        let tableHtml = `<table class="detail-table"><thead><tr><th>Supplier</th><th>Lead Time (days)</th><th>Status</th></tr></thead><tbody>`;
-        cachedSuppliers.filter(s => s.status === 'active' && s.lead_time).forEach(sup => { tableHtml += `<tr><td class="font-medium">${escapeHtml(sup.name)}</td><td>${sup.lead_time}</td><td><span class="badge badge-success">Active</span></td></tr>`; });
-        tableHtml += `</tbody></table>`;
-        modalDetail.innerHTML = tableHtml;
+        modalTitle.innerText = 'Supplier Lead Time Distribution';
+        modalStats.innerHTML = `
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Active Suppliers</div>
+            <div class="font-bold text-lg">${leadDist.total}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Avg Lead Time</div>
+            <div class="font-bold text-lg">${leadDist.avg} days</div>
+          </div>
+        `;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+          type: 'bar',
+          data: leadTimeChart.data,
+          options: { responsive: true, maintainAspectRatio: true }
+        });
+        modalDetail.innerHTML = `
+          <table class="detail-table">
+            <thead><tr><th>Supplier</th><th>Lead Time (days)</th><th>Category</th></tr></thead>
+            <tbody>${cachedSuppliers.filter(s => s.status === 'active' && s.lead_time).map(sup => `<tr>
+              <td class="font-medium">${escapeHtml(sup.name)}</td>
+              <td>${sup.lead_time}</td>
+              <td>${escapeHtml(sup.category || '-')}</td>
+            </tr>`).join('')}</tbody>
+          </table>
+        `;
       }
-      // STOCK HEALTH
       else if (chartId === 'stockHealth' && stockHealthChart) {
         const health = getStockHealth(cachedInventory);
-        modalTitle.innerText = 'Stock Health & Risk Assessment (Detailed Items)';
-        modalStats.innerHTML = `<div class="modal-stat-item"><div class="modal-stat-label">Critical (Out of Stock)</div><div class="modal-stat-value text-red-600">${health.zero}</div></div><div class="modal-stat-item"><div class="modal-stat-label">At Risk (Low Stock)</div><div class="modal-stat-value text-orange-600">${health.low}</div></div><div class="modal-stat-item"><div class="modal-stat-label">Health Rate</div><div class="modal-stat-value">${(((health.normal + health.high) / health.total) * 100).toFixed(1)}%</div></div>`;
-        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), { type: 'pie', data: stockHealthChart.data, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
-        let itemsHtml = `<div class="mt-2"><div class="font-bold text-red-700 mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">error</span> Out of Stock Items (${health.zeroDetails.length})</div>`;
-        if (health.zeroDetails.length) health.zeroDetails.forEach(p => { itemsHtml += `<div class="stock-alert-card stock-alert-critical mb-2"><div><span class="stock-product-name">${escapeHtml(p.name)}</span><div class="stock-meta">ID: ${p.id} | ${p.category || '-'} | ₱${parseFloat(p.price).toLocaleString()}</div></div><span class="stock-badge badge-out">0 units</span></div>`; });
-        else itemsHtml += `<div class="text-slate-400">None</div>`;
-        itemsHtml += `</div><div class="mt-4"><div class="font-bold text-orange-700 mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">warning</span> Low Stock Items (less than 50 units) — ${health.lowDetails.length} products</div>`;
-        if (health.lowDetails.length) health.lowDetails.forEach(p => { itemsHtml += `<div class="stock-alert-card stock-alert-low mb-2"><div><span class="stock-product-name">${escapeHtml(p.name)}</span><div class="stock-meta">ID: ${p.id} | ${p.category || '-'} | ₱${parseFloat(p.price).toLocaleString()}</div></div><span class="stock-badge badge-low">${p.stock} units</span></div>`; });
-        else itemsHtml += `<div class="text-slate-400">None</div>`;
+        modalTitle.innerText = 'Stock Health & Risk Assessment (Unique Products)';
+        modalStats.innerHTML = `
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Out of Stock</div>
+            <div class="font-bold text-lg text-red-600">${health.zero}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Low Stock</div>
+            <div class="font-bold text-lg text-orange-600">${health.low}</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg text-center">
+            <div class="text-xs text-slate-500">Health Rate</div>
+            <div class="font-bold text-lg">${health.total ? (((health.normal + health.high) / health.total) * 100).toFixed(1) : 0}%</div>
+          </div>
+        `;
+        currentModalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+          type: 'pie',
+          data: stockHealthChart.data,
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        let itemsHtml = `<div class="mt-2"><div class="font-bold text-red-700 mb-2">❌ Out of Stock (${health.zeroDetails.length})</div>`;
+        if (health.zeroDetails.length) {
+          health.zeroDetails.forEach(p => {
+            itemsHtml += `<div class="stock-alert-card stock-alert-critical mb-2">
+              <div><span class="font-medium">${escapeHtml(p.name)}</span><div class="text-xs text-slate-500">${escapeHtml(p.category)} | SKU: ${escapeHtml(p.sku || 'N/A')}</div></div>
+              <span class="badge badge-danger">0 units</span>
+            </div>`;
+          });
+        } else {
+          itemsHtml += `<div class="text-slate-400">None</div>`;
+        }
+        itemsHtml += `</div><div class="mt-4"><div class="font-bold text-orange-700 mb-2">⚠️ Low Stock (${health.lowDetails.length})</div>`;
+        if (health.lowDetails.length) {
+          health.lowDetails.forEach(p => {
+            itemsHtml += `<div class="stock-alert-card stock-alert-low mb-2">
+              <div><span class="font-medium">${escapeHtml(p.name)}</span><div class="text-xs text-slate-500">${escapeHtml(p.category)} | SKU: ${escapeHtml(p.sku || 'N/A')}</div></div>
+              <span class="badge badge-warning">${formatNumber(p.stock)} units</span>
+            </div>`;
+          });
+        } else {
+          itemsHtml += `<div class="text-slate-400">None</div>`;
+        }
         itemsHtml += `</div>`;
         modalDetail.innerHTML = itemsHtml;
       }
       else {
         modal.classList.remove('active');
-        showToast('Chart data not ready yet. Please refresh.', true);
+        showToast('Chart data not ready. Please refresh.', true);
         return;
       }
+
       modal.classList.add('active');
     }
 
     document.querySelectorAll('.chart-container').forEach(container => {
-      container.addEventListener('click', (e) => { if (e.target.closest('.chart-container')) { const id = container.dataset.chartId; if (id) openChartModal(id); } });
+      container.addEventListener('click', (e) => {
+        if (e.target.closest('.chart-container')) {
+          const id = container.dataset.chartId;
+          if (id) openChartModal(id);
+        }
+      });
     });
 
     document.getElementById('closeModalBtn').addEventListener('click', () => {
       document.getElementById('chartModal').classList.remove('active');
-      if (currentModalChartInstance) { currentModalChartInstance.destroy(); currentModalChartInstance = null; }
+      if (currentModalChartInstance) {
+        currentModalChartInstance.destroy();
+        currentModalChartInstance = null;
+      }
     });
-    document.getElementById('chartModal').addEventListener('click', (e) => { if (e.target === document.getElementById('chartModal')) document.getElementById('chartModal').classList.remove('active'); });
+
+    document.getElementById('chartModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('chartModal')) {
+        document.getElementById('chartModal').classList.remove('active');
+      }
+    });
+
     document.getElementById('exportModalChartBtn').addEventListener('click', async () => {
       const btn = document.getElementById('exportModalChartBtn');
       const originalHTML = btn.innerHTML;
@@ -931,13 +1269,11 @@
 
       try {
         const modalCard = document.querySelector('.modal-card');
-
         const originalMaxHeight = modalCard.style.maxHeight;
         const originalOverflow = modalCard.style.overflowY;
 
         modalCard.style.maxHeight = 'none';
         modalCard.style.overflowY = 'visible';
-
         await new Promise(r => setTimeout(r, 100));
 
         const canvas = await html2canvas(modalCard, {
@@ -968,10 +1304,8 @@
       }
     });
 
-    window.addEventListener('message', (event) => { if (event.data === 'orderCreated' || event.data === 'supplierSaved' || event.data === 'orderStatusChanged' || event.data === 'inventoryUpdated') refreshAnalytics(); });
-    window.addEventListener('storage', (e) => { if (e.key === 'supplierUpdateBroadcast') refreshAnalytics(); });
-    window.addEventListener('suppliersDataUpdated', () => refreshAnalytics());
     document.getElementById('refreshAnalyticsBtn').addEventListener('click', refreshAnalytics);
+
     refreshAnalytics();
     setInterval(refreshAnalytics, 60000);
   </script>

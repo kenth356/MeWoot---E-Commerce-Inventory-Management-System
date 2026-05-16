@@ -1,5 +1,4 @@
 <?php
-// api/delete_customer_order.php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: DELETE, OPTIONS');
@@ -21,8 +20,7 @@ if (!$input || !isset($input['order_id'])) {
 
 try {
     $pdo = getDB();
-    
-    // Check if order exists
+
     $stmt = $pdo->prepare("SELECT status, order_number FROM customer_details WHERE id = ?");
     $stmt->execute([$input['order_id']]);
     $order = $stmt->fetch();
@@ -32,7 +30,6 @@ try {
         exit();
     }
     
-    // If order was delivered, restore stock before deleting
     if ($order['status'] === 'delivered') {
         $itemStmt = $pdo->prepare("SELECT * FROM customer_ordered_products WHERE order_id = ?");
         $itemStmt->execute([$input['order_id']]);
@@ -55,11 +52,9 @@ try {
         }
     }
     
-    // Delete order items first
     $deleteItems = $pdo->prepare("DELETE FROM customer_ordered_products WHERE order_id = ?");
     $deleteItems->execute([$input['order_id']]);
-    
-    // Delete order
+
     $deleteOrder = $pdo->prepare("DELETE FROM customer_details WHERE id = ?");
     $deleteOrder->execute([$input['order_id']]);
     

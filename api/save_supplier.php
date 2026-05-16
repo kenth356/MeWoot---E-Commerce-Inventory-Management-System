@@ -56,7 +56,6 @@ try {
             }
         }
         
-        // Sync to inventory for new supplier
         $syncStmt = $pdo->prepare("
             INSERT INTO inventory (name, sku, category, stock, price, image_url) 
             SELECT sp.product_name, sp.product_sku, s.category, 0, sp.price, sp.product_image

@@ -13,13 +13,11 @@ if (!$id) {
 $pdo = getDB();
 
 try {
-    // Get supplier details
     $stmt = $pdo->prepare("SELECT * FROM suppliers WHERE id = ?");
     $stmt->execute([$id]);
     $supplier = $stmt->fetch();
     
     if ($supplier) {
-        // Get supplier products
         $productStmt = $pdo->prepare("SELECT * FROM supplier_products WHERE supplier_id = ? ORDER BY product_name");
         $productStmt->execute([$id]);
         $products = $productStmt->fetchAll();

@@ -1,4 +1,5 @@
 <?php
+// api/register_admin.php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -29,7 +30,6 @@ $full_name = isset($input['full_name']) ? trim($input['full_name']) : '';
 $email = isset($input['email']) ? strtolower(trim($input['email'])) : '';
 $password = isset($input['password']) ? $input['password'] : '';
 $confirm = isset($input['confirm_password']) ? $input['confirm_password'] : '';
-$role = isset($input['role']) ? $input['role'] : 'customer'; 
 
 if (empty($full_name) || empty($email) || empty($password)) {
     http_response_code(400);
@@ -53,25 +53,25 @@ $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
 try {
     $pdo = getDB();
-    
+
     $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->execute([$email]);
-    
+
     if ($stmt->rowCount() > 0) {
         http_response_code(409);
         echo json_encode(['success' => false, 'message' => 'Email is already registered.']);
         exit();
     }
-    
-    $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->execute([$full_name, $email, $password_hash, $role]);
-    
+
+    // Insert as admin
+    $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password_hash, role, created_at) VALUES (?, ?, ?, 'admin', NOW())");
+    $stmt->execute([$full_name, $email, $password_hash]);
+
     http_response_code(201);
-    echo json_encode(['success' => true, 'message' => 'Account created successfully!']);
-    
+    echo json_encode(['success' => true, 'message' => 'Admin account created successfully!']);
+
 } catch(PDOException $e) {
-    error_log("Registration error: " . $e->getMessage());
-    
+    error_log("Admin registration error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again.']);
     exit();

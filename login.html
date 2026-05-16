@@ -4,12 +4,13 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Login | MeWoo Shopping</title>
+    <title>Login | MeWoo Inventory</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
@@ -18,10 +19,15 @@
                 extend: {
                     colors: {
                         "surface-container-high": "#e7e8e9",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffdbd1",
+                        "secondary-fixed-dim": "#b6c4ff",
+                        "primary-fixed-dim": "#b6c4ff",
                         "on-secondary-container": "#243c88",
                         "secondary": "#445aa7",
                         "background": "#f8f9fa",
                         "surface-container-highest": "#e1e3e4",
+                        "on-tertiary-fixed-variant": "#872100",
                         "on-primary-fixed": "#001551",
                         "surface-variant": "#e1e3e4",
                         "surface-container-lowest": "#ffffff",
@@ -30,24 +36,40 @@
                         "on-primary-container": "#e3e6ff",
                         "surface-bright": "#f8f9fa",
                         "outline": "#737688",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#972500",
+                        "surface": "#f8f9fa",
+                        "primary-fixed": "#dce1ff",
+                        "on-tertiary-container": "#ffe1d9",
+                        "tertiary-container": "#c13301",
+                        "surface-tint": "#004dea",
+                        "on-secondary-fixed-variant": "#2b418d",
+                        "outline-variant": "#c3c5d9",
                         "on-background": "#191c1d",
                         "primary": "#0041c8",
                         "error": "#ba1a1a",
                         "primary-container": "#0055ff",
                         "surface-container": "#edeeef",
                         "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed-dim": "#ffb5a0",
                         "on-secondary": "#ffffff",
                         "inverse-primary": "#b6c4ff",
                         "surface-dim": "#d9dadb",
+                        "error-container": "#ffdad6",
                         "secondary-container": "#95aafd",
+                        "secondary-fixed": "#dce1ff",
+                        "on-tertiary-fixed": "#3b0900",
                         "inverse-surface": "#2e3132",
                         "on-primary-fixed-variant": "#0039b3",
                         "on-surface": "#191c1d",
+                        "on-tertiary": "#ffffff",
                         "surface-container-low": "#f3f4f5",
+                        "on-secondary-fixed": "#001551"
                     },
                     fontFamily: {
                         "headline": ["Manrope"],
                         "body": ["Inter"],
+                        "label": ["Inter"]
                     },
                     borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
                 },
@@ -95,42 +117,35 @@
 <body class="bg-background text-on-background min-h-screen flex flex-col">
     <main class="flex-grow flex items-center justify-center px-6 py-12">
         <div class="w-full max-w-md">
-
-            <!-- Back link -->
-            <a href="homepage.html"
-                class="inline-flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-widest font-semibold text-on-surface-variant hover:text-primary transition-colors mb-8">
-                <span class="material-symbols-outlined text-base">arrow_back</span>
-                Back to Home
-            </a>
-
             <!-- Branding Header -->
             <div class="text-center mb-10">
-                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4"
-                    style="background: linear-gradient(135deg, #0041c8 0%, #0055ff 100%);">
-                    <span class="material-symbols-outlined text-white text-2xl"
-                        style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">shopping_bag</span>
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary mb-4">
+                    <span class="material-symbols-outlined text-white text-2xl">inventory_2</span>
                 </div>
-                <h1 class="text-3xl font-extrabold tracking-tighter text-primary font-headline mb-2">MeWoo Shopping
+                <h1 class="text-3xl font-extrabold tracking-tighter text-primary font-headline mb-2">Precision Inventory
                 </h1>
-                <p class="text-on-surface-variant font-medium text-sm">Sign in to browse and order products</p>
+                <p class="text-on-surface-variant font-medium text-sm">Welcome back to the Atelier</p>
             </div>
 
             <!-- Login Card -->
             <div class="bg-surface-container-lowest p-8 md:p-10 rounded-xl shadow-sm border border-outline-variant/10">
+                <!-- Alert Message -->
                 <div class="alert" id="alert"></div>
 
                 <form id="loginForm" class="space-y-6">
-                    <!-- Email -->
+                    <!-- Email Field -->
                     <div class="space-y-2">
                         <label
                             class="block text-[0.6875rem] uppercase tracking-widest font-semibold text-on-surface-variant"
                             for="email">Email Address</label>
-                        <input
-                            class="w-full bg-surface-container-low border-0 rounded-md py-3 px-4 text-on-surface placeholder-slate-400 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200"
-                            id="email" name="email" placeholder="name@company.com" required type="email" />
+                        <div class="relative">
+                            <input
+                                class="w-full bg-surface-container-low border-0 rounded-md py-3 px-4 text-on-surface placeholder-slate-400 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200"
+                                id="email" name="email" placeholder="name@company.com" required="" type="email" />
+                        </div>
                     </div>
 
-                    <!-- Password -->
+                    <!-- Password Field -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
                             <label
@@ -139,40 +154,46 @@
                             <a class="text-[0.6875rem] font-semibold text-primary hover:text-primary-container transition-colors uppercase tracking-wider"
                                 href="#">Forgot password?</a>
                         </div>
-                        <input
-                            class="w-full bg-surface-container-low border-0 rounded-md py-3 px-4 text-on-surface placeholder-slate-400 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200"
-                            id="password" name="password" placeholder="••••••••" required type="password" />
+                        <div class="relative">
+                            <input
+                                class="w-full bg-surface-container-low border-0 rounded-md py-3 px-4 text-on-surface placeholder-slate-400 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200"
+                                id="password" name="password" placeholder="••••••••" required="" type="password" />
+                        </div>
                     </div>
 
-                    <!-- Submit -->
+                    <!-- Submit Button -->
                     <button
                         class="w-full py-4 px-6 bg-primary text-white font-bold rounded-md shadow-lg shadow-primary/20 hover:bg-primary-container active:scale-[0.98] transition-all duration-200 uppercase tracking-widest text-xs"
                         type="submit" id="loginBtn">
-                        Enter Shopping
+                        Login to Inventory
                     </button>
                 </form>
 
                 <!-- Divider -->
                 <div class="mt-8 pt-8 border-t border-surface-container-high">
                     <p class="text-center text-sm text-on-surface-variant">
-                        Don't have an account?
-                        <a class="font-bold text-primary hover:underline ml-1" href="register_customer.html">Register
-                            here</a>
+                        New to Precision Atelier?
+                        <a class="font-bold text-primary hover:underline ml-1" href="register.html">Register for an
+                            account</a>
                     </p>
                 </div>
             </div>
 
-            <!-- Footer links -->
+            <!-- Global Footer Links -->
             <div class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2">
                 <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-primary transition-colors"
-                    href="homepage.html">Home</a>
+                    href="#">Help</a>
                 <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-primary transition-colors"
-                    href="login_inventory.html">Inventory Login</a>
+                    href="#">Status</a>
+                <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-primary transition-colors"
+                    href="#">Terms of Service</a>
+                <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-primary transition-colors"
+                    href="#">Privacy</a>
             </div>
         </div>
     </main>
 
-    <!-- Background decoration -->
+    <!-- Content Background Decoration -->
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]"></div>
         <div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-secondary/5 blur-[120px]"></div>
@@ -180,26 +201,28 @@
 
     <footer class="w-full py-8 border-t border-slate-200/50 bg-slate-50 mt-auto">
         <div class="flex flex-col md:flex-row justify-between items-center px-12 w-full gap-4">
-            <div class="text-lg font-bold text-slate-900 font-headline">MeWoo</div>
-            <div class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400">© 2026 MeWoo. All
-                rights reserved.</div>
+            <div class="text-lg font-bold text-slate-900 font-headline">Precision Inventory</div>
+            <div class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400">© 2024 Precision
+                Atelier Inventory. All rights reserved.</div>
             <div class="flex gap-6">
                 <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-blue-700 transition-all"
                     href="#">Privacy Policy</a>
                 <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-blue-700 transition-all"
-                    href="#">Terms</a>
+                    href="#">Security</a>
+                <a class="text-[0.6875rem] uppercase tracking-widest font-semibold text-slate-400 hover:text-blue-700 transition-all"
+                    href="#">System Status</a>
             </div>
         </div>
     </footer>
 
     <script>
         const form = document.getElementById("loginForm");
-        const alertEl = document.getElementById("alert");
+        const alert = document.getElementById("alert");
         const loginBtn = document.getElementById("loginBtn");
 
         function showAlert(message, type) {
-            alertEl.textContent = message;
-            alertEl.className = "alert " + type;
+            alert.textContent = message;
+            alert.className = "alert " + type;
         }
 
         form.addEventListener("submit", async function (e) {
@@ -217,25 +240,22 @@
             loginBtn.textContent = "Logging in...";
 
             try {
-                // FIXED: Use correct absolute path
-                const response = await fetch("/final%20project/api/login.php", {
+                const response = await fetch("api/login.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, password })
                 });
 
                 const result = await response.json();
-                console.log("Login response:", result);
 
                 if (result.success) {
                     showAlert("Login successful! Redirecting...", "success");
                     localStorage.setItem("user_id", result.user_id);
                     localStorage.setItem("user_name", result.full_name);
                     localStorage.setItem("user_email", result.email);
-                    localStorage.setItem("user_role", result.role);
-                    
+
                     setTimeout(() => {
-                        window.location.href = "shopping.html";
+                        window.location.href = "dashboard.html";
                     }, 1500);
                 } else {
                     showAlert(result.message, "error");
@@ -247,7 +267,7 @@
             }
 
             loginBtn.disabled = false;
-            loginBtn.textContent = "Enter Shopping";
+            loginBtn.textContent = "Login to Inventory";
         });
     </script>
 </body>
