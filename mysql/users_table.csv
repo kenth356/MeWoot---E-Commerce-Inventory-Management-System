@@ -1,6 +1,0 @@
-Field,Type,Null,Key,Default,Extra
-id,int,NO,PRI,NULL,auto_increment
-full_name,varchar(100),YES,,NULL,
-email,varchar(150),YES,,NULL,
-password_hash,varchar(255),YES,,NULL,
-created_at,timestamp,YES,,NULL,

@@ -1,6 +1,0 @@
-id,order_number,customer_name,customer_email,customer_phone,customer_address,notes,total_amount,status,created_at,updated_at
-1,CUST-20260427-4761,"Allysa Viray",casimsimanallysa@gmail.com,9023090497,hjvngvyjgulkjgulkjg,"hdcykj7ifyt gxfyjf",14600.00,shipped,"2026-04-27 11:57:01","2026-04-29 23:24:11"
-2,CUST-20260427-5148,"Allysa Viray",casimsimanallysa@gmail.com,9023090497,saaaa,fasafsasasaddsafsafdsaf,1875.50,pending,"2026-04-27 17:30:59","2026-04-29 23:47:36"
-3,CUST-20260427-2351,"Allysa Viray",casimsimanallysa@gmail.com,873972304,hsajghjahjfgcmsvmhsafkj,dfFHYUFIWAIFWED,15770.98,shipped,"2026-04-27 17:32:10","2026-04-29 23:47:19"
-4,CUST-20260427-4837,"Allysa Viray",casimsimanallysa@gmail.com,9023090497,kjhiuaknksdakja,iuhiagidsaodsa,18250.00,shipped,"2026-04-27 18:37:29","2026-04-29 23:47:27"
-6,CUST-20260427-4175,"Alliah Viray",virayliah@gmail.com,0933994771,",kjsaukdsahil,ndsajkmbsambdsajambdsj",",hakjsd.,kj oawlkj wemejhds fil jfo",5749.97,cancelled,"2026-04-27 19:07:38","2026-04-29 23:24:05"
